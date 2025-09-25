@@ -2,7 +2,48 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Leaflet Map Container -->
+<div class="BigContainer">
+    <div id="map"></div>
+    <div id="mapSideBar">
+        <nav id="sideBarNav">
+            <button onclick="showSideBarSec('TempMarkerForm')">Test 1</button>
+            <button onclick="showSideBarSec('SomeOtherForm')">Test 2</button>
+            <button onclick="showSideBarSec('PotatoForm')">Test 3</button>
+        </nav>
+        <div class="sideBarContainer">
+            <div id="TempMarkerForm">
+                <h3>Temporary Marker Form</h3>
+                <form>
+                    <label for="type">Type</label>
+                    <input type="text" id="type" name="type" placeholder="Enter type">
+
+                    <label for="description">Description</label>
+                    <input type="text" id="description" name="description" placeholder="Enter description">
+
+                    <label for="lat">Latitude</label>
+                    <input type="number" id="lat" name="lat" disabled>
+
+                    <label for="lng">Longitude</label>
+                    <input type="number" id="lng" name="lng" disabled>
+
+                    <label for="height">Height (m)</label>
+                    <input type="number" id="height" name="height" placeholder="Enter height">
+
+                    <button type="submit">Save Marker</button>
+                </form>
+            </div>
+            <div id="SomeOtherForm" hidden>
+                <p>Some other form</p>
+            </div>
+            <div id="PotatoForm" hidden>
+                <p>PotatoForm</p>
+            </div>
+        </div>
+
+    </div>
+</div>>
+
+<link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/MapPage.css" asp-append-version="true" />
+<script src="~/js/MapPage.js"></script>
