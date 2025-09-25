@@ -1,20 +1,21 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <!-- Leaflet Map Container -->
 <div class="BigContainer">
     <div id="map"></div>
+    <></>
     <div id="mapSideBar">
         <nav id="sideBarNav">
-            <button onclick="showSideBarSec('TempMarkerForm')">Test 1</button>
-            <button onclick="showSideBarSec('SomeOtherForm')">Test 2</button>
-            <button onclick="showSideBarSec('PotatoForm')">Test 3</button>
+            <button onclick="showSideBarSec('TempMarkerForm'); SetActiveButton(this)">Mark it!</button>
+            <button onclick="showSideBarSec('SomeOtherForm'); UpdateMyMarkerList(); SetActiveButton(this)">Markers</button>
+            <button onclick="showSideBarSec('RegisterObstacleFromDraft'); SetActiveButton(this)">Reigster Obstacle</button>
         </nav>
         <div class="sideBarContainer">
             <div id="TempMarkerForm">
                 <h3>Temporary Marker Form</h3>
-                <form>
+                <form id="tempMarkerFormForm">
                     <label for="type">Type</label>
                     <input type="text" id="type" name="type" placeholder="Enter type">
 
@@ -22,33 +23,34 @@
                     <input type="text" id="description" name="description" placeholder="Enter description">
 
                     <label for="lat">Latitude</label>
-                    <input type="number" id="lat" name="lat" disabled>
+                    <input type="number" id="lat" name="lat" readonly>
 
                     <label for="lng">Longitude</label>
-                    <input type="number" id="lng" name="lng" disabled>
+                    <input type="number" id="lng" name="lng" readonly>
 
                     <label for="height">Height (m)</label>
                     <input type="number" id="height" name="height" placeholder="Enter height">
 
                     <button type="submit">Save Marker</button>
                 </form>
+                <div id="status"></div>
+
             </div>
             <div id="SomeOtherForm" hidden>
-                <p>Some other form</p>
+                <div id="mymrk"></div>
             </div>
-            <div id="PotatoForm" hidden>
-                <p>PotatoForm</p>
+            <div id="RegisterObstacleFromDraft" hidden>
+                <p>Reigster drafted obstacle</p>
             </div>
         </div>
-
+        
     </div>
-</div>>
+</div>
 
 <link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/MapPage.css" asp-append-version="true" />
 <script src="~/js/MapPage.js"></script>
-
-
+<script src="~/js/icons.js"></script>
 
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -61,30 +63,36 @@
         crossorigin=""></script>
 
 
-<!-- Fullscrean CSS -->
+<!-- Fullscreen CSS -->
 <style>
+    
 </style>
 
 <script>
-    //initialize map
+    // Initialize the map
     map = L.map('map').setView([51.505, -0.09], 13);
 
-    //Add OpenStreetMap tiles
+    // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     // Add a marker
-    L.marker([51.505, -0.09]).addTo(map)
-        .bindPopup('Hello, Leaflet!')
-        .openPopup();
-    mf = new MapFunctions(map);
-    mf.Run();
+    //L.marker([51.505, -0.09]).addTo(map)
+    //    .bindPopup('Hello, Leaflet!')
+    //    .openPopup();
+    fetch("./icon/geticons").then(res => res.json()).then((IconList) => {
+        icons = new Icons(IconList);
+        mf = new MapFunctions(map, icons);
+        mf.Run();
+    })
+    
+
+    
 
     const childrenArray = Array.from(document.querySelector('.sideBarContainer').children);
     function showSideBarSec(id) {
-        childrenArray.forEach(e => { e.hidden = true });
+        childrenArray.forEach(e => {e.hidden = true});
         document.getElementById(id).hidden = false;
     }
-
 </script>
