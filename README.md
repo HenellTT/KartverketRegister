@@ -9,8 +9,9 @@ Oppgave 1. � opprette en ASP.NET Core MVC applikasjon med frontend, skjema og 
 5. Kart i tillegg til skjemaet (punktet over) og at data hentes fra kartet og vises i en annen nettside.
 
 6. Dokumentasjon i Github om drift, system arkitektur, testing scenarier og resultater.
-7. Dokumentasjonen i selve koden. 
+7. Dokumentasjonen i selve koden.
 
-
+_______________________________________________________________________________________________
 Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luftambulanse (NLA)
+_______________________________________________________________________________________________
 
