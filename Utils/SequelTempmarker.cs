@@ -1,5 +1,5 @@
 using MySql.Data.MySqlClient;
-using ObstacleRegister.Models;
+using KartverketRegister.Models;
 using Org.BouncyCastle.Tls;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Data;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ObstacleRegister.Utils
+namespace KartverketRegister.Utils
 {
 
     public class SequelTempmarker
@@ -16,7 +16,7 @@ namespace ObstacleRegister.Utils
 
         public SequelTempmarker(string dbIP, string dbname)
         {
-            string dbConnString = $"Server={dbIP};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
+            string dbConnString = $"Server={dbIP};Port={Constants.DataBasePort};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
             conn = new MySqlConnection(dbConnString);
         }
         public void SaveMarker(string type, string description, double lat, double lng)

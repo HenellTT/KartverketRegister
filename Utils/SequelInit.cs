@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace ObstacleRegister.Utils
+namespace KartverketRegister.Utils
 {
     public class SequelInit
     {
@@ -13,7 +13,7 @@ namespace ObstacleRegister.Utils
         public SequelInit(string dbIP, string dbname)
         {
 
-            string rootConnString = $"Server={dbIP};User ID=root;Password={Constants.DataBaseRootPassword};";
+            string rootConnString = $"Server={dbIP};Port={Constants.DataBasePort};User ID=root;Password={Constants.DataBaseRootPassword};";
             using (var rootConn = new MySqlConnection(rootConnString))
             {
                 rootConn.Open();
@@ -24,7 +24,7 @@ namespace ObstacleRegister.Utils
             }
 
             // Step 2: Initialize class-level connection to the target database
-            string dbConnString = $"Server={dbIP};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
+            string dbConnString = $"Server={dbIP};Port={Constants.DataBasePort};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
             conn = new MySqlConnection(dbConnString);
 
         }
@@ -54,11 +54,18 @@ namespace ObstacleRegister.Utils
 
                 for (int i = 0; i < TablesToRemove.Length; i++)
                 {
-                    using (var cmd = new MySqlCommand(TablesToRemove[i], conn))
+                    try
                     {
-                        cmd.ExecuteNonQuery();
-                        Console.WriteLine("Mysql Executed: " + TablesToRemove[i]);
+                        using (var cmd = new MySqlCommand(TablesToRemove[i], conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                            Console.WriteLine("Mysql Executed: " + TablesToRemove[i]);
+                        }
+                    } catch
+                    {
+                        Console.WriteLine("Command failed, table not found: " + TablesToRemove[i]);
                     }
+                    
                 }
                 
             }

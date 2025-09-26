@@ -1,3 +1,5 @@
+using KartverketRegister.Utils;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,5 +27,9 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+SequelInit seq = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
+seq.conn.Open();
+seq.InitDb();
+seq.conn.Close();
 
 app.Run();

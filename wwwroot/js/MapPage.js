@@ -1,7 +1,7 @@
 ﻿
 
 class MapFunctions {
-    constructor(mapRef,ICONS) {
+    constructor(mapRef, ICONS) {
         this.map = mapRef;
 
         this.icons = ICONS;
@@ -24,7 +24,7 @@ class MapFunctions {
         // Init shit that has to be done fr fr
         setTimeout(this.startVehicleTracking(), 200);
     }
-    
+
     startVehicleTracking() {
         if (!navigator.geolocation) {
             console.error('Geolocation is not supported by this browser.');
@@ -41,7 +41,7 @@ class MapFunctions {
                     // Pan map smoothly to current position
                     this.map.panTo([lat, lng], { animate: true, duration: 0.5 });
                 }
-                
+
             },
             (err) => {
                 console.error('Geolocation error:', err);
@@ -53,7 +53,7 @@ class MapFunctions {
             }
         );
     }
-    moveViewTo(lat,lng) {
+    moveViewTo(lat, lng) {
         this.map.panTo([lat, lng], { animate: true, duration: 0.5 });
     }
 
@@ -63,14 +63,14 @@ class MapFunctions {
         }
         this.vehiclePosition.setLatLng([lat, lng])
             .bindPopup(`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`)
-            //.openPopup();
+        //.openPopup();
     }
 
     // Set the temp marker to the desired position
     setMarkerPosition(lat, lng, icon = null) {
         if (icon != null) {
             this.tempMarker.setIcon(icon);
-        } 
+        }
         if (!this.map.hasLayer(this.tempMarker)) {
             this.tempMarker.addTo(this.map);
         }
@@ -78,9 +78,9 @@ class MapFunctions {
             .bindPopup(`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`)
             .openPopup();
 
-        
+
     }
-    
+
 }
 const form = document.getElementById('tempMarkerFormForm');
 
