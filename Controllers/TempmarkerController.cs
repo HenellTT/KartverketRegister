@@ -10,19 +10,19 @@ using System.Linq.Expressions;
 namespace KartverketRegister.Controllers
 {
 
-    public class TempmarkerController : Controller
+    public class TempmarkerController : Controller //arver fra controller for å håndtere midlertidige markører
     {
         //private int MsgLimit = 15;
         public IActionResult Index()
         {
-            return BadRequest("Nothing to see here");
+            return BadRequest("Nothing to see here"); 
         }
 
         [HttpPost]
-        public IActionResult SubmitMarker()
+        public IActionResult SubmitMarker() //tar imot midlertidig markør via post forespørsel
         {
             
-            SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
+            SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName); //databaseforbindelse hvor innsendt hinder lagres med data
             try
             {
                 string type = Request.Form["type"];
@@ -37,9 +37,9 @@ namespace KartverketRegister.Controllers
             } catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("Potato hihi");
+                return BadRequest("Something went wrong :/"); //lagres ikke data riktig, får man denne feilmeldingen
             }
-            //return BadRequest('idfk what went wrong at this point');
+            
             
 
         }
