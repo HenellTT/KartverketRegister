@@ -6,6 +6,7 @@ using System.Xml.Linq;
 
 namespace KartverketRegister.Utils
 {
+	// initiering av database struktur, Ikke noe mer, Bare det. Lager Database navn, og Sjekker om tabeller eksisterer og lager dem om de ikke gjør det.
     public class SequelInit
     {
         public MySqlConnection conn;

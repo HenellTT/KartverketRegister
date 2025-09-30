@@ -8,7 +8,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace KartverketRegister.Utils
 {
-
+	// SQL queries for alt som har med Marker/obstacler å gjøre. 
     public class SequelMarker
     {
         public MySqlConnection conn;
