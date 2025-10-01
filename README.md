@@ -34,3 +34,7 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 	Åpne terminal i repoen og skriv - Dotnet build
 	
 	Etter den blir ferdig skriv - Dotnet Run
+	
+## Debug
+
+	Om docker compose ikke starter på første forsøk så prøv en gang til, for databasen starter av og til pararelt med MVC appen og derfor kræsjer appen
