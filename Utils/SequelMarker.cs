@@ -1,5 +1,3 @@
-// Purpose: Handles saving, fetching and deleting markers in the database.
-
 using MySql.Data.MySqlClient;
 using KartverketRegister.Models;
 using System;
