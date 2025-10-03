@@ -1,6 +1,6 @@
 # KartverketRegister
 
-Oppgave 1. Å opprette en ASP.NET Core MVC applikasjon med frontend, skjema og kart
+Oppgave 1. Ã… opprette en ASP.NET Core MVC applikasjon med frontend, skjema og kart
 
 
 Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luftambulanse (NLA)
@@ -9,32 +9,60 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 
 # Hvordan starte applikasjonen??
 
-	Sørg for at docker desktop kjører til enhver tid!
+	SÃ¸rg for at docker desktop kjÃ¸rer til enhver tid!
 
 ## Docker Compose
 
-	Åpne terminal i Mappa til repoen og skriv - Docker compose build
+	Ã…pne terminal i Mappa til repoen og skriv - Docker compose build
 	
 	Etter applikasjonen er bygget kan du starte den med - Docker compose up
 	
-	Applikasjonen skal nå kjøre på 8080 port!
+	Applikasjonen skal nÃ¥ kjÃ¸re pÃ¥ 8080 port!
 
 ## Visual Studio
 
-	Kjør start_mariadb.bat - Den starter opp databasen
+	KjÃ¸r start_mariadb.bat - Den starter opp databasen
 	
-	Åpne KartverketRegister.sln med Visual Studio
+	Ã…pne KartverketRegister.sln med Visual Studio
 	
 	Start applikasjonen med http
 	
 ## terminal
 
-	Kjør start_mariadb.bat - Den starter opp databasen
+	KjÃ¸r start_mariadb.bat - Den starter opp databasen
 
-	Åpne terminal i repoen og skriv - Dotnet build
+	Ã…pne terminal i repoen og skriv - Dotnet build
 	
 	Etter den blir ferdig skriv - Dotnet Run
 	
 ## Debug
 
-	Om docker compose ikke starter på første forsøk så prøv en gang til, for databasen starter av og til pararelt med MVC appen og derfor kræsjer appen
+	Om docker compose ikke starter pÃ¥ fÃ¸rste forsÃ¸k sÃ¥ prÃ¸v en gang til, for databasen starter av og til pararelt med MVC appen og derfor krÃ¦sjer appen
+	
+
+# Systemarkitektur
+
+## Oversikt
+	Applikasjonen er en ASP.NET Core MVC applikasjon som kjÃ¸res i en Docker Container. 
+	Den fÃ¸lger Model-View-Controller(MVC) sitt arkitekture rammeverk og leverer responsive nettsider med dynamisk innhold.
+	Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend, backend og databasen.
+	
+## Hovedkomponenter
+- Controller
+    - HÃ¥ndterer HTTP ForespÃ¸rseler (GET og POST)
+    - Sender forespÃ¸rseler til riktig logikk og retunerer views med data
+- Models
+    - Inneholder data som vises i brukergrensesnittet
+- View
+    - Ansvar for visning av user interface
+    - viser data som er lagd i models til brukeren
+- Database
+    - Lagrer brukernavn og henter informasjon fra skjema og kart
+    - Kommuniserer med backend
+- Docker
+    - Pakker applikasjonen i en container og sÃ¸rger for at applikasjonen kjÃ¸res likt
+- kart
+    - integrert kart fra Leaflet i frontend
+    - lar brukeren velge sted pÃ¥ kart, som sendes idere til backend
+
+
