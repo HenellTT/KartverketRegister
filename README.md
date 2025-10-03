@@ -63,6 +63,6 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
     - Pakker applikasjonen i en container og sørger for at applikasjonen kjøres likt
 - kart
     - integrert kart fra Leaflet i frontend
-    - lar brukeren velge sted på kart, som sendes idere til backend
+    - lar brukeren velge sted på kart, som sendes videre til backend
 
 
