@@ -48,21 +48,25 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 	Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend, backend og databasen.
 	
 ## Hovedkomponenter
-- Controller
-    - Håndterer HTTP Forespørseler (GET og POST)
-    - Sender forespørseler til riktig logikk og retunerer views med data
-- Models
-    - Inneholder data som vises i brukergrensesnittet
-- View
-    - Ansvar for visning av user interface
-    - viser data som er lagd i models til brukeren
-- Database
-    - Lagrer brukernavn og henter informasjon fra skjema og kart
-    - Kommuniserer med backend
-- Docker
-    - Pakker applikasjonen i en container og sørger for at applikasjonen kjøres likt
-- kart
-    - integrert kart fra Leaflet i frontend
-    - lar brukeren velge sted på kart, som sendes videre til backend
+- Controller: Håndterer HTTP Forespørseler (GET og POST). Sender forespørseler til riktig logikk og returnerer views med data
+- Models: Inneholder data som vises i brukergrensesnittet
+- View: Ansvar for visning av user interface. viser data som er lagd i models til brukeren
+- Database: Lagrer brukernavn og henter informasjon fra skjema og kart samt kommuniserer med backend. Vi bruker Mariadb som kjører i en egen docker container. Applikasjonen og databasen kommuniserer med et internt docker nettverk, fra docker-compose.yml
+- Docker: Pakker applikasjonen i en container og sørger for at applikasjonen kjøres likt. 
+- Kart: Integrert kart fra Leaflet i frontend. Lar brukeren velge sted på kart, sender kordinatene til backend
 
+## Dataflyt
+- GET: Bruker åpner side → Controller henter data fra database → View viser data via ViewModel.
+- POST(skjema): Bruker sender skjema → Controller validerer og lagrer → Redirect til visningsside som henter og viser lagret data.
+- Post(Kart): Bruker klikker på kart → Frontend sender koordinater til backend → Backend lagrer → Visningsside henter og viser på kart/tekst.
+
+## Diagram her?
+                diagram her kanskje
+
+
+
+
+# Drift
+				noen skrive om drift her?
+				
 
