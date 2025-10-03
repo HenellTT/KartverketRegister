@@ -43,9 +43,9 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 # Systemarkitektur
 
 ## Oversikt
-	Applikasjonen er en ASP.NET Core MVC applikasjon som kjøres i en Docker Container. 
-	Den følger Model-View-Controller(MVC) sitt arkitekture rammeverk og leverer responsive nettsider med dynamisk innhold.
-	Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend, backend og databasen.
+Applikasjonen er en ASP.NET Core MVC applikasjon som kjøres i en Docker Container. 
+Den følger Model-View-Controller(MVC) sitt arkitekture rammeverk og leverer responsive nettsider med dynamisk innhold.
+Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend, backend og databasen.
 	
 ## Hovedkomponenter
 - Controller: Håndterer HTTP Forespørseler (GET og POST). Sender forespørseler til riktig logikk og returnerer views med data
