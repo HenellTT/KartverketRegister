@@ -13,9 +13,9 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 
 ## Docker Compose
 
-	Åpne terminal i Mappa til repoen og skriv - Docker compose build
-	
-	Etter applikasjonen er bygget kan du starte den med - Docker compose up
+	Åpne terminal i Mappa til repoen og skriv - Docker compose up - Den kommandoen bygger og kjører applikasjonen
+
+	*Første startup pleier å feile fordi MVC appen starter før selve databasen, bare kjør docker compose up igjen!*
 	
 	Applikasjonen skal nå kjøre på 8080 port!
 
@@ -27,13 +27,11 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 	
 	Start applikasjonen med http
 	
-## terminal
+## Terminal
 
 	Kjør start_mariadb.bat - Den starter opp databasen
 
-	Åpne terminal i repoen og skriv - Dotnet build
-	
-	Etter den blir ferdig skriv - Dotnet Run
+	Åpne terminal i repoen og skriv - Dotnet run
 	
 ## Debug
 
