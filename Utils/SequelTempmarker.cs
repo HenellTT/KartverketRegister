@@ -9,7 +9,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace KartverketRegister.Utils
 {
-
+	// SQL queries for alt som har med tempmarker å gjøre. 
     public class SequelTempmarker
     {
         public MySqlConnection conn;

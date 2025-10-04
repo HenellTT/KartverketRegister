@@ -10,19 +10,19 @@ using System.Linq.Expressions;
 namespace KartverketRegister.Controllers
 {
 
-    public class MarkerController : Controller
+    public class MarkerController : Controller // Arver fra Controller for å håndtere markører
     {
         public IActionResult Index()
         {
-            return BadRequest("Nothing to see here");
+            return BadRequest("Nothing to see here"); 
         }
 
         [HttpPost]
-        public IActionResult SubmitMarker(Marker marker)
+        public IActionResult SubmitMarker(Marker marker) // Tar imot en markør via POST-forespørsel
         {
 
-            SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            try
+            SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName); // Oppretter en databaseforbindelse
+            try //try-catch for å håndtere feil
             {
                 seq.SaveMarker(
                     marker.Type,
@@ -44,9 +44,9 @@ namespace KartverketRegister.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("Potato hihi");
+                return BadRequest("something went wrong :(");
             }
-            //return BadRequest('idfk what went wrong at this point');
+            
         }
         [HttpGet]
         public IActionResult FetchMyMarkers()
@@ -54,7 +54,7 @@ namespace KartverketRegister.Controllers
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
-                List<Marker> MyMarkers = seq.FetchMyMarkers(1); // Currently 1 to simulate UserId; 
+                List<Marker> MyMarkers = seq.FetchMyMarkers(1); // Henter markører for bruker med ID 1
                 return Ok(MyMarkers);
             } catch
             {

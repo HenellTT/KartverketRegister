@@ -1,5 +1,6 @@
 ﻿namespace KartverketRegister.Utils
 {
+	//inneholder konstater og innstillinger for databaseoppsett
     public static class Constants
     {
 		public static string DataBaseIp { get; } = Environment.GetEnvironmentVariable("DATABASE_IP") ?? "127.0.0.1"; 

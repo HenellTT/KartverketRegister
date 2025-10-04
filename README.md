@@ -1,6 +1,6 @@
 # KartverketRegister
 
-Oppgave 1. � opprette en ASP.NET Core MVC applikasjon med frontend, skjema og kart
+Oppgave 1. Å opprette en ASP.NET Core MVC applikasjon med frontend, skjema og kart
 
 
 Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luftambulanse (NLA)
@@ -9,28 +9,64 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 
 # Hvordan starte applikasjonen??
 
-	S�rg for at docker desktop kj�rer til enhver tid!
+	Sørg for at docker desktop kjører til enhver tid!
 
 ## Docker Compose
 
-	�pne terminal i Mappa til repoen og skriv - Docker compose build
+	Åpne terminal i Mappa til repoen og skriv - Docker compose build
 	
 	Etter applikasjonen er bygget kan du starte den med - Docker compose up
 	
-	Applikasjonen skal n� kj�re p� 8080 port!
+	Applikasjonen skal nå kjøre på 8080 port!
 
 ## Visual Studio
 
-	Kj�r start_mariadb.bat - Den starter opp databasen
+	Kjør start_mariadb.bat - Den starter opp databasen
 	
-	�pne KartverketRegister.sln med Visual Studio
+	Åpne KartverketRegister.sln med Visual Studio
 	
 	Start applikasjonen med http
 	
 ## terminal
 
-	Kj�r start_mariadb.bat - Den starter opp databasen
+	Kjør start_mariadb.bat - Den starter opp databasen
 
-	�pne terminal i repoen og skriv - Dotnet build
+	Åpne terminal i repoen og skriv - Dotnet build
 	
 	Etter den blir ferdig skriv - Dotnet Run
+	
+## Debug
+
+	Om docker compose ikke starter på første forsøk så prøv en gang til, for databasen starter av og til pararelt med MVC appen og derfor kræsjer appen
+	
+
+# Systemarkitektur
+
+## Oversikt
+Applikasjonen er en ASP.NET Core MVC applikasjon som kjøres i en Docker Container. 
+Den følger Model-View-Controller(MVC) sitt arkitekture rammeverk og leverer responsive nettsider med dynamisk innhold.
+Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend, backend og databasen.
+	
+## Hovedkomponenter
+- Controller: Håndterer HTTP Forespørseler (GET og POST). Sender forespørseler til riktig logikk og returnerer views med data
+- Models: Inneholder data som vises i brukergrensesnittet
+- View: Ansvar for visning av user interface. viser data som er lagd i models til brukeren
+- Database: Lagrer brukernavn og henter informasjon fra skjema og kart samt kommuniserer med backend. Vi bruker Mariadb som kjører i en egen docker container. Applikasjonen og databasen kommuniserer med et internt docker nettverk, fra docker-compose.yml
+- Docker: Pakker applikasjonen i en container og sørger for at applikasjonen kjøres likt. 
+- Kart: Integrert kart fra Leaflet i frontend. Lar brukeren velge sted på kart, sender kordinatene til backend
+
+## Dataflyt
+- GET: Bruker åpner side → Controller henter data fra database → View viser data via ViewModel.
+- POST(skjema): Bruker sender skjema → Controller validerer og lagrer → Redirect til visningsside som henter og viser lagret data.
+- Post(Kart): Bruker klikker på kart → Frontend sender koordinater til backend → Backend lagrer → Visningsside henter og viser på kart/tekst.
+
+## Diagram her?
+                diagram her kanskje
+
+
+
+
+# Drift
+				noen skrive om drift her?
+				
+
