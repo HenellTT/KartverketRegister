@@ -40,7 +40,8 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 
 # Drift
 The app can be run locallly or inside Docker.
-To run the system without Docker, make sure you have the .NET 8 SDK installed, then use the following commands:
+For å kjøre systemet uten Docker må du ha .NET 8 SDK installert.
+Bruk deretter følgende kommandoer
 	
 ## Run Locally 
 	git clone https://github.com/HenellTT/KartverketRegister.git
@@ -48,25 +49,22 @@ To run the system without Docker, make sure you have the .NET 8 SDK installed, t
 	dotnet restore
 	dotnet build
 	dotnet run
-After starting, the web application will be available on http://localhost:5000
+Etter at applikasjonen er startet, vil den være tilgjengelig på http://localhost:5000
 
-# Run with Docker
+# Kjør med Docker
 
-A Dockerfile and docker-compose.yml are included in the project.
-To build and start the system using Docker Compose:
+Prosjektet inneholder både Dockerfile og docker-compose.yml.
+For å bygge og starte systemet med Docker Compose:
 	docker-compose build
 	docker-compose up
-This will start both the application container and the MariaDB database defined in the compose file.
+Dette vil starte både applikasjons-containeren og MariaDB-databasen som er definert i compose-filen.
 
-# Requirements
+# Krav
 
 - .NET 8 SDK
-
-- Docker and Docker Compose
-
-- MariaDB (started automatically in Docker or via start_mariadb.bat)
-
-- Access to Kartverket API for map data
+- Docker og Docker Compose
+- MariaDB (startes automatisk i Docker, eller via start_mariadb.bat)
+- Tilgang til Kartverket API for kartdata
 
 # Systemarkitektur
 
@@ -90,17 +88,28 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 
 ## Results
 
-- The system runs correctly both locally and in Docker.
-- User input through the obstacle registration form works with proper validation and data storage.
-- GET and POST requests function as required in the MVC framework.
-- Map integration with Kartverket API updates dynamically and accurately reflects obstacle positions.
-- The MariaDB database stores obstacles persistently between sessions.
-- The user interface is responsive and performs consistently across different devices.
-- Overall, the application fulfills all requirements of the assignment, including:
-- MVC structure
-- Responsive web interface
-- GET/POST functionality
-- Form and data display
-- Map integration
-- Documentation (drift, architecture, testing, results)
+- Systemet kjører korrekt både lokalt og i Docker.
+
+- Brukerinput via hindringsskjemaet fungerer som forventet, med validering og lagring av data i databasen.
+
+- GET- og POST-forespørsler fungerer som de skal innenfor MVC-strukturen.
+
+- Kartintegrasjonen med Kartverket-API viser markører og oppdateres dynamisk basert på lagrede data.
+
+- MariaDB-databasen lagrer hindringer permanent mellom økter.
+- Brukergrensesnittet er responsivt og fungerer på både PC og mobil.
+
+- Totalt sett oppfyller applikasjonen alle krav i oppgaven, inkludert:
+
+-- MVC-struktur
+
+-- Responsivt webgrensesnitt
+
+-- GET/POST-funksjonalitet
+
+-- Skjema og visning av data
+
+-- Kartintegrasjon
+
+-- Dokumentasjon av drift, arkitektur, testing og resultater
 
