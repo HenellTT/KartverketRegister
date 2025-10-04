@@ -58,13 +58,6 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - POST(skjema): Bruker sender skjema → Controller validerer og lagrer → Redirect til visningsside som henter og viser lagret data.
 - Post(Kart): Bruker klikker på kart → Frontend sender koordinater til backend → Backend lagrer → Visningsside henter og viser på kart/tekst.
 
-## Diagram her?
-                diagram her kanskje
 
-
-
-
-# Drift
-				noen skrive om drift her?
 				
 
