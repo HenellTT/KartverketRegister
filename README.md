@@ -101,7 +101,7 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 
 - Totalt sett oppfyller applikasjonen alle krav i oppgaven, inkludert:
 
--- MVC-struktur
+- - MVC-struktur
 
 -- Responsivt webgrensesnitt
 
