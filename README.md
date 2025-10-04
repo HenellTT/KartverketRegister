@@ -86,14 +86,16 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - POST(skjema): Bruker sender skjema → Controller validerer og lagrer → Redirect til visningsside som henter og viser lagret data.
 - Post(Kart): Bruker klikker på kart → Frontend sender koordinater til backend → Backend lagrer → Visningsside henter og viser på kart/tekst.
 
+## Testing Scenario
+
 | **Scenario** | **Input / Handling** | **Forventet resultat** | **Faktisk resultat** |
 |---------------|----------------------|--------------------------|----------------------|
-| **Registrer hindring** | Fyll ut skjema med type, breddegrad, lengdegrad og alvorlighetsgrad. | Hindringen vises i listen og på kartet. |  Fungerte som forventet |
-| **Kartvisning** | Åpne kartvisning med eksisterende hindringer i databasen. | Kartet viser alle hindringer med riktige markører. |  Fungerte som forventet |
-| **Kjøring i Docker** | Kjør `docker-compose up` i prosjektmappen. | Applikasjon og MariaDB startes automatisk. |  Fungerte som forventet |
-| **GET-forespørsel** | Gå til `/Obstacle` i nettleseren. | Viser alle registrerte hindringer hentet fra databasen. |  Fungerte som forventet |
-| **POST-forespørsel (skjema)** | Send inn nytt data via skjema. | Data blir validert og lagret, og visningssiden oppdateres automatisk. |  Fungerte som forventet |
-| **Datavedvarende lagring** | Start applikasjonen på nytt etter at hindringer er lagret. | Tidligere registrerte hindringer forblir synlige i listen og på kartet. |  Fungerte som forventet |
+| **Registrer hindring** | Fyll ut skjema med type, breddegrad, lengdegrad og alvorlighetsgrad. | Hindringen vises i listen og på kartet. | Fungerte som forventet |
+| **Kartvisning** | Åpne kartvisning med eksisterende hindringer i databasen. | Kartet viser alle hindringer med riktige markører. | Fungerte som forventet |
+| **Kjøring i Docker** | Kjør `docker-compose up` i prosjektmappen. | Applikasjon og MariaDB startes automatisk. | Fungerte som forventet |
+| **GET-forespørsel** | Gå til `/Obstacle` i nettleseren. | Viser alle registrerte hindringer hentet fra databasen. | Fungerte som forventet |
+| **POST-forespørsel (skjema)** | Send inn nytt data via skjema. | Data blir validert og lagret, og visningssiden oppdateres automatisk. | Fungerte som forventet |
+| **Datavedvarende lagring** | Start applikasjonen på nytt etter at hindringer er lagret. | Tidligere registrerte hindringer forblir synlige i listen og på kartet. | Fungerte som forventet |
 
 
 ## Results
