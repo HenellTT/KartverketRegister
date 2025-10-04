@@ -59,7 +59,7 @@ For å bygge og starte systemet med Docker Compose:
 	docker-compose up
 Dette vil starte både applikasjons-containeren og MariaDB-databasen som er definert i compose-filen.
 
-# Krav
+# Requirements
 
 - .NET 8 SDK
 - Docker og Docker Compose
