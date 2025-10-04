@@ -40,9 +40,9 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 
 # Drift
 	The app can be run locallly or inside Docker.
-
-## Run Locally 
 	To run the system without Docker, make sure you have the .NET 8 SDK installed, then use the following commands:
+	
+## Run Locally 
 	git clone https://github.com/HenellTT/KartverketRegister.git
 	cd KartverketRegister
 	dotnet restore
