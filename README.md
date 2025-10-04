@@ -38,6 +38,22 @@ Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luft
 	Om docker compose ikke starter på første forsøk så prøv en gang til, for databasen starter av og til pararelt med MVC appen og derfor kræsjer appen
 	
 
+# Drift
+	The app can be run locallly or inside Docker.
+
+## Run Locally 
+	To run the system without Docker, make sure you have the .NET 8 SDK installed, then use the following commands:
+	git clone https://github.com/HenellTT/KartverketRegister.git
+	cd KartverketRegister
+	dotnet restore
+	dotnet build
+	dotnet run
+
+
+
+
+
+
 # Systemarkitektur
 
 ## Oversikt
