@@ -89,27 +89,17 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 ## Results
 
 - Systemet kjører korrekt både lokalt og i Docker.
-
 - Brukerinput via hindringsskjemaet fungerer som forventet, med validering og lagring av data i databasen.
-
 - GET- og POST-forespørsler fungerer som de skal innenfor MVC-strukturen.
-
 - Kartintegrasjonen med Kartverket-API viser markører og oppdateres dynamisk basert på lagrede data.
-
 - MariaDB-databasen lagrer hindringer permanent mellom økter.
 - Brukergrensesnittet er responsivt og fungerer på både PC og mobil.
-
 - Totalt sett oppfyller applikasjonen alle krav i oppgaven, inkludert:
 
-- - MVC-struktur
-
--- Responsivt webgrensesnitt
-
--- GET/POST-funksjonalitet
-
--- Skjema og visning av data
-
--- Kartintegrasjon
-
--- Dokumentasjon av drift, arkitektur, testing og resultater
+ - MVC-struktur
+ - Responsivt webgrensesnitt
+ - GET/POST-funksjonalitet
+ - Skjema og visning av data
+ - Kartintegrasjon
+ - Dokumentasjon av drift, arkitektur, testing og resultater
 
