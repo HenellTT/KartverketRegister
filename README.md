@@ -48,11 +48,25 @@ To run the system without Docker, make sure you have the .NET 8 SDK installed, t
 	dotnet restore
 	dotnet build
 	dotnet run
+After starting, the web application will be available on http://localhost:5000
 
+# Run with Docker
 
+A Dockerfile and docker-compose.yml are included in the project.
+To build and start the system using Docker Compose:
+	docker-compose build
+	docker-compose up
+This will start both the application container and the MariaDB database defined in the compose file.
 
+# Requirements
 
+- .NET 8 SDK
 
+- Docker and Docker Compose
+
+- MariaDB (started automatically in Docker or via start_mariadb.bat)
+
+- Access to Kartverket API for map data
 
 # Systemarkitektur
 
@@ -74,6 +88,19 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - POST(skjema): Bruker sender skjema → Controller validerer og lagrer → Redirect til visningsside som henter og viser lagret data.
 - Post(Kart): Bruker klikker på kart → Frontend sender koordinater til backend → Backend lagrer → Visningsside henter og viser på kart/tekst.
 
+## Results
 
-				
+- The system runs correctly both locally and in Docker.
+- User input through the obstacle registration form works with proper validation and data storage.
+- GET and POST requests function as required in the MVC framework.
+- Map integration with Kartverket API updates dynamically and accurately reflects obstacle positions.
+- The MariaDB database stores obstacles persistently between sessions.
+- The user interface is responsive and performs consistently across different devices.
+- Overall, the application fulfills all requirements of the assignment, including:
+- MVC structure
+- Responsive web interface
+- GET/POST functionality
+- Form and data display
+- Map integration
+- Documentation (drift, architecture, testing, results)
 
