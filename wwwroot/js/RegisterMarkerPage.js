@@ -1,4 +1,5 @@
-﻿const form = document.querySelector("form");
+﻿
+const form = document.querySelector("form");
 const outputField = document.getElementById('returnMsg');
 const submitButton = document.querySelector('button[type="submit"]');
 
@@ -7,22 +8,27 @@ form.addEventListener("submit", async (event) => {
     event.preventDefault(); // Stop the default form submission
     const formData = new FormData(form);
 
-    const response = await fetch(form.action, {
-        method: form.method.toUpperCase(), // "POST"
-        body: formData
-    }).then(response => {
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return response.json(); 
-    })
-        .then(reply => { 
-            outputField.innerHTML = reply.message;
-            if (reply.success) {
-                SuccessfulReq();
-            } else {
-                FailedReq();
-            }
+    if (!ValidateForm(formData)) {
+        outputField.innerHTML += " You forgot to fill out some fields!";
 
+    } else {
+        const response = await fetch(form.action, {
+            method: form.method.toUpperCase(), // "POST"
+            body: formData
+        }).then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
         })
+            .then(reply => {
+                outputField.innerHTML = reply.message;
+                if (reply.success) {
+                    SuccessfulReq();
+                } else {
+                    FailedReq();
+                }
+
+            })
+    }
 });
 
 function SuccessfulReq(msg) {
@@ -35,4 +41,14 @@ function SuccessfulReq(msg) {
 }
 function FailedReq() {
 
+}
+
+function ValidateForm(formeeData) {
+    FieldsToBeVerified = ['Type','Description','Lat','Lng','HeightM','HeightMOverSea','Organization','AccuracyM','ObstacleCategory','Source'];
+
+    for (const item of formeeData) {
+        console.log(item);
+        if (item[1] === '' && FieldsToBeVerified.includes(item[0])) return false;
+    }
+    return true;
 }

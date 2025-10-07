@@ -11,48 +11,48 @@
     <!-- Prefilled fields from TempMarker -->
     <div class="form-group">
         <label>Type</label>
-        <input type="text" name="Type" class="form-control" value="@Model.Type" />
+        <input required type="text" name="Type" class="form-control" value="@Model.Type" />
     </div>
 
     <div class="form-group">
         <label>Description</label>
-        <textarea name="Description" class="form-control">@Model.Description</textarea>
+        <textarea required name="Description" class="form-control">@Model.Description</textarea>
     </div>
 
     <div class="form-group">
         <label>Latitude</label>
-        <input type="number" step="0.00000000001" name="Lat" class="form-control" value="@Model.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+        <input required type="number" step="0.00000000001" name="Lat" class="form-control" value="@Model.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
     </div>
 
     <div class="form-group">
         <label>Longitude</label>
-        <input type="number" step="0.00000000001" name="Lng" class="form-control" value="@Model.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+        <input required type="number" step="0.00000000001" name="Lng" class="form-control" value="@Model.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
     </div>
 
     <div class="form-group">
         <label>Height (m)</label>
-        <input type="number" step="0.01" name="HeightM" class="form-control" />
+        <input required type="number" step="0.01" name="HeightM" class="form-control" />
     </div>
 
     <div class="form-group">
         <label>Height Over Sea (m)</label>
-        <input type="number" step="0.01" name="HeightMOverSea" class="form-control" />
+        <input required type="number" step="0.01" name="HeightMOverSea" class="form-control" />
     </div>
 
     <div class="form-group">
         <label>Organization</label>
-        <input type="text" name="Organization" class="form-control" />
+        <input required type="text" name="Organization" class="form-control" />
     </div>
 
     <div class="form-group">
         <label>Accuracy (m)</label>
-        <input type="number" step="0.01" name="AccuracyM" class="form-control" />
+        <input required type="number" step="0.01" name="AccuracyM" class="form-control" />
     </div>
 
     <!-- Manually filled fields -->
     <div class="form-group">
         <label>Obstacle Category</label>
-        <select name="ObstacleCategory" class="form-control">
+        <select required name="ObstacleCategory" class="form-control">
             <option value="">--Select--</option>
             <option value="Tower">Tower</option>
             <option value="Crane">Crane</option>
@@ -81,7 +81,7 @@
 
     <div class="form-group">
         <label>Source</label>
-        <select name="Source" class="form-control">
+        <select required name="Source" class="form-control">
             <option value="">--Select--</option>
             <option value="Pilot Report">Pilot Report</option>
             <option value="Drone Survey">Drone Survey</option>
