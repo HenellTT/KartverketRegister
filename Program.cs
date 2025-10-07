@@ -27,13 +27,13 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-SequelInit seq;
+
 bool ConnectedToDb = false;
 while (!ConnectedToDb)
 {
     try
     {
-        seq = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
+        SequelInit seq = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
         seq.conn.Open();
         seq.InitDb();
         seq.conn.Close();
