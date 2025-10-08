@@ -20,7 +20,6 @@ namespace KartverketRegister.Controllers
         [HttpPost]
         public IActionResult SubmitMarker(Marker marker) // Tar imot en markør via POST-forespørsel
         {
-
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName); // Oppretter en databaseforbindelse
             try //try-catch for å håndtere feil
             {
@@ -39,12 +38,13 @@ namespace KartverketRegister.Controllers
                     lighting: marker.Lighting,
                     source: marker.Source
                 );
-                return Ok("Good good, registered");
+                
+                return Ok(new GeneralResponse(true, "The marker has been registered!"));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("something went wrong :(");
+                return Ok(new GeneralResponse(false, "Something went wrong :("));
             }
             
         }
