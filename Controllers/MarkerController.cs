@@ -44,7 +44,7 @@ namespace KartverketRegister.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return Ok(new GeneralResponse(false, "Something went wrong :("));
+                return Ok(new GeneralResponse(false, "The marker could not be registered!"));
             }
             
         }
