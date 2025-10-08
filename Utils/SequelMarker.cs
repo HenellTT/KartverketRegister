@@ -9,15 +9,12 @@ using static System.Net.Mime.MediaTypeNames;
 namespace KartverketRegister.Utils
 {
 	// SQL queries for alt som har med Marker/obstacler å gjøre. 
-    public class SequelMarker
+    public class SequelMarker : SequelBase
     {
         public MySqlConnection conn;
 
-        public SequelMarker(string dbIP, string dbname)
-        {
-            string dbConnString = $"Server={dbIP};Port={Constants.DataBasePort};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
-            conn = new MySqlConnection(dbConnString);
-        }
+        public SequelMarker(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
+        { }
         public void SaveMarker(
             string type,
             string description,
