@@ -15,17 +15,17 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        return View(); //returnerer viewet Index.cshtml (hjemmesiden)
     }
 
     public IActionResult Privacy()
     {
-        return View();
+        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    public IActionResult Error() //Feilhåndtering 
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }); 
     }
 }

@@ -1,3 +1,5 @@
+using KartverketRegister.Utils;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,5 +27,9 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+SequelInit seq = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName); // Funny but real, men programmet kræsjer hvis den ikke får kobla opp mot database. Så teknisk sett er det et test i seg selv
+seq.conn.Open();
+seq.InitDb();
+seq.conn.Close();
 
 app.Run();

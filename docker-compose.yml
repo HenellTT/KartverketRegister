@@ -1,4 +1,4 @@
-version: '3.9'
+version: '6.9'
 services:
   mariadb:
     image: mariadb:11.3
@@ -8,22 +8,22 @@ services:
       MYSQL_ROOT_PASSWORD: mysecretpassword
       MYSQL_DATABASE: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: mysecretpassword
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./initdb:/docker-entrypoint-initdb.d
-
+      
   webapp:
     build: .
-    container_name: dotnetmvc
+    container_name: kartverketregister
     ports:
       - "8080:8080"
     depends_on:
       - mariadb
     environment:
-      ConnectionStrings__DefaultConnection: "Server=mariadb;Port=3306;Database=testink;User=root;Password=mysecretpassword;"
+      ConnectionStrings__DefaultConnection: "Server=mariadb;Database=testink;User=root;Password=mysecretpassword;"
+      DATABASE_IP: mariadb
+      DATABASE_PORT: 3306
 
 volumes:
   db_data:
