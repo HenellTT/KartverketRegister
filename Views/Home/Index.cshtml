@@ -10,7 +10,7 @@
         <nav id="sideBarNav">
             <button onclick="showSideBarSec('TempMarkerForm'); SetActiveButton(this)">Mark it!</button>
             <button onclick="showSideBarSec('SomeOtherForm'); UpdateMyMarkerList(); SetActiveButton(this)">Markers</button>
-            <button onclick="showSideBarSec('RegisterObstacleFromDraft'); SetActiveButton(this)">Submitted</button>
+            <button onclick="showSideBarSec('RegisterObstacleFromDraft'); UpdateMySubmissionList(); SetActiveButton(this)">Submitted</button>
         </nav>
         <div class="sideBarContainer">
             <div id="TempMarkerForm">
@@ -40,7 +40,7 @@
                 <div id="mymrk"></div>
             </div>
             <div id="RegisterObstacleFromDraft" hidden>
-                <p>Register drafted obstacle</p>
+                <div id="mymrksub"></div>
             </div>
         </div>
         
