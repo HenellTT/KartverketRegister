@@ -129,6 +129,20 @@ async function FetchaMahMarkah() {
         return null;
     }
 }
+async function FetchaMahSubs() {
+    try {
+        const response = await fetch('/Marker/FetchMyMarkers');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}
+
 function MyMarkerListElement(Marker) {
     const lat = Marker.lat;
     const lng = Marker.lng;
@@ -141,9 +155,57 @@ function MyMarkerListElement(Marker) {
                                   <button onclick='mf.setMarkerPosition(${lat},${lng}, mf.icons.Get["pin_crook"]); shlongPositionIntoForm(${lat},${lng}); mf.moveViewTo(${lat},${lng})'>Show on Map</button>
                                   </div>`;
 }
+function SubmissionElement(marker) {
+    const {
+        type,
+        description,
+        lat,
+        lng,
+        heightM,
+        heightMOverSea,
+        organization,
+        accuracyM,
+        obstacleCategory,
+        isTemporary,
+        expectedRemovalDate,
+        lighting,
+        source,
+        userId,
+        reviewedBy,
+        reviewComment
+    } = marker;
 
+    return `
+        <div class='tmk-cont'>
+            <p><b>Type:</b> ${type || "N/A"}</p>
+            <p><b>Description:</b> ${description || "N/A"}</p>
+            <p><b>Organization:</b> ${organization || "N/A"}</p>
+            <p><b>Height (m):</b> ${heightM ?? "N/A"}</p>
+            <p><b>Height over sea (m):</b> ${heightMOverSea ?? "N/A"}</p>
+            <p><b>Accuracy (m):</b> ${accuracyM ?? "N/A"}</p>
+            <p><b>Obstacle category:</b> ${obstacleCategory || "N/A"}</p>
+            <p><b>Temporary:</b> ${isTemporary ? "Yes" : "No"}</p>
+            <p><b>Expected removal date:</b> ${expectedRemovalDate || "N/A"}</p>
+            <p><b>Lighting:</b> ${lighting || "N/A"}</p>
+            <p><b>Source:</b> ${source || "N/A"}</p>
+            <p><b>Latitude:</b> ${lat}</p>
+            <p><b>Longitude:</b> ${lng}</p>
+            <p><b>User ID:</b> ${userId ?? "N/A"}</p>
+            <p><b>Reviewed by:</b> ${reviewedBy ?? "N/A"}</p>
+            <p><b>Review comment:</b> ${reviewComment || "N/A"}</p>
+
+            <div class="tmk-actions">
+                
+                <button onclick='mf.setMarkerPosition(${lat}, ${lng}, mf.icons.Get["pin_crook"]);
+                                  mf.moveViewTo(${lat}, ${lng});'>
+                    Show on Map
+                </button>
+            </div>
+        </div>`;
+}
 
 const mrkList = document.getElementById('mymrk');
+const mrkListSub = document.getElementById('mymrksub');
 function DeleteMarkerReq(markerId) {
     fetch(`/TempMarker/DeleteMarker?markerId=${markerId}`).then((resp) => { UpdateMyMarkerList() });
 }
@@ -152,6 +214,11 @@ async function UpdateMyMarkerList() {
     const TempMarkers = await FetchaMahMarkah();
     mrkList.innerHTML = "";
     TempMarkers.forEach((Marker) => { mrkList.innerHTML += MyMarkerListElement(Marker); });
+}
+async function UpdateMySubmissionList() {
+    const Submissions = await FetchaMahSubs();
+    mrkListSub.innerHTML = "";
+    Submissions.forEach((Marker) => { mrkListSub.innerHTML += SubmissionElement(Marker); });
 }
 
 const sideBarNavButtons = Array.from(document.getElementById('sideBarNav').children);
