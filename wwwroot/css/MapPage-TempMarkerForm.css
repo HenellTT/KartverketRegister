@@ -68,6 +68,20 @@
     border: 1px solid #ccc;
     border-radius: 10px;
 }
+#mymrksub {
+    flex: 1; /* take all remaining vertical space */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px; /* optional: horizontal limit */
+    margin: 20px auto; /* center horizontally */
+    font-family: Arial, sans-serif;
+    overflow-y: auto; /* scroll if content overflows */
+    max-height: 70vh;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
 
 
 .tmk-cont {

@@ -11,7 +11,6 @@ namespace KartverketRegister.Utils
 	// SQL queries for alt som har med Marker/obstacler å gjøre. 
     public class SequelMarker : SequelBase
     {
-        public MySqlConnection conn;
 
         public SequelMarker(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
         { }

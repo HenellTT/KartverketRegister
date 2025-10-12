@@ -23,8 +23,18 @@ public class HomeController : Controller
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
 
+    public IActionResult Registry()
+    {
+        return View(); //returnerer viewet Registry.cshtml (registersiden)
+    }
+
+    public IActionResult User()
+    {
+        return View(); //returnerer viewet User.cshtml (brukersiden)
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error() //Feilhåndtering 
+    public IActionResult Error() //Feilhï¿½ndtering 
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }); 
     }
