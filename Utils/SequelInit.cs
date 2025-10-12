@@ -88,7 +88,7 @@ namespace KartverketRegister.Utils
                     cmd.ExecuteNonQuery();
                     Console.WriteLine("SequelInit: Created Users Table");
                 }
-
+                // Johnny Test er bare en Test dummy bruker som er laget for utvikling!!
                 string JohnnyTest = "INSERT INTO Users (Name,LastName) VALUES ('Johnny', 'Test')";
                 using (var cmd = new MySqlCommand(JohnnyTest, conn))
                 {

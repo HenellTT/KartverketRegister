@@ -101,7 +101,7 @@ namespace KartverketRegister.Utils
                         mrk.IsTemporary = reader["IsTemporary"] != DBNull.Value && Convert.ToBoolean(reader["IsTemporary"]);
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
-
+                        mrk.State = reader["State"] as string;
 
                         mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;
                         mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;

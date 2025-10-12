@@ -49,5 +49,7 @@
 
         //kommentar fra review fra admin
         public string ReviewComment { get; set; }
+
+        public string State { get; set; }
     }
 }
