@@ -51,5 +51,6 @@
         public string ReviewComment { get; set; }
 
         public string State { get; set; }
+        public int? MarkerId { get; set; }
     }
 }
