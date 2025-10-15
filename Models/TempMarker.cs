@@ -20,5 +20,7 @@
 
         //type hinder
         public string Type { get; set; }
+
+        public decimal? HeightM { get; set; }
     }
 }
