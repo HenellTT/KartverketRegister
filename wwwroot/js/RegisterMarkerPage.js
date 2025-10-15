@@ -34,6 +34,9 @@ form.addEventListener("submit", async (event) => {
 function SuccessfulReq(msg) {
     submitButton.disabled = true;
     outputField.innerHTML += " - Redirecting to back to home . . .";
+    let params = new URLSearchParams(document.location.search)
+    let markerIdToDelete = params.get("markerId");
+    fetch(`/TempMarker/DeleteMarker?markerId=${markerIdToDelete}`);
 
     setTimeout(() => {
         location.href = '/';
