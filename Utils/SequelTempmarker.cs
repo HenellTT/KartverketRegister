@@ -29,8 +29,7 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@lat", lat);
                 cmd.Parameters.AddWithValue("@lng", lng);
                 cmd.Parameters.AddWithValue("@UserId", 1);
-                Console.WriteLine(lat);
-                Console.WriteLine(lng);
+                
                 cmd.ExecuteNonQuery(); // <-- this runs the INSERT
             }
             conn.Close();
