@@ -32,7 +32,8 @@ namespace KartverketRegister.Controllers
                     SequelAdmin sequel = new SequelAdmin(Constants.DataBaseIp, Constants.DataBaseName);
                     MarkerList = sequel.FetchAllMarkers(markerStatus);
 
-                } catch
+                }
+                catch
                 {
                     return BadRequest(new
                     {
@@ -58,6 +59,44 @@ namespace KartverketRegister.Controllers
                 });
             }
         }
-
+        public IActionResult DeleteMarker(int MarkerId)
+        {
+            SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            try
+            {
+                sequel.DeleteMarkerById(MarkerId);
+                return Ok(new GeneralResponse(true,$"Marker ${MarkerId} removed successfully"));
+            }
+            catch
+            {
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT removed successfully"));
+            }
+        }
+        public IActionResult Approve(int MarkerId, string ReviewComment)
+        {
+            SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            try
+            {
+                sequel.ApproveMarker(MarkerId,ReviewComment);
+                return Ok(new GeneralResponse(true, $"Marker ${MarkerId} approved successfully"));
+            }
+            catch
+            {
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT approved successfully"));
+            }
+        }
+        public IActionResult Reject(int MarkerId, string ReviewComment)
+        {
+            SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            try
+            {
+                sequel.RejectMarker(MarkerId, ReviewComment);
+                return Ok(new GeneralResponse(true, $"Marker ${MarkerId} approved successfully"));
+            }
+            catch
+            {
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT approved successfully"));
+            }
+        }
     }
 }

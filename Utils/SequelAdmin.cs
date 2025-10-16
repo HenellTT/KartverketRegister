@@ -68,20 +68,6 @@ namespace KartverketRegister.Utils
             conn.Close();
             return Markers;
         }
-        public void DeleteMarkerById(int markerId)
-        {
-            conn.Open();
-            string sql = "DELETE FROM RegisteredMarkers WHERE MarkerId = @MarkerId";
-
-            using (var cmd = new MySqlCommand(sql, conn))
-            {
-                cmd.Parameters.AddWithValue("@MarkerId", markerId);
-                cmd.ExecuteNonQuery();
-
-            }
-
-            conn.Close();
-
-        }
+        
     }
 }

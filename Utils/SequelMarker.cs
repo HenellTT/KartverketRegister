@@ -176,5 +176,54 @@ namespace KartverketRegister.Utils
             conn.Close();
 
         }
+        public void SetMarkerStatusSeen(int markerId)
+        {
+            conn.Open();
+            string sql = "UPDATE RegisteredMarkers SET Status = 'Seen' WHERE MarkerId = @MarkerId";
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.ExecuteNonQuery();
+
+            }
+
+            conn.Close();
+
+        }
+        public void ApproveMarker(int markerId, string ReviewComment)
+        {
+            conn.Open();
+            string sql = "UPDATE RegisteredMarkers SET Status = 'Accepted', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.ExecuteNonQuery();
+
+            }
+
+            conn.Close();
+
+        }
+        public void RejectMarker(int markerId, string ReviewComment)
+        {
+            conn.Open();
+            string sql = "UPDATE RegisteredMarkers SET Status = 'Rejected', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.ExecuteNonQuery();
+
+            }
+
+            conn.Close();
+
+        }
+
+
     }
 }
