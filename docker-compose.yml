@@ -24,6 +24,8 @@ services:
       ConnectionStrings__DefaultConnection: "Server=mariadb;Database=testink;User=root;Password=mysecretpassword;"
       DATABASE_IP: mariadb
       DATABASE_PORT: 3306
+      DATABASE_PASSWORD: mysecretpassword
+
 
 volumes:
   db_data:
