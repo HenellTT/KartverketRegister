@@ -71,6 +71,8 @@ namespace KartverketRegister.Utils
 
                 cmd.ExecuteNonQuery();
             }
+            Console.WriteLine($"laat: {lat}");
+            Console.WriteLine($"lnng: {lng}");
             conn.Close();
         }
         public List<Marker> FetchMyMarkers(int UserId)

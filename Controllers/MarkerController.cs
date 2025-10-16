@@ -18,11 +18,12 @@ namespace KartverketRegister.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitMarker(Marker marker) // Tar imot en markør via POST-forespørsel
+        public IActionResult SubmitMarker([FromBody] Marker marker) // Tar imot en markør via POST-forespørsel
         {
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName); // Oppretter en databaseforbindelse
             try //try-catch for å håndtere feil
             {
+                
                 seq.SaveMarker(
                     marker.Type,
                     marker.Description,

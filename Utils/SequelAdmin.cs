@@ -1,11 +1,13 @@
-using MySql.Data.MySqlClient;
 using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
+using System.Reflection.Metadata;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
-using KartverketRegister.Models.Other;
 
 namespace KartverketRegister.Utils
 {
@@ -41,8 +43,8 @@ namespace KartverketRegister.Utils
 
                         mrk.Type = reader["Type"] as string;
                         mrk.Description = reader["Description"] as string;
-                        mrk.Lat = reader.GetDouble("Lat");
-                        mrk.Lng = reader.GetDouble("Lng");
+                        mrk.Lat = Convert.ToDouble(reader["Lat"]);
+                        mrk.Lng = Convert.ToDouble(reader["Lng"]);
 
                         mrk.HeightM = reader["HeightM"] != DBNull.Value ? reader.GetDecimal("HeightM") : (decimal?)null;
                         mrk.HeightMOverSea = reader["HeightMOverSea"] != DBNull.Value ? reader.GetDecimal("HeightMOverSea") : (decimal?)null;
@@ -64,6 +66,8 @@ namespace KartverketRegister.Utils
                     }
                 }
             }
+            Console.WriteLine($"Adm mrk lat1: {Markers[0].Lat}");
+            Console.WriteLine($"Adm mrk lng: {Markers[0].Lng}");
 
             conn.Close();
             return Markers;
