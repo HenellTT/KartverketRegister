@@ -5,35 +5,47 @@ const submitButton = document.querySelector('button[type="submit"]');
 
 
 form.addEventListener("submit", async (event) => {
-    event.preventDefault(); // Stop the default form submission
-    const formData = new FormData(form);
+    event.preventDefault(); // Stop normal form submission
+    const data = Object.fromEntries(new FormData(form).entries());
 
-    if (!ValidateForm(formData)) {
-        outputField.innerHTML += " You forgot to fill out some fields!";
+    // Convert number fields properly
+    const numericFields = ["Lat", "Lng", "HeightM", "HeightMOverSea", "AccuracyM"];
+    numericFields.forEach(f => data[f] = data[f] ? parseFloat(data[f]) : null);
 
+    // Convert checkbox
+    data.IsTemporary = form.querySelector("[name='IsTemporary']").checked;
+
+    // Optional date (may be empty)
+    if (data.ExpectedRemovalDate === "") data.ExpectedRemovalDate = null;
+
+    const response = await fetch(form.action, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const reply = await response.json();
+    const outputField = document.getElementById("returnMsg");
+    outputField.innerHTML = reply.message;
+
+    if (reply.success) {
+        outputField.style.color = "green";
+        SuccessfulReq();
     } else {
-        const response = await fetch(form.action, {
-            method: form.method.toUpperCase(), // "POST"
-            body: formData
-        }).then(response => {
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return response.json();
-        })
-            .then(reply => {
-                outputField.innerHTML = reply.message;
-                if (reply.success) {
-                    SuccessfulReq();
-                } else {
-                    FailedReq();
-                }
-
-            })
+        outputField.style.color = "red";
+        FailedReq();
     }
 });
+
 
 function SuccessfulReq(msg) {
     submitButton.disabled = true;
     outputField.innerHTML += " - Redirecting to back to home . . .";
+    let params = new URLSearchParams(document.location.search)
+    let markerIdToDelete = params.get("markerId");
+    fetch(`/TempMarker/DeleteMarker?markerId=${markerIdToDelete}`);
 
     setTimeout(() => {
         location.href = '/';

@@ -53,14 +53,6 @@ The app can be run locallly or inside Docker.
 For å kjøre systemet uten Docker må du ha .NET 8 SDK installert.
 Bruk deretter følgende kommandoer
 	
-## Run Locally 
-	git clone https://github.com/HenellTT/KartverketRegister.git
-	cd KartverketRegister
-	dotnet restore
-	dotnet build
-	dotnet run
-Etter at applikasjonen er startet, vil den være tilgjengelig på http://localhost:5000
-
 # Kjør med Docker
 
 Prosjektet inneholder både Dockerfile og docker-compose.yml.
@@ -71,10 +63,10 @@ Dette vil starte både applikasjons-containeren og MariaDB-databasen som er defi
 
 # Requirements
 
-- .NET 8 SDK
-- Docker og Docker Compose
+- .NET 9 SDK
+- Docker
 - MariaDB (startes automatisk i Docker, eller via start_mariadb.bat)
-- Tilgang til Kartverket API for kartdata
+- Tilgang til internet for kartet
 
 # Systemarkitektur
 

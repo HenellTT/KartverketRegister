@@ -71,6 +71,8 @@ namespace KartverketRegister.Utils
 
                 cmd.ExecuteNonQuery();
             }
+            Console.WriteLine($"laat: {lat}");
+            Console.WriteLine($"lnng: {lng}");
             conn.Close();
         }
         public List<Marker> FetchMyMarkers(int UserId)
@@ -101,7 +103,9 @@ namespace KartverketRegister.Utils
                         mrk.IsTemporary = reader["IsTemporary"] != DBNull.Value && Convert.ToBoolean(reader["IsTemporary"]);
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
+                        mrk.State = reader["State"] as string;
 
+                        mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 
                         mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;
                         mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
@@ -174,5 +178,54 @@ namespace KartverketRegister.Utils
             conn.Close();
 
         }
+        public void SetMarkerStatusSeen(int markerId)
+        {
+            conn.Open();
+            string sql = "UPDATE RegisteredMarkers SET Status = 'Seen' WHERE MarkerId = @MarkerId";
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.ExecuteNonQuery();
+
+            }
+
+            conn.Close();
+
+        }
+        public void ApproveMarker(int markerId, string ReviewComment)
+        {
+            conn.Open();
+            string sql = "UPDATE RegisteredMarkers SET Status = 'Accepted', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.ExecuteNonQuery();
+
+            }
+
+            conn.Close();
+
+        }
+        public void RejectMarker(int markerId, string ReviewComment)
+        {
+            conn.Open();
+            string sql = "UPDATE RegisteredMarkers SET Status = 'Rejected', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.ExecuteNonQuery();
+
+            }
+
+            conn.Close();
+
+        }
+
+
     }
 }

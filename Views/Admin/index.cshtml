@@ -1,0 +1,32 @@
+﻿@page
+@model KartverketRegister.Views.Admin.indexModel
+@{
+}
+
+<h1>Main admin panel page</h1>
+
+<div><h2>Markers for approval</h2>
+	<div id="mymrk">
+		<div class="tmk-cont">
+			<h3>Flying ass potato</h3>
+			<p><b>Description:</b> It was really fucking huge idk waht to do with mah life</p>
+			<p>By: <u>Johnny Test</u></p>
+			<button>Details</button>
+			<button>Reject</button>
+			<button>Approve</button>
+		</div>
+	</div>
+</div>
+
+<link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
+
+<script src="~/js/admin.js"></script>
+
+<script>
+	window.onload = () => {
+		UpdateMarkerList("Everything")
+	}
+
+</script>
+

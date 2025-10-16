@@ -1,21 +1,8 @@
 ﻿namespace KartverketRegister.Models
 {
-    public class Marker
+    public class Marker : TempMarker
     {
-        //type markør
-        public string Type { get; set; }
         
-        //Beskrivelse av markøren
-        public string Description { get; set; }
-        
-        //Breddegrad
-        public double Lat { get; set; }
-        
-        //Lengdegrad
-        public double Lng { get; set; }
-        
-        //høyde i meter (kan være null)
-        public decimal? HeightM { get; set; }
         
         //Høydeover havet (kan være null)
         public decimal? HeightMOverSea { get; set; }
@@ -49,5 +36,8 @@
 
         //kommentar fra review fra admin
         public string ReviewComment { get; set; }
+
+        public string State { get; set; }
+        public int? MarkerId { get; set; }
     }
 }
