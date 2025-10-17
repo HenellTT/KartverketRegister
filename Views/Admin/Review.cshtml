@@ -4,7 +4,7 @@
 
 <h2>Review Marker</h2>
 
-<!-- Her vises marker-detaljer -->
+
 <div id="marker-info" style="margin-bottom: 20px;">
     <p><b>Name:</b> <span id="marker-name"></span></p>
     <p><b>Description:</b> <span id="marker-description"></span></p>
@@ -12,23 +12,22 @@
     <p><b>Longitude:</b> <span id="marker-lng"></span></p>
 </div>
 
-<!-- Felt for kommentar -->
 <div style="margin-bottom: 20px;">
     <label for="review-comment"><b>Review comment:</b></label><br />
     <textarea id="review-comment" rows="4" cols="50" placeholder="Write your review here..."></textarea>
 </div>
 
-<!-- Knapper -->
+
 <button id="accept-btn">Accept</button>
 <button id="reject-btn">Reject</button>
 
-<!-- JavaScript -->
+
 <script>
-    // 1️⃣ Hent MarkerId fra URL
+
     const urlParams = new URLSearchParams(window.location.search);
     const markerId = urlParams.get("MarkerId");
 
-    // 2️⃣ Hent marker-data fra server
+  
     async function fetchMarker(markerId) {
         const response = await fetch(`/Admin/GetMarkerInfo?MarkerId=${markerId}`);
         if (!response.ok) {
@@ -38,7 +37,7 @@
 
         const data = await response.json();
 
-        // 3️⃣ Fyll inn info på siden
+        
         document.getElementById("marker-name").textContent = data.name;
         document.getElementById("marker-description").textContent = data.description;
         document.getElementById("marker-lat").textContent = data.lat;
@@ -47,11 +46,11 @@
 
     fetchMarker(markerId);
 
-    // 4️⃣ Knappefunksjoner
+    
     document.getElementById("accept-btn").addEventListener("click", () => sendReview("accepted"));
     document.getElementById("reject-btn").addEventListener("click", () => sendReview("rejected"));
 
-    // 5️⃣ Send kommentar og status tilbake til server
+   
     async function sendReview(status) {
         const comment = document.getElementById("review-comment").value;
 
@@ -69,7 +68,7 @@
 
         if (response.ok) {
             alert(`Marker ${status}!`);
-            window.location.href = "/Admin/Index"; // send tilbake til hovedsiden
+            window.location.href = "/Admin/Index"; 
         } else {
             alert("Noe gikk galt ved innsending.");
         }
