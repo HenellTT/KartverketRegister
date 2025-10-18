@@ -18,6 +18,8 @@
         // bruker som registrerer hinder
         public int? UserId { get; set; }
 
+        public string UserName { get; set; }
+
         //type hinder
         public string Type { get; set; }
 

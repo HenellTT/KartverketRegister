@@ -1,76 +1,150 @@
-﻿@{
+﻿@using System.Globalization
+@model KartverketRegister.Models.Marker
+@{
     ViewData["Title"] = "Review Marker";
 }
+<head>
+    <link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin-Review.css" asp-append-version="true" />
 
+</head>
 <h2>Review Marker</h2>
 
+<div class="ap">
+    <div class="information-ap">
+        <div id="marker-info" class="mb-4">
+            <p><b>Marker ID:</b> @Model.MarkerId</p>
+            <p><b>Name:</b> @(Model.UserName ?? "N/A")</p>
+            <p><b>Description:</b> @Model.Description</p>
+            <p><b>Type:</b> @Model.Type</p>
+            <p><b>Latitude:</b> @Model.Lat</p>
+            <p><b>Longitude:</b> @Model.Lng</p>
+            <p><b>Height (m):</b> @Model.HeightM</p>
+            <p><b>Height Over Sea (m):</b> @Model.HeightMOverSea</p>
+            <p><b>Organization:</b> @Model.Organization</p>
+            <p><b>Accuracy (m):</b> @Model.AccuracyM</p>
+            <p><b>Obstacle Category:</b> @Model.ObstacleCategory</p>
+            <p><b>Temporary:</b> @(Model.IsTemporary ? "Yes" : "No")</p>
+            <p><b>Expected Removal Date:</b> @(Model.ExpectedRemovalDate?.ToString("yyyy-MM-dd") ?? "N/A")</p>
+            <p><b>Lighting:</b> @Model.Lighting</p>
+            <p><b>Source:</b> @Model.Source</p>
+            <p><b>Submitted by User ID:</b> @Model.UserId</p>
+        </div>
 
-<div id="marker-info" style="margin-bottom: 20px;">
-    <p><b>Name:</b> <span id="marker-name"></span></p>
-    <p><b>Description:</b> <span id="marker-description"></span></p>
-    <p><b>Latitude:</b> <span id="marker-lat"></span></p>
-    <p><b>Longitude:</b> <span id="marker-lng"></span></p>
+
+
+        <div style="margin-bottom: 20px;">
+            <button type="button" onclick="setStatus('Approve', this)" class="ar-button">Approve</button>
+            <button type="button" onclick="setStatus('Reject', this)" class="ar-button">Reject</button>
+
+            <form id="review-form">
+                <label for="review-comment"><b>Review comment:</b></label><br>
+                <textarea name="ReviewComment" required id="review-comment" rows="4" cols="50" placeholder="Write your review here..."></textarea>
+
+                <!-- Hidden inputs -->
+                <input type="hidden" id="statusi" name="Status">
+                <input type="hidden" name="MarkerId" value="@Model.MarkerId">
+
+                <br>
+                <button type="submit">Submit Review!</button>
+            </form>
+
+            <div id="status" style="margin-top: 10px; font-weight: bold;"></div>
+        </div>
+    </div>
+    <div id="map"></div>
 </div>
 
-<div style="margin-bottom: 20px;">
-    <label for="review-comment"><b>Review comment:</b></label><br />
-    <textarea id="review-comment" rows="4" cols="50" placeholder="Write your review here..."></textarea>
-</div>
-
-
-<button id="accept-btn">Accept</button>
-<button id="reject-btn">Reject</button>
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script src="~/js/MapFunctions.js"></script>
+<script src="~/js/icons.js"></script>
 
 <script>
+    function setStatus(v, obji) {
+        const statusI = document.getElementById('statusi');
+        statusI.value = v;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const markerId = urlParams.get("MarkerId");
-
-  
-    async function fetchMarker(markerId) {
-        const response = await fetch(`/Admin/GetMarkerInfo?MarkerId=${markerId}`);
-        if (!response.ok) {
-            console.error("Kunne ikke hente marker-info.");
-            return;
-        }
-
-        const data = await response.json();
-
-        
-        document.getElementById("marker-name").textContent = data.name;
-        document.getElementById("marker-description").textContent = data.description;
-        document.getElementById("marker-lat").textContent = data.lat;
-        document.getElementById("marker-lng").textContent = data.lng;
-    }
-
-    fetchMarker(markerId);
-
-    
-    document.getElementById("accept-btn").addEventListener("click", () => sendReview("accepted"));
-    document.getElementById("reject-btn").addEventListener("click", () => sendReview("rejected"));
-
-   
-    async function sendReview(status) {
-        const comment = document.getElementById("review-comment").value;
-
-        const response = await fetch('/Admin/SubmitReview', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                markerId: markerId,
-                comment: comment,
-                status: status
-            })
+        // Remove highlight class from all buttons
+        document.querySelectorAll(".ar-button-clicked").forEach((el) => {
+            el.classList.remove("ar-button-clicked");
         });
 
-        if (response.ok) {
-            alert(`Marker ${status}!`);
-            window.location.href = "/Admin/Index"; 
-        } else {
-            alert("Noe gikk galt ved innsending.");
-        }
+        // Add highlight to clicked button
+        obji.classList.add('ar-button-clicked');
     }
+
+    // Handle form submission via AJAX
+    document.getElementById('review-form').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent page reload
+
+        const form = e.target;
+        const formData = new FormData(form);
+
+        fetch('/Admin/HandleReview', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json(); // Assuming server returns JSON: { Success, Message }
+        })
+        .then(data => {
+            const statusDiv = document.getElementById('status');
+            console.log(`Log data: ${JSON.stringify(data)}`);
+            if (data.success) {
+                statusDiv.innerText = data.message || 'Marker saved successfully! Redirecting back. . .';
+                form.reset();
+                setTimeout(() => { location.href='./../Admin'; }, 2500);
+
+                // Optional: remove button highlight
+                document.querySelectorAll(".ar-button-clicked").forEach(el => el.classList.remove("ar-button-clicked"));
+            } else {
+                statusDiv.innerText = data.message || 'Error saving marker.';
+            }
+
+            // Hide message after 3 seconds
+            setTimeout(() => { statusDiv.innerText = ''; }, 3000);
+        })
+        .catch(error => {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerText = 'Error saving marker.';
+            console.error('Error:', error);
+            setTimeout(() => { statusDiv.innerText = ''; }, 3000);
+        });
+    });
+
+
+    var map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    fetch("/icon/geticons").then(res => res.json()).then((IconList) => {
+        icons = new Icons(IconList);
+        
+        mf = new MapFunctions(map, icons);
+        const lat = @Model.Lat.ToString(CultureInfo.InvariantCulture);
+        const lng = @Model.Lng.ToString(CultureInfo.InvariantCulture);
+        let type = "@Model.ObstacleCategory";
+        type = type.toLowerCase().replaceAll(" ","");
+        console.log(type);
+        console.log(mf.icons);
+        mf.setMarkerPosition(lat,lng, mf.icons.Get[type]);
+        mf.setViewTo(lat,lng,zoom=17);
+        
+        
+    })
 </script>
+
+
+
+
+
+
+
