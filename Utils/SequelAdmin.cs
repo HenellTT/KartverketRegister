@@ -25,10 +25,10 @@ namespace KartverketRegister.Utils
             List<Marker> Markers = new List<Marker>();
             if (markerStatus == "Everything")
             {
-                sql = "SELECT * FROM RegisteredMarkers WHERE State != @markerStatus";
+                sql = "SELECT rm.*, u.Name FROM RegisteredMarkers rm LEFT JOIN Users u ON rm.UserId = u.UserId WHERE State != @markerStatus";
             } else
             {
-                sql = "SELECT * FROM RegisteredMarkers WHERE State = @markerStatus";
+                sql = "SELECT rm.*, u.Name FROM RegisteredMarkers rm LEFT JOIN Users u ON rm.UserId = u.UserId WHERE State = @markerStatus";
             }
 
             using (var cmd = new MySqlCommand(sql, conn))
@@ -55,7 +55,7 @@ namespace KartverketRegister.Utils
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
-
+                        mrk.UserName = reader["Name"] as string;
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 
                         mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;

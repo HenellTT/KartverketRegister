@@ -1,0 +1,25 @@
+﻿.ap {
+    display: flex; /* Enable flexbox */
+    gap: 20px; /* Optional: space between children */
+    justify-content: flex-start; /* Align children to the start horizontally */
+    align-items: flex-start; /* Align children to the top vertically */
+    flex-wrap: nowrap; /* Prevent wrapping to next line */
+}
+
+/* Flex children - optional styling */
+.information-ap {
+    flex: 1; /* Grow to take available space */
+    background-color: #f0f0f0; /* Example styling */
+    padding: 10px;
+}
+
+#map {
+    flex: 1; /* Grow to take available space */
+    background-color: #d0d0d0; /* Example styling */
+    padding: 10px;
+    height:80vh;
+}
+#marker-info p {
+    padding:0;
+    margin:0;
+}

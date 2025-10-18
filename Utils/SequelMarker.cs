@@ -119,13 +119,20 @@ namespace KartverketRegister.Utils
             conn.Close();
             return Markers;
         }
-        public TempMarker FetchMarkerById(int markerId)
+        public Marker FetchMarkerById(int markerId)
         {
-            TempMarker mrk = null; // Will hold the result
+            Marker mrk = new Marker() ; // Will hold the result
 
             conn.Open();
-            string sql = "SELECT MarkerId, Lat, Lng, Description, UserId, Type FROM RegisteredMarkers WHERE MarkerId = @markerId LIMIT 1";
-
+            string sql = @"
+                SELECT 
+                    rm.*,
+                    u.Name
+                FROM RegisteredMarkers rm
+                LEFT JOIN Users u ON rm.UserId = u.UserId
+                WHERE rm.MarkerId = @markerId
+                LIMIT 1;
+            ";
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@markerId", markerId);
@@ -134,15 +141,29 @@ namespace KartverketRegister.Utils
                 {
                     if (reader.Read()) // Only read first row
                     {
-                        mrk = new TempMarker
-                        {
-                            MarkerId = reader.GetInt32("MarkerId"),
-                            UserId = reader.IsDBNull("UserId") ? (int?)null : reader.GetInt32("UserId"),
-                            Lat = reader.GetDouble("Lat"),
-                            Lng = reader.GetDouble("Lng"),
-                            Type = reader.IsDBNull("Type") ? null : reader.GetString("Type"),
-                            Description = reader.IsDBNull("Description") ? null : reader.GetString("Description")
-                        };
+                        
+
+                        mrk.Type = reader["Type"] as string;
+                        mrk.Description = reader["Description"] as string;
+                        mrk.Lat = reader.GetDouble("Lat");
+                        mrk.Lng = reader.GetDouble("Lng");
+
+                        mrk.HeightM = reader["HeightM"] != DBNull.Value ? reader.GetDecimal("HeightM") : (decimal?)null;
+                        mrk.HeightMOverSea = reader["HeightMOverSea"] != DBNull.Value ? reader.GetDecimal("HeightMOverSea") : (decimal?)null;
+                        mrk.Organization = reader["Organization"] as string;
+                        mrk.AccuracyM = reader["AccuracyM"] != DBNull.Value ? reader.GetDecimal("AccuracyM") : (decimal?)null;
+                        mrk.ObstacleCategory = reader["ObstacleCategory"] as string;
+                        mrk.IsTemporary = reader["IsTemporary"] != DBNull.Value && Convert.ToBoolean(reader["IsTemporary"]);
+                        mrk.Lighting = reader["Lighting"] as string;
+                        mrk.Source = reader["Source"] as string;
+                        mrk.State = reader["State"] as string;
+
+                        mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
+
+                        mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;
+                        mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
+                        mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
+
                     }
                 }
             }
@@ -150,15 +171,9 @@ namespace KartverketRegister.Utils
             conn.Close();
 
             // Fallback if marker not found
-            if (mrk == null)
+            if (mrk.MarkerId == null)
             {
-                mrk = new TempMarker();
-                mrk.Description = "No";
-                mrk.MarkerId = -1;
-                mrk.Type = "No";
-                mrk.Lat = 0;
-                mrk.Lng = 0;
-                mrk.UserId = -1;
+                return null;
             }
 
             return mrk;
@@ -196,7 +211,7 @@ namespace KartverketRegister.Utils
         public void ApproveMarker(int markerId, string ReviewComment)
         {
             conn.Open();
-            string sql = "UPDATE RegisteredMarkers SET Status = 'Accepted', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+            string sql = "UPDATE RegisteredMarkers SET State = 'Accepted', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
@@ -212,7 +227,7 @@ namespace KartverketRegister.Utils
         public void RejectMarker(int markerId, string ReviewComment)
         {
             conn.Open();
-            string sql = "UPDATE RegisteredMarkers SET Status = 'Rejected', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+            string sql = "UPDATE RegisteredMarkers SET State = 'Rejected', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {

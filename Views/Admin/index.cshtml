@@ -12,6 +12,12 @@
         <button>Show Map</button>
         <button>Sort by Date</button>
         <button>Sort by User</button>
+        <select id="stateToSee" oninput="UpdateMarkerList(this.value)">
+            <option value="Everything">Everything</option>
+            <option value="Unseen">Pending</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Accepted">Accepted</option>
+        </select>
     </div>
 
     <div id="mymrk">
