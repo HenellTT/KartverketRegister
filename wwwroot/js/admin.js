@@ -24,7 +24,7 @@ async function UpdateMarkerList(status) {
 
 function CreateMarkerElement(marker) {
     return `
-    <div class="tmk-cont trw-${marker.state}" style="padding:10px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <div class="tmk-cont trw-${marker.state}" id='markerBox-${marker.markerId}' style="padding:10px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
         <h3>${marker.type}</h3>
         <div class="marker-info" style="display:flex; flex-wrap:wrap; gap:10px;">
             <p><b>Description:</b> ${marker.description}</p>
@@ -69,4 +69,89 @@ function postRedirect(url, params = { }) {
 
     document.body.appendChild(form);
     form.submit();
+}
+function SmoothScroll(topPx) {
+    window.scrollTo({
+        top: -2000000000,
+        left: 0,
+        behavior: 'smooth'
+    });
+    window.scrollTo({
+        top: topPx,
+        left: 0,
+        behavior: 'smooth' 
+    });
+}
+function scrollToMarker(markerId) {
+    const topsset = document.getElementById(`markerBox-${markerId}`).offsetTop;
+    SmoothScroll(topsset);
+}
+
+class OverComplicatedAverage {
+    constructor() {
+        this.numbers = [];
+    }
+    average() {
+        let sum = 0;
+        this.numbers.forEach(n => sum += n)
+        return sum / this.numbers.length;
+    }
+    addNumber(n) {
+        this.numbers.push(n);
+    }
+}
+
+function ResizeIcons(size, ICONS) {
+    const keys = Object.keys(ICONS.icons);
+    keys.forEach((key) => {
+        iconOptions = ICONS.icons[key].options;
+        iconOptions['iconAnchor'] = [size / 2, size];
+        iconOptions['iconSize'] = [size, size];
+        iconOptions['popupAnchor'] = [0, -size];
+
+    })
+}
+
+async function UpdateMapMarkers(map, L, type = 'Everything') {
+    const markers = await FetchMarkers(type);
+    if (markers.length == 0) {
+        return "brr";
+    }
+    map.markers = map.markers || [];
+
+    // kill old markers
+    map.markers.forEach(m => map.removeLayer(m));
+    map.markers = [];
+
+    let ocaLat = new OverComplicatedAverage();
+    let ocaLng = new OverComplicatedAverage();
+
+    // Add new markers
+    markers.forEach((markerData) => {
+        const iconName = markerData.obstacleCategory.toLowerCase().replaceAll(" ", "");
+        const icon = map.ICONS.Get[iconName]; // fixed: use map.ICONS, not this.ICONS
+
+        const mrk = L.marker([markerData.lat, markerData.lng], {
+            draggable: false,
+            icon: icon
+        }).bindPopup(`<div onclick='scrollToMarker(${markerData.markerId})'>${markerData.type}<br>${markerData.description}<br>
+        <button onclick="postRedirect('/Admin/Review', { markerId: ${markerData.markerId} })" style="margin-top:10px;">Review</button>
+        </div>`).on('click', () => {
+            scrollToMarker(markerData.markerId);
+        });
+
+        mrk.addTo(map);
+        map.markers.push(mrk);
+
+        ocaLat.addNumber(markerData.lat)
+        ocaLng.addNumber(markerData.lng)
+
+    });
+    
+    const AvgLat = ocaLat.average();
+    const AvgLng = ocaLng.average();
+    //map.setView([AvgLat, AvgLng], 10);
+
+    const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]));
+    map.fitBounds(bounds, { padding: [50, 50] });
 }
