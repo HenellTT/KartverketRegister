@@ -108,6 +108,7 @@ namespace KartverketRegister.Utils
                 Lng         DOUBLE NOT NULL,
                 Description VARCHAR(500),
                 UserId      INT NULL,
+                HeightMOverSea    DECIMAL(6,2),
                 Type        VARCHAR(100) DEFAULT NULL,
                 Date        DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE

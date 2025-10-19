@@ -14,12 +14,12 @@ namespace KartverketRegister.Utils
     {
         public SequelTempmarker(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
         { }
-        public void SaveMarker(string type, string description, double lat, double lng)
+        public void SaveMarker(string type, string description, double lat, double lng, decimal height)
         {
             conn.Open();
 
-            string sql = "INSERT INTO Markers (Type, Description, Lat, Lng, UserId) " +
-                     "VALUES (@type, @description, @lat, @lng, @UserId)";
+            string sql = "INSERT INTO Markers (Type, Description, Lat, Lng, HeightMOverSea, UserId) " +
+                     "VALUES (@type, @description, @lat, @lng, @Height, @UserId)";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
@@ -28,10 +28,13 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@description", description);
                 cmd.Parameters.AddWithValue("@lat", lat);
                 cmd.Parameters.AddWithValue("@lng", lng);
+                cmd.Parameters.AddWithValue("@Height", height);
                 cmd.Parameters.AddWithValue("@UserId", 1);
                 Console.WriteLine(lat);
                 Console.WriteLine(lng);
+               
                 cmd.ExecuteNonQuery(); // <-- this runs the INSERT
+                
             }
             conn.Close();
         }
@@ -39,7 +42,7 @@ namespace KartverketRegister.Utils
         {
             conn.Open();
             List<TempMarker> Markers = new List<TempMarker>();
-            string sql = "SELECT MarkerId,Lat,Lng,Description,UserId,Type FROM Markers WHERE UserId = @userId";
+            string sql = "SELECT MarkerId,Lat,Lng,Description,UserId,Type,HeightMOverSea FROM Markers WHERE UserId = @userId";
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@userId", UserId);
@@ -54,6 +57,7 @@ namespace KartverketRegister.Utils
                         mrk.Lng = reader.GetDouble("Lng");
                         mrk.Type = reader.GetString("Type");
                         mrk.Description = reader.GetString("Description");
+                        mrk.HeightMOverSea = reader.GetDecimal("HeightMOverSea");
 
                         Markers.Add(mrk);
                     }
@@ -68,7 +72,7 @@ namespace KartverketRegister.Utils
             TempMarker mrk = null; // Will hold the result
 
             conn.Open();
-            string sql = "SELECT MarkerId, Lat, Lng, Description, UserId, Type FROM Markers WHERE MarkerId = @markerId LIMIT 1";
+            string sql = "SELECT MarkerId, Lat, Lng, Description, UserId, HeightMOverSea, Type FROM Markers WHERE MarkerId = @markerId LIMIT 1";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
@@ -78,15 +82,15 @@ namespace KartverketRegister.Utils
                 {
                     if (reader.Read()) // Only read first row
                     {
-                        mrk = new TempMarker
-                        {
-                            MarkerId = reader.GetInt32("MarkerId"),
-                            UserId = reader.IsDBNull("UserId") ? (int?)null : reader.GetInt32("UserId"),
-                            Lat = reader.GetDouble("Lat"),
-                            Lng = reader.GetDouble("Lng"),
-                            Type = reader.IsDBNull("Type") ? null : reader.GetString("Type"),
-                            Description = reader.IsDBNull("Description") ? null : reader.GetString("Description")
-                        };
+                        mrk = new TempMarker();
+                        mrk.MarkerId = reader.GetInt32("MarkerId");
+                        mrk.UserId = reader.GetInt32("UserId");
+                        mrk.Lat = reader.GetDouble("Lat");
+                        mrk.Lng = reader.GetDouble("Lng");
+                        mrk.Type = reader.GetString("Type");
+                        mrk.Description = reader.GetString("Description");
+                        mrk.HeightMOverSea = reader.GetDecimal("HeightMOverSea");
+
                     }
                 }
             }

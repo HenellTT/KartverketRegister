@@ -5,7 +5,7 @@
         
         
         //Høydeover havet (kan være null)
-        public decimal? HeightMOverSea { get; set; }
+        public decimal? HeightM { get; set; }
         
         //Organisasjon som registrerer markøren
         public string Organization { get; set; }

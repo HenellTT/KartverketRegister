@@ -32,11 +32,11 @@ namespace KartverketRegister.Controllers
                 double lng = double.Parse(Request.Form["lng"], CultureInfo.InvariantCulture);
                 decimal height = decimal.Parse(Request.Form["height"], CultureInfo.InvariantCulture);
 
-                seq.SaveMarker(type, description, lat, lng);
+                seq.SaveMarker(type, description, lat, lng, height);
                 return Ok();
             } catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(e.InnerException);
                 return BadRequest("Something went wrong :/"); //lagres ikke data riktig, får man denne feilmeldingen
             }
             

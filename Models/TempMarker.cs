@@ -23,6 +23,6 @@
         //type hinder
         public string Type { get; set; }
 
-        public decimal? HeightM { get; set; }
+        public decimal? HeightMOverSea { get; set; }
     }
 }
