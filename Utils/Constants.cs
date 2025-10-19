@@ -7,7 +7,7 @@
 		public static int DataBasePort { get; } = int.TryParse(Environment.GetEnvironmentVariable("DATABASE_PORT"), out var port) ? port : 3306;
         public static string DataBaseRootPassword { get; } = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "mysecretpassword";
         public static string DataBaseName { get; } = "ObstacleRegister";
-        public static bool ResetDbOnStartup { get; } = false;
+        public static bool ResetDbOnStartup { get; set; } = false;
 
     }
 }
