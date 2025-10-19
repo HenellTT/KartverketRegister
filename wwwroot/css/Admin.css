@@ -191,13 +191,16 @@ h2 {
 .trw-Accepted {
     background-color:green;
 }
+    .trw-Accepted p {
+        color: darkturquoise;
+    }
 .trw-Rejected {
     background-color:orangered;
     
 }
-.trw-Rejected p {
-    color: darkturquoise;
-}
+    .trw-Rejected p {
+        color: darkturquoise;
+    }
 .trw-Unseen {
     background-color:aqua;
 }
