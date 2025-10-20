@@ -32,6 +32,10 @@ public class HomeController : Controller
     {
         return View(); //returnerer viewet User.cshtml (brukersiden)
     }
+    public IActionResult FlightMode()
+    {
+        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() //Feilh�ndtering 
