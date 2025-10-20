@@ -21,6 +21,24 @@ async function UpdateMarkerList(status) {
     markers.forEach((mrk) => { stringToAdd += CreateMarkerElement(mrk)})
     mymrk.innerHTML = stringToAdd;
 } 
+async function UpdateMarkerListTable(status) {
+    let markers = await FetchMarkers(status);
+
+    let stringToAdd = `<table><tr">
+        <td>Type</td>
+        <td><u>User</u></td>
+        <td>Height</td>
+        <td>Height(sea)</td>
+        <td>Organization</td>
+        <td>Accuracy</td>
+        <td>Category</td>
+        <td>Review Comment</td>
+        <td>Actions</td>
+    </tr>`;
+       
+    markers.forEach((mrk) => { stringToAdd += CreateMarkerRow(mrk) })
+    mymrk.innerHTML = stringToAdd + "</table>";
+} 
 
 function CreateMarkerElement(marker) {
     return `
@@ -43,10 +61,28 @@ function CreateMarkerElement(marker) {
     </div>
     `;
 }
+function CreateMarkerRow(marker) {
+    return `
+    <tr id="markerRow-${marker.markerId}" class="trw-${marker.state}">
+        <td>${marker.type}</td>
+        <td><u>${marker.userName}</u></td>
+        <td>${marker.heightM ?? 'N/A'}</td>
+        <td>${marker.heightMOverSea ?? 'N/A'}</td>
+        <td>${marker.organization ?? 'N/A'}</td>
+        <td>${marker.accuracyM ?? 'N/A'}</td>
+        <td>${marker.obstacleCategory ?? 'N/A'}</td>
+        <td>${marker.reviewComment ?? 'N/A'}</td>
+        <td style="text-align:right;">
+            <button onclick="postRedirect('/Admin/Review', { markerId: ${marker.markerId} })">Review</button>
+            <button onclick="DeleteMarker(${marker.markerId})">Delete</button>
+        </td>
+    </tr>
+    `;
+}
 const sts = document.getElementById("stateToSee");
 function DeleteMarker(MarkerId) {
     fetch(`./Admin/DeleteMarker?MarkerId=${MarkerId}`).then(() => {
-        UpdateMarkerList(sts.value);
+        UpdateMarkerListTable(sts.value);
     })
     
 }
