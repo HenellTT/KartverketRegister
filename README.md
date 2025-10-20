@@ -46,6 +46,8 @@ ________________________________________________________________________________
 ## Debug
 
 	Om docker compose ikke starter på første forsøk så prøv en gang til, for databasen starter av og til pararelt med MVC appen og derfor kræsjer appen
+
+	Om lagring av markere feiler, kan det hende du har gammel database oppsett fra tidligere versjon av applikasjonen. Bruk RESET DATABASE knappen, det burde løse problemmet!
 	
 
 # Drift
