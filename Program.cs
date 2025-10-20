@@ -42,6 +42,7 @@ while (!ConnectedToDb)
     }
     catch (Exception ex) {
         Console.WriteLine($"Connection to db failed: No database found at {Constants.DataBaseIp}:{Constants.DataBasePort}");
+        Console.WriteLine(ex.Message);
         Console.WriteLine("Retrying in 2s. . .");
         Thread.Sleep(2000);
     }
