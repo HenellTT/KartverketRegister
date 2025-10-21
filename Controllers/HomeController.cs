@@ -1,16 +1,26 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(
+        ILogger<HomeController> logger,
+        UserManager<AppUser> userManager,
+        SignInManager<AppUser> signInManager)
     {
         _logger = logger;
+        _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     public IActionResult Index()
@@ -28,9 +38,22 @@ public class HomeController : Controller
         return View(); //returnerer viewet Registry.cshtml (registersiden)
     }
 
-    public IActionResult User()
+    public async Task<IActionResult> User()
     {
-        return View(); //returnerer viewet User.cshtml (brukersiden)
+
+        try
+        {
+            var appUser = await _userManager.GetUserAsync(HttpContext?.User);
+            if (appUser != null)
+                return View("UserLogged", appUser);
+        } catch
+        {
+            return View(); //returnerer viewet User.cshtml (brukersiden)
+
+        }
+
+        return View();
+
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
