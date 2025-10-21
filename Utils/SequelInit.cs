@@ -10,6 +10,7 @@ namespace KartverketRegister.Utils
     public class SequelInit
     {
         public MySqlConnection conn;
+        public string dbConnString;
 
         public SequelInit(string dbIP, string dbname)
         {
@@ -25,7 +26,7 @@ namespace KartverketRegister.Utils
             }
 
             // Step 2: Initialize class-level connection to the target database
-            string dbConnString = $"Server={dbIP};Port={Constants.DataBasePort};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
+            dbConnString = $"Server={dbIP};Port={Constants.DataBasePort};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
             conn = new MySqlConnection(dbConnString);
 
         }
@@ -81,7 +82,14 @@ namespace KartverketRegister.Utils
                 LastName      VARCHAR(100) NOT NULL,
                 UserType      ENUM('User','Admin') NOT NULL DEFAULT 'User',
                 Organization  VARCHAR(100),
-                CreatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP
+                CreatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+                NormalizedName     VARCHAR(100),
+                PasswordHash       VARCHAR(500),
+                Email              VARCHAR(255),
+                NormalizedEmail    VARCHAR(255),
+                SecurityStamp      VARCHAR(100),
+                ConcurrencyStamp   VARCHAR(100)
             );";
                 using (var cmd = new MySqlCommand(createUsers, conn))
                 {

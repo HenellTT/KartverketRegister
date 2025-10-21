@@ -1,0 +1,32 @@
+﻿<link rel="stylesheet" href="~/css/Auth.css" />
+
+<div class="container">
+    <h2>Register</h2>
+    <input type="text" id="username" placeholder="First Name" />
+    <input type="text" id="lastname" placeholder="Last Name" />
+    <input type="text" id="org" placeholder="Organization" />
+    <input type="password" id="password" placeholder="Password" />
+    <input type="email" id="email" placeholder="email" />
+    <button onclick="register()">Register</button>
+    <p id="msg"></p>
+</div>
+
+<script>
+    async function register() {
+        const username = document.getElementById('username').value;
+        const lastname = document.getElementById('lastname').value;
+        const org = document.getElementById('org').value;
+        const password = document.getElementById('password').value;
+        const email = document.getElementById('email').value;
+
+        const res = await fetch('/Auth/RegisterHandle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `username=${encodeURIComponent(username)}&lastname=${encodeURIComponent(lastname)}&org=${encodeURIComponent(org)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`
+        });
+
+        const data = await res.json();
+        document.getElementById('msg').innerText = data.message;
+        if (data.success) window.location.href = '/Auth/Login';
+    }
+</script>
