@@ -1,11 +1,11 @@
 ﻿class MapFunctions {
-    constructor(mapRef, ICONS) {
+    constructor(mapRef, L, ICONS) {
         this.map = mapRef;
-
+        this.L = L;
         this.icons = ICONS;
 
         this.UpdatePosition = true;
-        this.tempMarker = L.marker([0, 0], { draggable: true, icon: this.icons.Get["pin"] });
+        this.tempMarker = L.marker([0, 0], { draggable: false, icon: this.icons.Get["pin"] });
         this.vehiclePosition = L.marker([58.1608783456262, 7.9985872834629], { draggable: true, icon: this.icons.Get["helicopter"] });
     }
 
@@ -80,6 +80,12 @@
             .openPopup();
 
 
+    }
+    changeTileLayer(newUrl) {
+        this.map.removeLayer(tileLayer);
+        let tileLayer = this.L.tileLayer(newUrl, {
+            attribution: '&copy; Brr brr'
+        }).addTo(this.map);
     }
 
 }

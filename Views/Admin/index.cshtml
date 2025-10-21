@@ -5,39 +5,54 @@
 
 <h1>Main Admin Panel</h1>
 <h2>Markers Pending Approval</h2>
-
+<div>
+    <select id="stateToSee" oninput="UpdateMarkerListTable(this.value);UpdateMapMarkers(map,L,type=this.value)">
+        <option value="Everything">Everything</option>
+        <option value="Unseen">Pending</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Accepted">Accepted</option>
+    </select>
+</div>
 <div class="main-container">
-    <div id="filter">
-        <h3>Filter Options</h3>
-        <button>Show Map</button>
-        <button>Sort by Date</button>
-        <button>Sort by User</button>
-        <select id="stateToSee" oninput="UpdateMarkerList(this.value)">
-            <option value="Everything">Everything</option>
-            <option value="Unseen">Pending</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Accepted">Accepted</option>
-        </select>
-    </div>
+    
 
     <div id="mymrk">
-        <div class="tmk-cont">
-            <h3>Flying ass potato</h3>
-            <p><b>Description:</b> It was really huge — I didn’t know what to do!</p>
-            <p><b>By:</b> <u>Johnny Test</u></p>
-            <button>Details</button>
-            <button>Reject</button>
-            <button>Approve</button>
-        </div>
+        
     </div>
+    <div id="map"></div>
 </div>
 
 <link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Admin-table.css" asp-append-version="true" />
+
 <script src="~/js/admin.js"></script>
+<script src="~/js/icons.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
 <script>
     window.onload = () => {
-        UpdateMarkerList("Everything");
+        UpdateMarkerListTable("Everything");
+        UpdateMapMarkers(map,L);
     };
+
+    var map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    map.markers = [];
+
+    fetch("./icon/geticons").then(res => res.json()).then((IconList) => {
+        map.ICONS = new Icons(IconList);
+        
+    })
 </script>
 
 

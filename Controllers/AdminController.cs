@@ -20,6 +20,25 @@ namespace KartverketRegister.Controllers
             return View();
 
         }
+        [HttpGet]
+        public IActionResult ResetDB()
+        {
+            try
+            {
+                SequelInit sequel = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
+                Constants.ResetDbOnStartup = true;
+                sequel.conn.Open();
+                sequel.InitDb();
+                sequel.conn.Close();
+                Constants.ResetDbOnStartup = false;
+                return Ok(new GeneralResponse(true, "Database Resetted Successfully"));
+            } catch (Exception e)
+            {
+                return Ok(new GeneralResponse(true, $"Database Reset failed: {e.Message}"));
+            }
+
+        }
+
         [HttpPost]
         public IActionResult Review(int markerId)
         {

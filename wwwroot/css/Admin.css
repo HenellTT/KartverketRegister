@@ -36,16 +36,29 @@ h2 {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    margin: 40px auto;
+    margin: 10px auto;
     width: 100%;
-    max-width: 1400px;
-    gap: 50px;
-    padding: 0 40px;
+    max-width: 100vw;
+    gap: 5px;
+    padding: 0 10px;
+}
+
+#map 
+{
+    flex: 0 0 350px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    padding: 20px;
+    position: sticky;
+    top: 100px;
+    height: 80vh;
 }
 
 /* --- Filter Sidebar --- */
 #filter {
-    flex: 0 0 250px;
+    flex: 0 0 200px;
     background: #fafafa;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
@@ -54,17 +67,19 @@ h2 {
     position: sticky;
     top: 100px;
     height: fit-content;
+    width:fit-content;
 }
 
     #filter h3 {
         color: #111827;
         margin-bottom: 16px;
         font-size: 1.1rem;
+        width:150px;
     }
 
     #filter button {
         display: block;
-        width: 100%;
+        width: 150px;
         text-align: left;
         padding: 10px 14px;
         margin-bottom: 10px;
@@ -176,13 +191,16 @@ h2 {
 .trw-Accepted {
     background-color:green;
 }
+    .trw-Accepted p {
+        color: darkturquoise;
+    }
 .trw-Rejected {
     background-color:orangered;
     
 }
-.trw-Rejected p {
-    color: darkturquoise;
-}
+    .trw-Rejected p {
+        color: darkturquoise;
+    }
 .trw-Unseen {
     background-color:aqua;
 }

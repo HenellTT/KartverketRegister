@@ -128,7 +128,7 @@
     fetch("/icon/geticons").then(res => res.json()).then((IconList) => {
         icons = new Icons(IconList);
         
-        mf = new MapFunctions(map, icons);
+        mf = new MapFunctions(map, L,icons);
         const lat = @Model.Lat.ToString(CultureInfo.InvariantCulture);
         const lng = @Model.Lng.ToString(CultureInfo.InvariantCulture);
         let type = "@Model.ObstacleCategory";

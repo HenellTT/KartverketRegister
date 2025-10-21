@@ -6,15 +6,15 @@ class Icons {
     #icons
     constructor(IconList = basicIcons) {
         this.IconList = IconList;
-        this.#icons = {};
+        this.icons = {};
 
         IconList.forEach((icon) => {this.AddIcon(icon) });
     }
     get Get() {
-        return this.#icons;
+        return this.icons;
     }
     AddIcon(IconName) {
-        this.#icons[IconName] = L.icon({
+        this.icons[IconName] = L.icon({
             iconUrl: `../img/icons/${IconName}.png`,
             iconSize: [38, 38],
             iconAnchor: [19, 38],

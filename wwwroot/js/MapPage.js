@@ -12,7 +12,7 @@ class MapFunctions {
     }
 
     Run() {
-        this.map.on('click', (e) => {
+        this.map.on('click', async (e) => {
             const lat = e.latlng.lat;
             const lng = e.latlng.lng;
             //console.log(`lat:${lat}, lng:${lng}`);
@@ -20,6 +20,7 @@ class MapFunctions {
             // Move marker to clicked location
             this.setMarkerPosition(lat, lng, mf.icons.Get["pin"]);
             shlongPositionIntoForm(lat, lng);
+            shlongHeightIntoForm(lat, lng);
         });
         // Init shit that has to be done fr fr
         setTimeout(this.startVehicleTracking(), 200);
@@ -84,6 +85,13 @@ class MapFunctions {
 }
 const form = document.getElementById('tempMarkerFormForm');
 
+async function shlongHeightIntoForm(lat,lng) {
+    fetch(`/api/getHeight?lat=${lat}&lng=${lng}`).then((response) => { return response.json() }).then((data) => {
+        console.log(data);
+        form.height.value = data.height.toFixed(2);
+    })
+    
+}
 function shlongPositionIntoForm(lat, lng) {
     form.lng.value = lng;
     form.lat.value = lat;
