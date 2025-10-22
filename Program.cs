@@ -59,7 +59,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Redirect here if the user is NOT authenticated
-    options.LoginPath = "/Auth/Login";
+
 
     // Redirect here if the user IS authenticated but forbidden (403)
     options.AccessDeniedPath = "/Auth/AccessDenied";
