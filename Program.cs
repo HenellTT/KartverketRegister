@@ -45,9 +45,32 @@ builder.Services.AddScoped<IRoleStore<IdentityRole<int>>, MySqlRoleStore>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 {
-    options.User.RequireUniqueEmail = false;
+    options.User.RequireUniqueEmail = true;
+    if (!Constants.RequireStrongPassword)
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequiredLength = 4;
+    }
 })
 .AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Redirect here if the user is NOT authenticated
+    options.LoginPath = "/Auth/Login";
+
+    // Redirect here if the user IS authenticated but forbidden (403)
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+
+    // Redirect here after logout
+    options.LogoutPath = "/Auth/Logout";
+
+    // Session and expiration settings
+    options.ExpireTimeSpan = TimeSpan.FromHours(2);
+    options.SlidingExpiration = true;
+});
 
 builder.Services.AddAuthorization();
 
