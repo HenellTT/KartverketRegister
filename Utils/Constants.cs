@@ -8,6 +8,7 @@
         public static string DataBaseRootPassword { get; } = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "mysecretpassword";
         public static string DataBaseName { get; } = "ObstacleRegister";
         public static bool ResetDbOnStartup { get; set; } = false;
+        public static bool RequireStrongPassword { get; set; } = false;
 
     }
 }
