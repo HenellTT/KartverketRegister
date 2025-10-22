@@ -176,5 +176,47 @@ namespace KartverketRegister.Utils
             conn.Close();
 
         }
+
+        public List<Marker> FetchAllMarkers()
+        {
+            var markers = new List<Marker>();
+
+            conn.Open();
+            string sql = "SELECT * FROM RegisteredMarkers;";
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var mrk = new Marker
+                    {
+                        MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null,
+                        Type = reader["Type"] as string,
+                        Description = reader["Description"] as string,
+                        Lat = reader.GetDouble("Lat"),
+                        Lng = reader.GetDouble("Lng"),
+                        HeightM = reader["HeightM"] != DBNull.Value ? reader.GetDecimal("HeightM") : (decimal?)null,
+                        HeightMOverSea = reader["HeightMOverSea"] != DBNull.Value ? reader.GetDecimal("HeightMOverSea") : (decimal?)null,
+                        Organization = reader["Organization"] as string,
+                        AccuracyM = reader["AccuracyM"] != DBNull.Value ? reader.GetDecimal("AccuracyM") : (decimal?)null,
+                        ObstacleCategory = reader["ObstacleCategory"] as string,
+                        IsTemporary = reader["IsTemporary"] != DBNull.Value && Convert.ToBoolean(reader["IsTemporary"]),
+                        Lighting = reader["Lighting"] as string,
+                        Source = reader["Source"] as string,
+                        State = reader["State"] as string,
+                        UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null,
+                        ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null,
+                        ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null
+                    };
+
+                    markers.Add(mrk);
+                }
+            }
+
+            conn.Close();
+            return markers;
+        }
+
     }
 }

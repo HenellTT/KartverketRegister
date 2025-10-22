@@ -25,6 +25,7 @@ public class HomeController : Controller
 
     public IActionResult Registry()
     {
+        var model = new RegistryViewModel();
         return View(); //returnerer viewet Registry.cshtml (registersiden)
     }
 

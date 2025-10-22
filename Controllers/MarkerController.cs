@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
 using KartverketRegister.Models;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq.Expressions;
+
 
 
 namespace KartverketRegister.Controllers
@@ -16,10 +19,12 @@ namespace KartverketRegister.Controllers
         {
             return BadRequest("Nothing to see here"); 
         }
+        
 
         [HttpPost]
         public IActionResult SubmitMarker(Marker marker) // Tar imot en markør via POST-forespørsel
         {
+
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName); // Oppretter en databaseforbindelse
             try //try-catch for å håndtere feil
             {
@@ -46,7 +51,10 @@ namespace KartverketRegister.Controllers
                 Console.WriteLine(e);
                 return Ok(new GeneralResponse(false, "The marker could not be registered!"));
             }
-            
+
+
+           
+
         }
         [HttpGet]
         public IActionResult FetchMyMarkers()
@@ -63,6 +71,7 @@ namespace KartverketRegister.Controllers
             
         }
 
-
+        
     }
+
 }

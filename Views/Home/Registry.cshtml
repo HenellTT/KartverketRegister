@@ -1,6 +1,36 @@
+@model KartverketRegister.Models.RegistryViewModel
+
 @{
     ViewData["Title"] = "Registry";
 }
+
+<head>
+    <link rel="stylesheet" href="~/css/registry.css" />
+</head>
+
 <h1>@ViewData["Title"]</h1>
 
-<p>Testing</p>
+<!-- ?? Feildiagnose – behold midlertidig hvis du feilsøker -->
+@if (Model == null)
+{
+    <div style="color:red;">Model er null!</div>
+}
+else if (Model.Markers == null)
+{
+    <div style="color:red;">Model.Markers er null!</div>
+}
+else
+{
+    <div style="color:green;">Model og Markers finnes ?</div>
+}
+
+<hr />
+
+<!-- ?? Seksjon 1: Registrerte hindere -->
+<h2>Registrerte hindere</h2>
+
+@if (Model?.Markers == null || !Model.Markers.Any())
+{
+    <p class="no-markers" style="color:gray;">Ingen registrerte markører funnet ??</p>
+}
+

@@ -1,10 +1,12 @@
 using KartverketRegister.Utils;
 using System.Threading;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
@@ -46,5 +48,6 @@ while (!ConnectedToDb)
         Thread.Sleep(2000);
     }
 }
+
 
 app.Run();
