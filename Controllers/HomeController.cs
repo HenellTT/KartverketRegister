@@ -67,7 +67,7 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> SetMode(string mode)
     {
-        var appUser = await _userManager.GetUserAsync(User);
+        var appUser = await _userManager.GetUserAsync(HttpContext.User);
         ViewBag.Theme = mode ?? "light"; // visning antar lys modus
         return View();
     }
