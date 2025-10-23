@@ -54,7 +54,8 @@ public class HomeController : Controller
             return View(new List<Marker>());
         }
     }
-
+    
+    [Route("EditMarker/{id:int}")]
     public IActionResult EditMarker(int id)
     {
         SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
@@ -62,6 +63,7 @@ public class HomeController : Controller
         return View(marker);
     }
     
+    [Route("ViewMarker/{id:int}")]
     public IActionResult ViewMarker(int id)
     {
         SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);

@@ -26,8 +26,8 @@
                 <td>@marker.Source</td>
                 <td>@marker.State</td>
                 <td>
-                    <a asp-controller="Home" asp-action="=EditMarker" asp-route-id="@marker.MarkerId" class="btn btn-sm btn-primary">Edit</a>
-                    <a asp-controller="Home" asp-action="=ViewMarker" asp-route-id="@marker.MarkerId" class="btn btn-sm btn-primary">View</a>
+                    <a href="~/EditMarker/@marker.MarkerId" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="~/ViewMarker/@marker.MarkerId" class="btn btn-sm btn-secondary">View</a>
                 </td>
             </tr>
         }
