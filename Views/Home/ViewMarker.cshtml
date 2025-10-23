@@ -1,18 +1,73 @@
+@using System.Globalization
 @model KartverketRegister.Models.Marker
+@{
+    ViewData["Title"] = "Review Marker";
+}
+<head>
+    <link rel="stylesheet" href="~/css/Registry.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Registry-ViewMarker.css" asp-append-version="true" />
 
-<h2>Details for marker #@Model.MarkerId</h2>
-<p><strong>Type:</strong>@Model.Type</p>
-<p><strong>Description:</strong>@Model.Description</p>
-<p><strong>Category:</strong>@Model.ObstacleCategory</p>
-<p><strong>Height (m):</strong>@Model.HeightM</p>
-<p><strong>Height over sea (m):</strong>@Model.HeightMOverSea</p>
-<p><strong>Accuracy (m):</strong>@Model.AccuracyM</p>
-<p><strong>Temporary:</strong>@Model.IsTemporary</p>
-<p><strong>Removal date:</strong>@Model.ExpectedRemovalDate</p>
-<p><strong>Lightning:</strong>@Model.Lighting</p>
-<p><strong>Latitude:</strong>@Model.Lat</p>
-<p><strong>Longitude:</strong>@Model.Lng</p>
-<p><strong>User ID:</strong>@Model.UserId</p>
-<p><strong>Souce:</strong>@Model.Source</p>
-<p><strong>Reviewed by:</strong>@Model.ReviewedBy</p>
-<p><strong>Review comment:</strong>@Model.ReviewComment</p>
+</head>
+<h2>Review Marker</h2>
+
+<div class="ap">
+    <div class="information-ap">
+        <div id="marker-info" class="mb-4">
+            <p><b>Marker ID:</b> @Model.MarkerId</p>
+            <p><b>Name:</b> @(Model.UserName ?? "N/A")</p>
+            <p><b>Description:</b> @Model.Description</p>
+            <p><b>Type:</b> @Model.Type</p>
+            <p><b>Latitude:</b> @Model.Lat</p>
+            <p><b>Longitude:</b> @Model.Lng</p>
+            <p><b>Height (m):</b> @Model.HeightM</p>
+            <p><b>Height Over Sea (m):</b> @Model.HeightMOverSea</p>
+            <p><b>Organization:</b> @Model.Organization</p>
+            <p><b>Accuracy (m):</b> @Model.AccuracyM</p>
+            <p><b>Obstacle Category:</b> @Model.ObstacleCategory</p>
+            <p><b>Temporary:</b> @(Model.IsTemporary ? "Yes" : "No")</p>
+            <p><b>Expected Removal Date:</b> @(Model.ExpectedRemovalDate?.ToString("yyyy-MM-dd") ?? "N/A")</p>
+            <p><b>Lighting:</b> @Model.Lighting</p>
+            <p><b>Source:</b> @Model.Source</p>
+            <p><b>Submitted by User ID:</b> @Model.UserId</p>
+        </div>
+    </div>
+    <div id="map"></div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script src="~/js/MapFunctions.js"></script>
+<script src="~/js/icons.js"></script>
+
+<script>
+    var map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    fetch("/icon/geticons").then(res => res.json()).then((IconList) => {
+        icons = new Icons(IconList);
+        
+        mf = new MapFunctions(map, L,icons);
+        const lat = @Model.Lat.ToString(CultureInfo.InvariantCulture);
+        const lng = @Model.Lng.ToString(CultureInfo.InvariantCulture);
+        let type = "@Model.ObstacleCategory";
+        type = type.toLowerCase().replaceAll(" ","");
+        console.log(type);
+        console.log(mf.icons);
+        mf.setMarkerPosition(lat,lng, mf.icons.Get[type]);
+        mf.setViewTo(lat,lng,zoom=17);
+    })
+</script>
+
+
+
+
+
+
+
