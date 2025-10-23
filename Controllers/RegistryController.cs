@@ -1,17 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using KartverketRegister.Models;
+﻿using KartverketRegister.Models;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Identity.Client;
+using System.Xml.Linq;
 
 
 
 public class RegistryController : Controller
 {
+    public IActionResult Index()
+    {
+
+        string dbIP = Constants.DatabasePath;
+        string dbname = Constants.DatabaseName;
+
+        string userIdStr = User.Identity.GetUserId();
+        int userId = int.Parse(userIdStr); // ← Konverterer string til int
+
+        SequelMarker max = new SequelMarker(dbIP, dbname);
+
+        List<Marker> maxMarkers = max.FetchMyMarkers(userId);
+        Console.WriteLine("MyMarker count: " + maxMarkers.Count);
+
+        var model = new RegistryViewModel
+        {
+            Markers = maxMarkers,
+            TempMarkers = new List<Marker>()
+        };
+
+        return View(model);
+
+    }
     public IActionResult Registry()
     {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+        SequelMarker seq = new SequelMarker(Constants.DatabasePath;, Constants.DatabaseName;);
 
         // Hent bruker-ID fra session eller sett til testverdi
         int? userIdFromSession = HttpContext.Session.GetInt32("UserId");
@@ -29,6 +53,7 @@ public class RegistryController : Controller
 
         return View(model);
     }
+
 
 }
 
