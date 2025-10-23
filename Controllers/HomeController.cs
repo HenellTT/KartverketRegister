@@ -61,4 +61,15 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }); 
     }
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> SetMode(string mode)
+    {
+        var appUser = await _userManager.GetUserAsync(User);
+        ViewBag.Theme = mode ?? "light"; // visning antar lys modus
+        return View();
+    }
 }
+
