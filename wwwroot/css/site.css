@@ -32,8 +32,53 @@ body {
   text-align: start;
 }
 
- 
+
 body.dark-mode .navbar {
-    background-color: #222 !important;
+    background-color: #080808 !important;
     color: #eee !important;
+}
+
+
+body.dark-mode #mapSideBar {
+    background-color: #080808 !important;
+    color: #eee !important;
+}
+
+
+body.dark-mode #sideBarNav {
+    background-color: #080808 !important;
+    color: #eee !important;
+}
+
+    body.dark-mode #sideBarNav button {
+        background-color: #080808 !important;
+        color: #eee !important;
+        border: none;
+    }
+
+
+body.dark-mode .sideBarContainer {
+    background-color: #080808 !important;
+    color: #eee !important;
+}
+
+body.dark-mode #TempMarkerForm {
+    background-color: #080808 !important;
+    color: #eee !important;
+}
+
+body.dark-mode #tempMarkerFormForm input {
+    background-color: #080808 !important;
+    color: #eee !important;
+    border: 1px solid #444;
+}
+body.dark-mode #tempMarkerFormForm label {
+    background-color: #080808 !important;
+    color: #eee !important;
+}
+
+body.dark-mode #tempMarkerFormForm button {
+    background-color: #080808 !important;
+    color: #fff !important;
+    border: none;
 }
