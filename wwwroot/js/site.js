@@ -6,12 +6,12 @@
     document.addEventListener('DOMContentLoaded', () => {
         const body = document.body;
 
-        document.getElementById('Light_Btn').onclick = () => {
+        document.getElementById('Light_btn').onclick = () => {
             body.classList.remove('dark-mode');
             sendTheme('light');
         };
 
-        document.getElementById('Dark_Btn').onclick = () => {
+        document.getElementById('Dark_btn').onclick = () => {
             body.classList.add('dark-mode');
             sendTheme('dark');
         };
@@ -20,7 +20,7 @@
             fetch('/Home/SetMode', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: `mode=${mode}`
+                body: JSON.stringify({ mode })
             });
         }
     });

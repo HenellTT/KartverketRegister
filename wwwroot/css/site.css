@@ -21,10 +21,7 @@ body {
   margin-bottom: 60px;
 }
 
-body.dark-mode {
-   background-color: #333;
-   color: #eee;
-}
+
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
@@ -35,3 +32,8 @@ body.dark-mode {
   text-align: start;
 }
 
+ 
+body.dark-mode .navbar {
+    background-color: #222 !important;
+    color: #eee !important;
+}
