@@ -4,7 +4,20 @@
 
 <!-- Leaflet Map Container -->
 <div class="BigContainer">
+    <div class="obstacleContainer">
+        <div id="Point" >
+        <button onclick="" class="obPoint">Point</button>
+        </div>
+        <div id="Line">
+        <button onclick="" class="obLine">Line</button></div>
+    </div>
+    <a asp-area="" asp-controller="Home" asp-action="Index" id="exitFlightMode">Exit</a>
     <div id="map"></div>
+
+    <div class="toggleMode">
+        <button id="toggleMapMode">Toggle Mode</button>
+    </div>
+    
 </div>
 
 <link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
@@ -22,11 +35,6 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
 
-
-<!-- Fullscreen CSS -->
-<style>
-
-</style>
 
 <script>
     // Initialize the map
