@@ -50,12 +50,7 @@
         mf.Run();
     })
 
-
-
-
-    const childrenArray = Array.from(document.querySelector('.sideBarContainer').children);
-    function showSideBarSec(id) {
-        childrenArray.forEach(e => {e.hidden = true});
-        document.getElementById(id).hidden = false;
+    window.onresize = function () {
+        mf.ResizeMap();
     }
 </script>
