@@ -7,11 +7,12 @@ using System.Globalization;
 using System.Linq.Expressions;
 using KartverketRegister.Models.Other;
 using System.Diagnostics.Eventing.Reader;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace KartverketRegister.Controllers
 {
-
+    //[Authorize(Roles = "User")] // shit works for now!!! 
     public class AdminController : Controller // Arver fra Controller for å håndtere markører
     {
         [HttpGet]

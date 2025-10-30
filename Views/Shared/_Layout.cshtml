@@ -39,7 +39,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User" >User</a>
                         </li>
-                        <li class="nav-item" style="background-color:darkred;color:white">
+                        <li class="nav-item" id="resetdbbutton" style="background-color:darkred;color:white">
                             <a class="nav-link text-dark" onclick="resetdb()">RESET DATABASE</a>
                         </li>
                     </ul>
@@ -70,31 +70,32 @@
             "Give me an unusual 'Are you sure' message, one sentence long, its to make sure user wants to HARD RESET database, end it with a phase type 'true, yes, accept, positive, etc', Keep the phase in * instead of quotes! and tell userto type it!"
 
         ]
+
+        const rdbbut = document.getElementById('resetdbbutton');
         let msgin = null;
         async function setMsginToAi() {
+            console.log('Sending api req to get Confirmation string')
             if (msgin == null) {
                 try {
+                    
                     msgin = await ApiFreeLLM.chat(prompts[0]);
+                    console.log('Confirmation string generated successfully');
+                    rdbbut.style.backgroundColor = 'lightblue';
+                    
                 } catch {
-                    setMsginToAi();
+                    console.log('Failed to fetch confirmation string');
+                    await setMsginToAi();
                 }
             }
         }
+        rdbbut.onload = async() => {await setMsginToAi()};
 
-        window.onload = async () => {await setMsginToAi()}
+       
 
         async function resetdb() {
             if (msgin == null) {
-                alert("Loading Confirmation message, Click OK to wait in peace");
-                try {
-                    msgin = await ApiFreeLLM.chat(prompts[0]);
-                } catch {
-                    msgin = "Are you sure you want to delete and reset the WHOLE database? Type *yes* to continue...";
-                }
+                msgin = "Are you sure you want to delete and reset the WHOLE database? Type *yes* to continue...";
             }
-
-
-
 
             let rightpin = findKeyWord(msgin);
             console.log(rightpin);
