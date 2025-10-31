@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Globalization;
@@ -9,9 +12,17 @@ using System.Linq.Expressions;
 
 namespace KartverketRegister.Controllers
 {
-
+    
     public class TempmarkerController : Controller //arver fra controller for å håndtere midlertidige markører
     {
+        private readonly UserManager<AppUser> _userManager;
+        public TempmarkerController(
+
+        UserManager<AppUser> userManager
+        )
+        {
+            _userManager = userManager;
+        }
         //private int MsgLimit = 15;
         public IActionResult Index()
         {
@@ -32,7 +43,10 @@ namespace KartverketRegister.Controllers
                 double lng = double.Parse(Request.Form["lng"], CultureInfo.InvariantCulture);
                 decimal height = decimal.Parse(Request.Form["height"], CultureInfo.InvariantCulture);
 
-                seq.SaveMarker(type, description, lat, lng, height);
+                string UserIdString = _userManager.GetUserId(HttpContext?.User);
+                int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+
+                seq.SaveMarker(type, description, lat, lng, height, UserId);
                 return Ok();
             } catch (Exception e)
             {
@@ -47,15 +61,31 @@ namespace KartverketRegister.Controllers
         public IActionResult FetchMyMarkers()
         {
             SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
-            List<TempMarker> MyMarkers = seq.FetchMyMarkers(1); // Currently 1 to simulate UserId; 
+            // Httpcontext.user.userId istd for 1
+
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+
+            List <TempMarker> MyMarkers = seq.FetchMyMarkers(UserId); // Currently 1 to simulate UserId; 
             return Ok(MyMarkers);
         }
         [HttpGet]
         public IActionResult DeleteMarker(int markerId)
         {
-            SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
-            seq.DeleteMarkerById(markerId);
-            return Ok();
+            try
+            {
+                SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
+                string UserIdString = _userManager.GetUserId(HttpContext?.User);
+                int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+
+                GeneralResponse DeleteMarkerResponse = seq.DeleteMarkerById(markerId, UserId);
+
+                return Ok(DeleteMarkerResponse);
+            }
+            catch (Exception ex) {
+
+                return Ok(new GeneralResponse(false, $"Marker was NOT deleted! {ex}"));
+            }
         }
         [HttpGet]
         public IActionResult RegisterMarker(int markerId)

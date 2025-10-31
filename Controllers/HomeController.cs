@@ -37,7 +37,11 @@ public class HomeController : Controller
     {
         return View(); //returnerer viewet Registry.cshtml (registersiden)
     }
-
+    public async Task<IActionResult> Test()
+    {
+        var smth = _userManager.GetUserId(HttpContext?.User);
+        return Json(smth);
+    }
     public async Task<IActionResult> User()
     {
 
@@ -45,6 +49,7 @@ public class HomeController : Controller
         {
             var appUser = await _userManager.GetUserAsync(HttpContext?.User);
             if (appUser != null)
+                
                 return View("UserLogged", appUser);
         } catch
         {

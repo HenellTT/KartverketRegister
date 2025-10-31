@@ -1,5 +1,6 @@
-using MySql.Data.MySqlClient;
 using KartverketRegister.Models;
+using Microsoft.AspNetCore.Identity;
+using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Tls;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace KartverketRegister.Utils
     {
         public SequelTempmarker(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
         { }
-        public void SaveMarker(string type, string description, double lat, double lng, decimal height)
+        public void SaveMarker(string type, string description, double lat, double lng, decimal height, int UserId)
         {
             conn.Open();
 
@@ -29,7 +30,7 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@lat", lat);
                 cmd.Parameters.AddWithValue("@lng", lng);
                 cmd.Parameters.AddWithValue("@Height", height);
-                cmd.Parameters.AddWithValue("@UserId", 1);
+                cmd.Parameters.AddWithValue("@UserId", UserId);
                 Console.WriteLine(lat);
                 Console.WriteLine(lng);
                
@@ -111,19 +112,30 @@ namespace KartverketRegister.Utils
 
             return mrk;
         }
-        public void DeleteMarkerById(int markerId)
+        public GeneralResponse DeleteMarkerById(int markerId, int UserId)
         {
+            try
+            {
+
             conn.Open();
-            string sql = "DELETE FROM Markers WHERE MarkerId = @MarkerId";
+            //string sql = "DELETE FROM Markers WHERE MarkerId = @MarkerId";
+            string sql = "DELETE FROM Markers WHERE MarkerId = @MarkerId AND UserId = @UserId";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.Parameters.AddWithValue("@UserId", UserId);
                 cmd.ExecuteNonQuery();
 
             }
 
             conn.Close();
+                return new GeneralResponse(true, "Marker Deleted Successfully");
+
+            } catch (Exception ex)
+            {
+                return new GeneralResponse(false, $"Error deleting marker: {ex}");
+            }
 
         }
     }

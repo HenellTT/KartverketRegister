@@ -82,7 +82,7 @@
     //L.marker([51.505, -0.09]).addTo(map)
     //    .bindPopup('Hello, Leaflet!')
     //    .openPopup();
-    fetch("./icon/geticons").then(res => res.json()).then((IconList) => {
+    fetch("/icon/geticons").then(res => res.json()).then((IconList) => {
         icons = new Icons(IconList);
         mf = new MapFunctions(map, icons);
         mf.Run();
