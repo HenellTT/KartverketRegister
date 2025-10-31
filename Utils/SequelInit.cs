@@ -121,7 +121,9 @@ namespace KartverketRegister.Utils
                 HeightMOverSea    DECIMAL(6,2),
                 Type        VARCHAR(100) DEFAULT NULL,
                 Date        DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+                FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+
+                GeoJson     JSON
             );";
                 using (var cmd = new MySqlCommand(createMarkers, conn))
                 {
@@ -157,7 +159,9 @@ namespace KartverketRegister.Utils
                 Date              DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL,
                 FOREIGN KEY (SubmittedBy) REFERENCES Users(UserId) ON DELETE SET NULL,
-                FOREIGN KEY (ReviewedBy) REFERENCES Users(UserId) ON DELETE SET NULL
+                FOREIGN KEY (ReviewedBy) REFERENCES Users(UserId) ON DELETE SET NULL,
+
+                GeoJson           JSON
             );";
                 using (var cmd = new MySqlCommand(createRegisteredMarkers, conn))
                 {
