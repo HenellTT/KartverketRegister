@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Text;
 
 
 namespace KartverketRegister.Controllers
@@ -36,8 +37,20 @@ namespace KartverketRegister.Controllers
             SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName); //databaseforbindelse hvor innsendt hinder lagres med data
             try
             {
+                string geojson = Request.Form["geojson"];
+
+                int geoJsonBytes = Encoding.UTF8.GetByteCount(geojson);
+                int maxBytes = 1000 * 1024; // 1000 KB limit ~1mb
+
+                if (geoJsonBytes > maxBytes)
+                {
+                    return Json(new GeneralResponse(false, $"GeoJSON too large! Max size is {maxBytes / 1024} KB."));
+                }
+
+
                 string type = Request.Form["type"];
                 string description = Request.Form["description"];
+                
 
                 double lat = double.Parse(Request.Form["lat"], CultureInfo.InvariantCulture);
                 double lng = double.Parse(Request.Form["lng"], CultureInfo.InvariantCulture);
@@ -46,12 +59,12 @@ namespace KartverketRegister.Controllers
                 string UserIdString = _userManager.GetUserId(HttpContext?.User);
                 int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
 
-                seq.SaveMarker(type, description, lat, lng, height, UserId);
-                return Ok();
+                seq.SaveMarker(type, description, lat, lng, height, UserId, geojson);
+                return Json(new GeneralResponse(true, "Marker saved successfully!"));
             } catch (Exception e)
             {
                 Console.WriteLine(e.InnerException);
-                return BadRequest("Something went wrong :/"); //lagres ikke data riktig, får man denne feilmeldingen
+                return Json(new GeneralResponse(false, "Failed saving marker!")); //lagres ikke data riktig, får man denne feilmeldingen
             }
             
             

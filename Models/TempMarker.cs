@@ -24,5 +24,7 @@
         public string Type { get; set; }
 
         public decimal? HeightMOverSea { get; set; }
+
+        public string GeoJson { get; set; }
     }
 }
