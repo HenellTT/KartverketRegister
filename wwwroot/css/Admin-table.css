@@ -1,0 +1,107 @@
+﻿/* === Marker Table Styling === */
+#mymrk table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 14px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Header */
+#mymrk thead {
+    background: linear-gradient(90deg, #0078d7, #00b4d8);
+    color: #fff;
+    text-align: left;
+}
+
+    #mymrk thead th {
+        padding: 12px 14px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+    }
+
+/* Body Rows */
+#mymrk tbody tr {
+    transition: background 0.2s ease, transform 0.1s ease;
+    border-bottom: 1px solid #eee;
+}
+
+    #mymrk tbody tr:hover {
+        background: #f7fbff;
+        transform: scale(1.01);
+    }
+
+/* Cells */
+#mymrk tbody td {
+    padding: 10px 14px;
+    vertical-align: middle;
+}
+
+/* Alternate Row Color */
+#mymrk tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* Buttons */
+#mymrk button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 4px;
+}
+
+    #mymrk button:first-child {
+        background: #0078d7;
+        color: #fff;
+    }
+
+        #mymrk button:first-child:hover {
+            background: #005fa3;
+        }
+
+    #mymrk button:last-child {
+        background: #e74c3c;
+        color: #fff;
+    }
+
+        #mymrk button:last-child:hover {
+            background: #c0392b;
+        }
+
+/* Optional: Responsive tweaks */
+@media (max-width: 700px) {
+    #mymrk table,
+    #mymrk thead,
+    #mymrk tbody,
+    #mymrk th,
+    #mymrk td,
+    #mymrk tr {
+        display: block;
+        width: 100%;
+    }
+
+    #mymrk tr {
+        margin-bottom: 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    #mymrk td {
+        padding: 8px 12px;
+        border: none;
+        position: relative;
+    }
+
+        #mymrk td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+            color: #555;
+        }
+}

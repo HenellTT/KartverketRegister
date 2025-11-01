@@ -1,0 +1,8 @@
+﻿.skibidi-button {
+    padding: 4px;
+    border: solid black 2px;
+    cursor: pointer;
+    margin: 3px;
+    display: inline-block;
+    width: fit-content;
+}

@@ -1,4 +1,6 @@
 ﻿
+using KartverketRegister.Auth;
+using Microsoft.AspNetCore.Identity;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ namespace KartverketRegister.Utils
     public class SequelInit
     {
         public MySqlConnection conn;
+        public string dbConnString;
 
         public SequelInit(string dbIP, string dbname)
         {
@@ -25,7 +28,7 @@ namespace KartverketRegister.Utils
             }
 
             // Step 2: Initialize class-level connection to the target database
-            string dbConnString = $"Server={dbIP};Port={Constants.DataBasePort};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
+            dbConnString = $"Server={dbIP};Port={Constants.DataBasePort};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
             conn = new MySqlConnection(dbConnString);
 
         }
@@ -81,7 +84,14 @@ namespace KartverketRegister.Utils
                 LastName      VARCHAR(100) NOT NULL,
                 UserType      ENUM('User','Admin') NOT NULL DEFAULT 'User',
                 Organization  VARCHAR(100),
-                CreatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP
+                CreatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+                NormalizedName     VARCHAR(100),
+                PasswordHash       VARCHAR(500),
+                Email              VARCHAR(255),
+                NormalizedEmail    VARCHAR(255),
+                SecurityStamp      VARCHAR(100),
+                ConcurrencyStamp   VARCHAR(100)
             );";
                 using (var cmd = new MySqlCommand(createUsers, conn))
                 {
@@ -111,7 +121,9 @@ namespace KartverketRegister.Utils
                 HeightMOverSea    DECIMAL(6,2),
                 Type        VARCHAR(100) DEFAULT NULL,
                 Date        DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+                FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+
+                GeoJson     JSON
             );";
                 using (var cmd = new MySqlCommand(createMarkers, conn))
                 {
@@ -147,7 +159,9 @@ namespace KartverketRegister.Utils
                 Date              DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL,
                 FOREIGN KEY (SubmittedBy) REFERENCES Users(UserId) ON DELETE SET NULL,
-                FOREIGN KEY (ReviewedBy) REFERENCES Users(UserId) ON DELETE SET NULL
+                FOREIGN KEY (ReviewedBy) REFERENCES Users(UserId) ON DELETE SET NULL,
+
+                GeoJson           JSON
             );";
                 using (var cmd = new MySqlCommand(createRegisteredMarkers, conn))
                 {

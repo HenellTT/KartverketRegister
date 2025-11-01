@@ -5,20 +5,16 @@
 
 <h1>Main Admin Panel</h1>
 <h2>Markers Pending Approval</h2>
-
+<div>
+    <select id="stateToSee" oninput="UpdateMarkerListTable(this.value);UpdateMapMarkers(map,L,type=this.value)">
+        <option value="Everything">Everything</option>
+        <option value="Unseen">Pending</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Accepted">Accepted</option>
+    </select>
+</div>
 <div class="main-container">
-    <div id="filter">
-        <h3>Filter Options</h3>
-        <button>Show Map</button>
-        <button>Sort by Date</button>
-        <button>Sort by User</button>
-        <select id="stateToSee" oninput="UpdateMarkerList(this.value);UpdateMapMarkers(map,L,type=this.value)">
-            <option value="Everything">Everything</option>
-            <option value="Unseen">Pending</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Accepted">Accepted</option>
-        </select>
-    </div>
+    
 
     <div id="mymrk">
         
@@ -27,6 +23,8 @@
 </div>
 
 <link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Admin-table.css" asp-append-version="true" />
+
 <script src="~/js/admin.js"></script>
 <script src="~/js/icons.js"></script>
 
@@ -40,7 +38,7 @@
 
 <script>
     window.onload = () => {
-        UpdateMarkerList("Everything");
+        UpdateMarkerListTable("Everything");
         UpdateMapMarkers(map,L);
     };
 
