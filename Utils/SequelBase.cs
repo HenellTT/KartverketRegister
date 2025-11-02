@@ -1,4 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using KartverketRegister.Auth;
+using Microsoft.AspNetCore.Identity;
+using MySql.Data.MySqlClient;
 using System;
 
 namespace KartverketRegister.Utils
@@ -6,6 +8,7 @@ namespace KartverketRegister.Utils
     public abstract class SequelBase : IDisposable
     {
         protected MySqlConnection conn;
+
 
         protected SequelBase(string dbIP, string dbname)
         {

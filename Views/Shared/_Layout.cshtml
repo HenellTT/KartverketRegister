@@ -82,8 +82,8 @@
                 }
             }
         }
+        setTimeout(async ()=>{await setMsginToAi()},1000)
 
-        window.onload = async () => {await setMsginToAi()}
 
         async function resetdb() {
             if (msgin == null) {
