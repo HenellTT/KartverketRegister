@@ -15,7 +15,6 @@
             body.classList.add('dark-mode');
             sendTheme('dark');
         };
-
         function sendTheme(mode) {
             fetch('/Home/SetMode', {
                 method: 'POST',
