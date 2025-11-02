@@ -4,7 +4,9 @@ using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using KartverketRegister.Models;
+using KartverketRegister.Utils;
 
 namespace KartverketRegister.Controllers;
 
@@ -34,11 +36,6 @@ public class HomeController : Controller
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
 
-    public IActionResult Registry()
-    {
-        return View(); //returnerer viewet Registry.cshtml (registersiden)
-    }
-
     public IActionResult User()
     }
     public async Task<IActionResult> Test()
@@ -64,11 +61,22 @@ public class HomeController : Controller
         return View();
 
     }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error() //Feilh�ndtering 
+    
+    [Route("EditMarker/{id:int}")]
+    public IActionResult EditMarker(int id)
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }); 
+        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+        Marker marker = seq.FetchMarkerById(id);
+        return View(marker);
+    }
+    
+    [Route("ViewMarker/{id:int}")]
+    public IActionResult ViewMarker(int id)
+    {
+        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+        Marker marker = seq.FetchMarkerById(id);
+        return View(marker);
+        
     }
 
     public IActionResult Registry()
