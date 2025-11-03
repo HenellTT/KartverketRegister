@@ -88,22 +88,15 @@ public class HomeController : Controller
         Marker marker = seq.FetchMarkerById(id);
         return View(marker);
     }
-    
-    [Route("ViewMarker/{id:int}")]
-    public IActionResult ViewMarker(int id)
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> SetMode(string mode)
     {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(id);
-        return View(marker);
-        
+        var appUser = await _userManager.GetUserAsync(HttpContext.User);
+        ViewBag.Theme = mode ?? "light"; // visning antar lys modus
+        return View();
     }
-
-    /*public IActionResult UserView()
-    {
-        int userId = 1; 
-
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        List<Marker> userMarkers = seq.FetchMarkersByUserId(userId);
-        return View(userMarkers);
-    }*/
 }
+
