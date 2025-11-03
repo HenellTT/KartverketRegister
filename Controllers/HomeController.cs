@@ -36,8 +36,7 @@ public class HomeController : Controller
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
 
-    public IActionResult User()
-    }
+    
     public async Task<IActionResult> Test()
     {
         var smth = _userManager.GetUserId(HttpContext?.User);
@@ -62,29 +61,17 @@ public class HomeController : Controller
 
     }
     
-    [Route("EditMarker/{id:int}")]
-    public IActionResult EditMarker(int id)
-    {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(id);
-        return View(marker);
-    }
-    
-    [Route("ViewMarker/{id:int}")]
-    public IActionResult ViewMarker(int id)
-    {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(id);
-        return View(marker);
-        
-    }
+   
 
     public IActionResult Registry()
     {
         SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
         try
         {
-            List<Marker> myMarkers = seq.FetchMyMarkers(1);
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+
+            List<Marker> myMarkers = seq.FetchMyMarkers(UserId);
             return View(myMarkers);
         }
         catch (Exception ex)
