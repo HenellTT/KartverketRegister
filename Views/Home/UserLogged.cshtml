@@ -1,0 +1,20 @@
+<!-- USER INFORMATION-->
+
+@model KartverketRegister.Auth.AppUser
+
+<link rel="stylesheet" href="~/css/User.css" asp-append-version="true" />
+
+<h1>User</h1>
+
+<p>Information about the user</p>
+<p>Like prob a account management site - might be making a dropdown menu thingy.</p>
+
+
+<h2>User Profile</h2>
+<p>Username: @Model.UserName</p>
+<p>Full Name: @Model.Name @Model.LastName</p>
+<p>Email: @Model.Email</p>
+<p>Organization: @Model.Organization</p>
+<p>Role: @Model.UserType</p>
+
+<a class="skibidi-button nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
