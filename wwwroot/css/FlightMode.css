@@ -5,6 +5,82 @@ html, body {
     overflow: hidden;
 }
 
+header {
+    display: none;
+}
+
+/* container must be positioned so absolute children are positioned relative to it */
+.BigContainer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100vh; /* adjust if you want a different height */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+#map {
+    height: 100%; /* Full viewport height */
+    width: 100%; /* Full viewport width */
+    position: absolute;
+    filter: hue-rotate(180deg)  invert(100%) brightness(95%) contrast(90%);
+}
+
+ /* button overlayed on top of the map */
+ #exitFlightMode {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background-color: white;
+        z-index: 10000; /* ensure it's above Leaflet layers */
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        /*Remove link effects*/
+        text-decoration: none;
+        color: black;
+
+ }
+
+ .obstacleContainer {
+    position: absolute;
+    z-index: 10;
+    /*Adjust container to middle top of the screen*/
+    left: 50%;
+    transform: translateX(-50%);
+    top: 12px;
+ }
+
+ #Point, #Line {
+    display: inline-block;
+    margin: 0;
+    padding: 0 5px;
+}
+
+ .obPoint, .obLine {
+    /*Style buttons - making them look like buttons*/
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 4px;
+ }
+
+.toggleMode {
+    position: absolute;
+    bottom: 12px;
+    left: 5%;
+    transform: translateX(-50%);
+    z-index: 10000; /* ensure it's above Leaflet layers */
+
+}
+
+
+ footer {
+    display: none
+}
 #map {
     height: 100vh; /* Full viewport height */
     width: 100%; /* Full viewport width */

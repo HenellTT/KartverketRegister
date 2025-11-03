@@ -63,6 +63,11 @@ public class HomeController : Controller
         return View();
 
     }
+    public IActionResult FlightMode()
+    {
+        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
+    
+    
     
    
 
@@ -96,6 +101,7 @@ public class HomeController : Controller
         return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
     }
 
+   
 
 
     [HttpPost]

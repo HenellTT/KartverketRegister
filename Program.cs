@@ -11,10 +11,12 @@ builder.Services.AddControllersWithViews();
 
 // ✅ Initialize DB (using your existing logic)
 bool connectedToDb = false;
-SequelInit seq = null;
+SequelInit? seq = null;
+int attempt = 0;
 
 while (!connectedToDb)
 {
+    attempt++;
     try
     {
         seq = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
@@ -22,19 +24,24 @@ while (!connectedToDb)
         seq.InitDb();
         seq.conn.Close();
         connectedToDb = true;
+        Console.WriteLine($"Connected to DB at {Constants.DataBaseIp}:{Constants.DataBasePort} (attempt {attempt}).");
     }
-    catch
+    catch (Exception ex)
     {
-        Console.WriteLine($"Connection to DB failed: No database found at {Constants.DataBaseIp}:{Constants.DataBasePort}");
+        Console.WriteLine($"Connection to DB failed (attempt {attempt}): No database found at {Constants.DataBaseIp}:{Constants.DataBasePort}");
+        Console.WriteLine($"Error: {ex.Message}");
         Console.WriteLine("Retrying in 2s...");
         Thread.Sleep(2000);
     }
 }
 
+// Capture confirmed non-null connection string for DI registration
+var dbConnString = seq!.dbConnString;
+
 // ✅ Register a scoped MySQL connection factory using SequelInit's connection string
 builder.Services.AddScoped<MySqlConnection>(_ =>
 {
-    var conn = new MySqlConnection(seq.dbConnString);
+    var conn = new MySqlConnection(dbConnString);
     conn.Open();
     return conn;
 });
