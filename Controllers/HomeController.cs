@@ -35,7 +35,10 @@ public class HomeController : Controller
     {
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
-
+    public IActionResult Flightmode()
+    {
+        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
+    }
     
     public async Task<IActionResult> Test()
     {
@@ -87,6 +90,10 @@ public class HomeController : Controller
         SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
         Marker marker = seq.FetchMarkerById(id);
         return View(marker);
+    }
+    public IActionResult FlightMode()
+    {
+        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
     }
 
 
