@@ -23,10 +23,13 @@ while (!connectedToDb)
         seq.conn.Close();
         connectedToDb = true;
     }
-    catch
+    catch (Exception ex)
     {
-        Console.WriteLine($"Connection to DB failed: No database found at {Constants.DataBaseIp}:{Constants.DataBasePort}");
+        
+        Console.WriteLine($"Connection to DB failed at {Constants.DataBaseIp}:{Constants.DataBasePort} with password: {Constants.DataBaseRootPassword}");
+        Console.WriteLine($"Error message {ex.Message}")
         Console.WriteLine("Retrying in 2s...");
+        Constants.DataBaseRootPassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
         Thread.Sleep(2000);
     }
 }
