@@ -1,6 +1,40 @@
+@model IEnumerable<KartverketRegister.Models.Marker>
+
 @{
     ViewData["Title"] = "Registry";
 }
 <h1>@ViewData["Title"]</h1>
+<h2>Your reports</h2>
 
-<p>Testink</p>
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thread>
+            <tr>
+                <th>Report</th>
+                <th>Description</th>
+                <th>Source</th>
+                <th>Status</th>
+            </tr>
+        </thread>
+        <tbody>
+        @foreach (var marker in Model)
+        {
+            <tr>
+                <td>@marker.MarkerId</td>
+                <td>@marker.Description</td>
+                <td>@marker.Source</td>
+                <td>@marker.State</td>
+                <td>
+                    <a href="~/EditMarker/@marker.MarkerId" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="~/ViewMarker/@marker.MarkerId" class="btn btn-sm btn-secondary">View</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>You have no registered rapports</p>
+}

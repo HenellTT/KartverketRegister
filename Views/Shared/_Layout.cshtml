@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,7 +20,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                     <!-- LEFT-SIDE NAVIGATION ITEMS -->
+                    <!-- LEFT-SIDE NAVIGATION ITEMS -->
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Flightmode" asp-action="Index">FlightMode</a>
@@ -34,10 +35,10 @@
                     </ul>
                     <ul>
                     </ul>
-                     <!-- RIGHT-SIDE NAVIGATION ITEM  -->
+                    <!-- RIGHT-SIDE NAVIGATION ITEM  -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User" >User</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User">User</a>
                         </li>
                         <li class="nav-item" id="resetdbbutton" style="background-color:darkred;color:white">
                             <a class="nav-link text-dark" onclick="resetdb()">RESET DATABASE</a>
@@ -74,23 +75,24 @@
         const rdbbut = document.getElementById('resetdbbutton');
         let msgin = null;
         async function setMsginToAi() {
-            console.log('Sending api req to get Confirmation string')
+            console.log('[AI-MSG] Fetching AI message from the tactical AI source!')
             if (msgin == null) {
                 try {
-                    
+
                     msgin = await ApiFreeLLM.chat(prompts[0]);
-                    console.log('Confirmation string generated successfully');
+                    console.log('[AI-MSG] Confirmation string generated successfully');
                     rdbbut.style.backgroundColor = 'lightblue';
-                    
+
                 } catch {
-                    console.log('Failed to fetch confirmation string');
+                    console.log('[AI-MSG] Failed to fetch tactical message, Trying again!');
                     await setMsginToAi();
                 }
             }
         }
-        rdbbut.onload = async() => {await setMsginToAi()};
+        setTimeout(async ()=>{await setMsginToAi()},1000)
 
-       
+
+
 
         async function resetdb() {
             if (msgin == null) {
