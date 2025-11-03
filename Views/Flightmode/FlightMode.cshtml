@@ -18,6 +18,7 @@
         <button id="toggleMapMode">Toggle Mode</button>
     </div>
     
+    <div id="map"></div>
 </div>
 
 <link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
@@ -35,6 +36,11 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
 
+
+<!-- Fullscreen CSS -->
+<style>
+
+</style>
 
 <script>
     // Initialize the map
@@ -60,5 +66,12 @@
 
     window.onresize = function () {
         mf.ResizeMap();
+
+
+
+    const childrenArray = Array.from(document.querySelector('.sideBarContainer').children);
+    function showSideBarSec(id) {
+        childrenArray.forEach(e => {e.hidden = true});
+        document.getElementById(id).hidden = false;
     }
 </script>

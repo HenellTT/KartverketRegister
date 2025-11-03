@@ -35,9 +35,11 @@ public class HomeController : Controller
     {
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
-
-    public IActionResult User()
+    public IActionResult Flightmode()
+    {
+        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
+    
     public async Task<IActionResult> Test()
     {
         var smth = _userManager.GetUserId(HttpContext?.User);
@@ -66,13 +68,18 @@ public class HomeController : Controller
         return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
     
     
+    
+   
 
     public IActionResult Registry()
     {
         SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
         try
         {
-            List<Marker> myMarkers = seq.FetchMyMarkers(1);
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+
+            List<Marker> myMarkers = seq.FetchMyMarkers(UserId);
             return View(myMarkers);
         }
         catch (Exception ex)
@@ -89,15 +96,20 @@ public class HomeController : Controller
         Marker marker = seq.FetchMarkerById(id);
         return View(marker);
     }
-    
-    [Route("ViewMarker/{id:int}")]
-    public IActionResult ViewMarker(int id)
+    public IActionResult FlightMode()
     {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(id);
-        return View(marker);
-        
+        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
     }
 
    
+
+
+    [HttpPost]
+    public async Task<IActionResult> SetMode(string mode)
+    {
+        var appUser = await _userManager.GetUserAsync(HttpContext.User);
+        ViewBag.Theme = mode ?? "light"; // visning antar lys modus
+        return View();
+    }
 }
+

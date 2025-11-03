@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,18 +9,23 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KartverketRegister.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dark-mode.css" asp-append-version="true" />
+  
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" id="topmeny">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">KartverketRegister</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between" id="navbarNav">
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                      <!-- LEFT-SIDE NAVIGATION ITEMS -->
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <!-- LEFT-SIDE NAVIGATION ITEMS -->
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Flightmode" asp-action="Index">FlightMode</a>
@@ -34,12 +40,19 @@
                     </ul>
                     <ul>
                     </ul>
-                     <!-- RIGHT-SIDE NAVIGATION ITEM  -->
+                    <!-- RIGHT-SIDE NAVIGATION ITEM  -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User" >User</a>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-primary" id="Light_btn">light</button>
+                                <button type="button" class="btn btn-primary" id="Dark_btn">Dark</button>
+                            </div>
                         </li>
-                        <li class="nav-item" style="background-color:darkred;color:white">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User" >User</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User">User</a>
+                        </li>
+                        <li class="nav-item" id="resetdbbutton" style="background-color:darkred;color:white">
                             <a class="nav-link text-dark" onclick="resetdb()">RESET DATABASE</a>
                         </li>
                     </ul>
@@ -57,11 +70,13 @@
         <div class="container">
             &copy; 2025 - KartverketRegister - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
+
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://apifreellm.com/apifree.min.js"></script>
+    <script src="/js/Dark-mode.js"></script>
     <script>
                 const prompts = [
             "Write a quirky one-sentence 'Are you sure?' message for a HARD RESET. " +
@@ -70,31 +85,33 @@
             "Give me an unusual 'Are you sure' message, one sentence long, its to make sure user wants to HARD RESET database, end it with a phase type 'true, yes, accept, positive, etc', Keep the phase in * instead of quotes! and tell userto type it!"
 
         ]
+
+        const rdbbut = document.getElementById('resetdbbutton');
         let msgin = null;
         async function setMsginToAi() {
+            console.log('[AI-MSG] Fetching AI message from the tactical AI source!')
             if (msgin == null) {
                 try {
+
                     msgin = await ApiFreeLLM.chat(prompts[0]);
+                    console.log('[AI-MSG] Confirmation string generated successfully');
+                    rdbbut.style.backgroundColor = 'lightblue';
+
                 } catch {
-                    setMsginToAi();
+                    console.log('[AI-MSG] Failed to fetch tactical message, Trying again!');
+                    await setMsginToAi();
                 }
             }
         }
         setTimeout(async ()=>{await setMsginToAi()},1000)
 
 
+
+
         async function resetdb() {
             if (msgin == null) {
-                alert("Loading Confirmation message, Click OK to wait in peace");
-                try {
-                    msgin = await ApiFreeLLM.chat(prompts[0]);
-                } catch {
-                    msgin = "Are you sure you want to delete and reset the WHOLE database? Type *yes* to continue...";
-                }
+                msgin = "Are you sure you want to delete and reset the WHOLE database? Type *yes* to continue...";
             }
-
-
-
 
             let rightpin = findKeyWord(msgin);
             console.log(rightpin);

@@ -104,4 +104,24 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+bool ConnectedToDb = false;
+while (!ConnectedToDb)
+{
+    try
+    {
+        SequelInit seq = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
+        seq.conn.Open();
+        seq.InitDb();
+        seq.conn.Close();
+        // Funny but real, men programmet kræsjer hvis den ikke får kobla opp mot database. Så teknisk sett er det et test i seg selv
+        ConnectedToDb = true;
+    }
+    catch (Exception ex) {
+        Console.WriteLine($"Connection to db failed: No database found at {Constants.DataBaseIp}:{Constants.DataBasePort}");
+        Console.WriteLine(ex.Message);
+        Console.WriteLine("Retrying in 2s. . .");
+        Thread.Sleep(2000);
+    }
+}
+
 app.Run();
