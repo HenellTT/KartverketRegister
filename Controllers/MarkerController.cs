@@ -28,13 +28,17 @@ namespace KartverketRegister.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitMarker([FromBody] Marker marker) // Tar imot en markør via POST-forespørsel
+        public async Task<IActionResult> SubmitMarker([FromBody] Marker marker) // Tar imot en markør via POST-forespørsel
         {
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName); // Oppretter en databaseforbindelse
             
             string UserIdString = _userManager.GetUserId(HttpContext?.User);
             int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            var appUser = await _userManager.GetUserAsync(HttpContext?.User);
+
             Console.WriteLine($"Cap shit {UserId}");
+            Console.WriteLine($"User org {appUser.Organization}");
+
 
             try //try-catch for å håndtere feil
             {
@@ -45,7 +49,7 @@ namespace KartverketRegister.Controllers
                     marker.Lat,
                     marker.Lng,
                     userId: UserId,
-                    organization: marker.Organization,
+                    organization: appUser.Organization,
                     heightM: marker.HeightM,
                     heightMOverSea: marker.HeightMOverSea,
                     accuracyM: marker.AccuracyM,
