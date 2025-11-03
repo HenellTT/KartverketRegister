@@ -1,29 +1,53 @@
 ﻿
-
 class MapFunctions {
     constructor(mapRef, ICONS) {
         this.map = mapRef;
-
         this.icons = ICONS;
 
         this.UpdatePosition = true;
         this.tempMarker = L.marker([0, 0], { draggable: true, icon: this.icons.Get["pin"] });
         this.vehiclePosition = L.marker([58.1608783456262, 7.9985872834629], { draggable: true, icon: this.icons.Get["helicopter"] });
+
+        // Collection of all features (points and lines)
+        this.features = [];
+
+        // Toggle between placing points or drawing lines
+        this.placeLine = false;
+        this.currentLine = null;
     }
 
     Run() {
-        this.map.on('click', async (e) => {
-            const lat = e.latlng.lat;
-            const lng = e.latlng.lng;
-            //console.log(`lat:${lat}, lng:${lng}`);
+        this.map.on('click', (e) => this.handleMapClick(e));
+        const btnHolder = document.querySelector('.leaflet-control-zoom');
+        btnHolder.innerHTML += `<a class="leaflet-control-line" onclick='mf.toggleLineMode()' title="Line Mode" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">/</span></a>`
+        // Start vehicle tracking
+        setTimeout(() => this.startVehicleTracking(), 200);
+    }
 
-            // Move marker to clicked location
-            this.setMarkerPosition(lat, lng, mf.icons.Get["pin"]);
+    handleMapClick(e) {
+        const { lat, lng } = e.latlng;
+
+        if (this.placeLine) {
+            // Drawing a line
+            if (!this.currentLine) {
+                this.currentLine = L.polyline([[lat, lng]], { color: 'blue' }).addTo(this.map);
+                this.features.push({ type: 'LineString', latlngs: [[lat, lng]] });
+            } else {
+                this.currentLine.addLatLng([lat, lng]);
+                this.features[this.features.length - 1].latlngs.push([lat, lng]);
+            }
+        } else {
+            // Placing a point
+            this.setMarkerPosition(lat, lng, this.icons.Get["pin"]);
             shlongPositionIntoForm(lat, lng);
             shlongHeightIntoForm(lat, lng);
-        });
-        // Init shit that has to be done fr fr
-        setTimeout(this.startVehicleTracking(), 200);
+            shlongGeoJsonIntoForm(JSON.stringify(this.toGeoJson()))
+
+            this.features.push({
+                type: 'Point',
+                latlng: [lat, lng]
+            });
+        }
     }
 
     startVehicleTracking() {
@@ -38,22 +62,18 @@ class MapFunctions {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     this.setVehiclePosition(lat, lng);
-
-                    // Pan map smoothly to current position
                     this.map.panTo([lat, lng], { animate: true, duration: 0.5 });
                 }
-
             },
-            (err) => {
-                console.error('Geolocation error:', err);
-            },
+            (err) => console.error('Geolocation error:', err),
             {
                 enableHighAccuracy: true,
-                maximumAge: 1000,   // use cached location up to 1 second
+                maximumAge: 1000,
                 timeout: 5000
             }
         );
     }
+
     moveViewTo(lat, lng) {
         this.map.panTo([lat, lng], { animate: true, duration: 0.5 });
     }
@@ -63,25 +83,56 @@ class MapFunctions {
             this.vehiclePosition.addTo(this.map);
         }
         this.vehiclePosition.setLatLng([lat, lng])
-            .bindPopup(`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`)
-        //.openPopup();
+            .bindPopup(`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`);
     }
 
-    // Set the temp marker to the desired position
     setMarkerPosition(lat, lng, icon = null) {
-        if (icon != null) {
-            this.tempMarker.setIcon(icon);
-        }
-        if (!this.map.hasLayer(this.tempMarker)) {
-            this.tempMarker.addTo(this.map);
-        }
+        if (icon) this.tempMarker.setIcon(icon);
+        if (!this.map.hasLayer(this.tempMarker)) this.tempMarker.addTo(this.map);
+
         this.tempMarker.setLatLng([lat, lng])
             .bindPopup(`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`)
             .openPopup();
+    }
 
+    toggleLineMode() {
+        if (this.placeLine == true) {
+            this.placeLine = false;
+            this.currentLine = null;
+        } else {
+            this.placeLine = true;
+        }
 
     }
 
+    // Export all features as GeoJSON
+    toGeoJson() {
+        const geoJson = {
+            type: "FeatureCollection",
+            features: this.features.map(f => {
+                if (f.type === 'Point') {
+                    return {
+                        type: "Feature",
+                        geometry: {
+                            type: "Point",
+                            coordinates: [f.latlng[1], f.latlng[0]] // GeoJSON uses [lng, lat]
+                        },
+                        properties: {}
+                    };
+                } else if (f.type === 'LineString') {
+                    return {
+                        type: "Feature",
+                        geometry: {
+                            type: "LineString",
+                            coordinates: f.latlngs.map(ll => [ll[1], ll[0]])
+                        },
+                        properties: {}
+                    };
+                }
+            })
+        };
+        return geoJson;
+    }
 }
 const form = document.getElementById('tempMarkerFormForm');
 
@@ -96,6 +147,10 @@ function shlongPositionIntoForm(lat, lng) {
     form.lng.value = lng;
     form.lat.value = lat;
 }
+function shlongGeoJsonIntoForm(GeoJson) {
+    form.geojson.value = GeoJson;
+}
+
 form.addEventListener('submit', function (e) {
     e.preventDefault(); // Prevent page reload
 
