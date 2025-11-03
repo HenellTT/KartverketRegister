@@ -66,8 +66,8 @@ public class HomeController : Controller
     public IActionResult FlightMode()
     {
         return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
-    
-    
+
+    }
     
    
 
@@ -96,10 +96,7 @@ public class HomeController : Controller
         Marker marker = seq.FetchMarkerById(id);
         return View(marker);
     }
-    public IActionResult FlightMode()
-    {
-        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
-    }
+   
 
    
 
