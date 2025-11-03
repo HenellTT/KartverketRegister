@@ -81,3 +81,11 @@ header {
  footer {
     display: none
 }
+#map {
+    height: 100vh; /* Full viewport height */
+    width: 100%; /* Full viewport width */
+    position: absolute;
+    left: 0;
+    top:57px;
+    filter: hue-rotate(180deg)  invert(100%) brightness(95%) contrast(90%);
+}

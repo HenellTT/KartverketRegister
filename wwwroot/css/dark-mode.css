@@ -1,0 +1,3 @@
+body.dark-mode {
+    filter: invert(100%) saturate(0.9) hue-rotate(198deg);
+}

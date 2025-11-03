@@ -35,7 +35,10 @@ public class HomeController : Controller
     {
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
-
+    public IActionResult Flightmode()
+    {
+        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
+    }
     
     public async Task<IActionResult> Test()
     {
@@ -92,22 +95,17 @@ public class HomeController : Controller
         Marker marker = seq.FetchMarkerById(id);
         return View(marker);
     }
-    
-    [Route("ViewMarker/{id:int}")]
-    public IActionResult ViewMarker(int id)
+    public IActionResult FlightMode()
     {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(id);
-        return View(marker);
-        
+        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
     }
 
-    /*public IActionResult UserView()
+    [HttpPost]
+    public async Task<IActionResult> SetMode(string mode)
     {
-        int userId = 1; 
-
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        List<Marker> userMarkers = seq.FetchMarkersByUserId(userId);
-        return View(userMarkers);
-    }*/
+        var appUser = await _userManager.GetUserAsync(HttpContext.User);
+        ViewBag.Theme = mode ?? "light"; // visning antar lys modus
+        return View();
+    }
 }
+
