@@ -1,5 +1,5 @@
 ﻿// If new icons are added, Just add them to this list;
-const basicIcons = ["potato", "user_icon"];
+const basicIcons = ["potato"];
 // That's it, don't touch the rest it's very fragile 🥺
 // Mucho Fragileses! ._.
 class Icons {

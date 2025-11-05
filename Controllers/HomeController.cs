@@ -35,7 +35,10 @@ public class HomeController : Controller
     {
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
-
+    public IActionResult Flightmode()
+    {
+        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
+    }
     
     public async Task<IActionResult> Test()
     {
@@ -58,6 +61,11 @@ public class HomeController : Controller
         }
 
         return View();
+
+    }
+    public IActionResult FlightMode()
+    {
+        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
 
     }
     
@@ -88,6 +96,14 @@ public class HomeController : Controller
         Marker marker = seq.FetchMarkerById(id);
         return View(marker);
     }
+    [Route("ViewMarker/{id:int}")]
+    public IActionResult ViewMarker(int id)
+    {
+        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+        Marker marker = seq.FetchMarkerById(id);
+        return View(marker);
+    }
+
 
 
 
