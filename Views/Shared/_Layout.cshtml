@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KartverketRegister.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/dark-mode.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/WelcomeToCompleteDarkness.css" asp-append-version="true" />
   
 </head>
 
@@ -48,6 +49,12 @@
                                 <button type="button" class="btn btn-primary" id="Dark_btn">Dark</button>
                             </div>
                         </li>
+                            <li class="nav-item">
+                                <div class="btn-group" role="group" aria-label=" k">
+                                    <button type="button" class="btn btn-primary" onclick="dms(false)">light v2</button>
+                                    <button type="button" class="btn btn-primary" onclick="dms(true)">Dark v2</button>
+                                </div>
+                            </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User" >User</a>
 
@@ -86,6 +93,22 @@
 
         ]
 
+        function dms(bool) {
+            let body = document.querySelector('body')
+            let mappyUwU = document.getElementById("map")
+            
+
+            if (bool) {
+                sessionStorage.setItem('DarkMode', true);
+                body.classList.add("MayDarknessSwallowYourSoul")
+                mappyUwU.classList.add("MayDarknessSwallowYourSoulMap")
+            } else {
+                sessionStorage.setItem('DarkMode', false);
+                body.classList.remove("MayDarknessSwallowYourSoul")
+                mappyUwU.classList.remove("MayDarknessSwallowYourSoulMap")
+            }
+        }
+
         const rdbbut = document.getElementById('resetdbbutton');
         let msgin = null;
         async function setMsginToAi() {
@@ -104,7 +127,7 @@
             }
         }
         setTimeout(async ()=>{await setMsginToAi()},1000)
-
+        setTimeout(()=>{dms(sessionStorage.getItem('DarkMode') === 'true')},1);
 
 
 
