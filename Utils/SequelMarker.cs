@@ -241,12 +241,29 @@ namespace KartverketRegister.Utils
             conn.Close();
 
         }
-        public List<MapMarker> GetObstacles() { // add lat lng l8r to limit amount of markers fetched by user;
+        public List<MapMarker> GetObstacles(LocationModel LM) { // add lat lng l8r to limit amount of markers fetched by user;
             conn.Open();
+
             List<MapMarker> markers = new List<MapMarker>();
-            string sql = "SELECT * FROM RegisteredMarkers";
+            double latOffset = 0.009;
+            double lngOffset = 0.009 / Math.Cos(LM.Lat * Math.PI / 180);
+
+            string sql = @"
+                SELECT *
+                FROM RegisteredMarkers
+                WHERE Lat BETWEEN @lat - @latOffset AND @lat + @latOffset
+                  AND Lng BETWEEN @lng - @lngOffset AND @lng + @lngOffset;
+            ";
+
+
             using (var cmd = new MySqlCommand(sql, conn))
             {
+                cmd.Parameters.AddWithValue("@lat", LM.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                cmd.Parameters.AddWithValue("@lng", LM.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                cmd.Parameters.AddWithValue("@latOffset", latOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                cmd.Parameters.AddWithValue("@lngOffset", lngOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())

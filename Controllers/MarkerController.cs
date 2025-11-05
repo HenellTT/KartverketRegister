@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Runtime;
 
 
 namespace KartverketRegister.Controllers
@@ -86,12 +87,14 @@ namespace KartverketRegister.Controllers
             }
             
         }
-        public IActionResult GetObstacles()
+        public IActionResult GetObstacles([FromBody] LocationModel model)
         {
+            Console.WriteLine($"[GetObstacles] Lng: {model.Lng}");
+            Console.WriteLine($"[GetObstacles] Lat: {model.Lat}");
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
-                List<MapMarker> Markers = seq.GetObstacles(); 
+                List<MapMarker> Markers = seq.GetObstacles(model); 
                 return Ok(Markers);
             }
             catch
