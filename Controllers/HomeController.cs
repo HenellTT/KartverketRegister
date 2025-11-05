@@ -96,9 +96,15 @@ public class HomeController : Controller
         Marker marker = seq.FetchMarkerById(id);
         return View(marker);
     }
-   
+    [Route("ViewMarker/{id:int}")]
+    public IActionResult ViewMarker(int id)
+    {
+        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+        Marker marker = seq.FetchMarkerById(id);
+        return View(marker);
+    }
 
-   
+
 
 
     [HttpPost]

@@ -85,45 +85,7 @@ class MapFunctions {
     }
 
 }
-const form = document.getElementById('tempMarkerFormForm');
 
-async function shlongHeightIntoForm(lat,lng) {
-    fetch(`/api/getHeight?lat=${lat}&lng=${lng}`).then((response) => { return response.json() }).then((data) => {
-        console.log(data);
-        form.height.value = data.height.toFixed(2);
-    })
-    
-}
-function shlongPositionIntoForm(lat, lng) {
-    form.lng.value = lng;
-    form.lat.value = lat;
-}
-form.addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent page reload
-
-    const form = e.target;
-    const formData = new FormData(form); // Collect all form fields
-
-    fetch('/Tempmarker/SubmitMarker', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => {
-            if (response.ok) return response.text(); // or response.json() if returning JSON
-            throw new Error('Network response was not ok');
-        })
-        .then(data => {
-            document.getElementById('status').innerText = 'Marker saved successfully!';
-            console.log('Server response:', data);
-            form.reset(); // Optional: clear the form
-        })
-        .catch(error => {
-            document.getElementById('status').innerText = 'Error saving marker.';
-            console.error('Error:', error);
-        });
-    setTimeout(() => { document.getElementById('status').innerText = ''; }, 3000)
-
-});
 
 
 async function FetchaMahMarkah() {
