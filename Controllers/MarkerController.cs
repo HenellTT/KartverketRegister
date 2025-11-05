@@ -78,13 +78,26 @@ namespace KartverketRegister.Controllers
 
             try
             {
-                List<Marker> MyMarkers = seq.FetchMyMarkers(UserId); // Henter markører for bruker med ID 1
+                List<Marker> MyMarkers = seq.FetchMyMarkers(UserId); // Henter markører for bruker med ID 
                 return Ok(MyMarkers);
             } catch
             {
                 return NoContent();
             }
             
+        }
+        public IActionResult GetObstacles()
+        {
+            SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            try
+            {
+                List<MapMarker> Markers = seq.GetObstacles(); 
+                return Ok(Markers);
+            }
+            catch
+            {
+                return NoContent();
+            }
         }
 
 

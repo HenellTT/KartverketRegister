@@ -52,15 +52,8 @@ namespace KartverketRegister.Utils
                 {
                     while (reader.Read())
                     {
-                        TempMarker mrk = new TempMarker();
-                        mrk.MarkerId = reader.GetInt32("MarkerId");
-                        mrk.UserId = reader.GetInt32("UserId");
-                        mrk.Lat = reader.GetDouble("Lat");
-                        mrk.Lng = reader.GetDouble("Lng");
-                        mrk.Type = reader.GetString("Type");
-                        mrk.GeoJson = reader.GetString("GeoJson");
-                        mrk.Description = reader.GetString("Description");
-                        mrk.HeightMOverSea = reader.GetDecimal("HeightMOverSea");
+                        TempMarker mrk = new TempMarker(reader);
+                        
 
                         Markers.Add(mrk);
                     }
@@ -85,15 +78,8 @@ namespace KartverketRegister.Utils
                 {
                     if (reader.Read()) // Only read first row
                     {
-                        mrk = new TempMarker();
-                        mrk.MarkerId = reader.GetInt32("MarkerId");
-                        mrk.UserId = reader.GetInt32("UserId");
-                        mrk.Lat = reader.GetDouble("Lat");
-                        mrk.Lng = reader.GetDouble("Lng");
-                        mrk.Type = reader.GetString("Type");
-                        mrk.Description = reader.GetString("Description");
-                        mrk.HeightMOverSea = reader.GetDecimal("HeightMOverSea");
-
+                        mrk = new TempMarker(reader);
+                        
                     }
                 }
             }
