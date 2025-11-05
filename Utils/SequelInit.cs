@@ -91,7 +91,8 @@ namespace KartverketRegister.Utils
                 Email              VARCHAR(255),
                 NormalizedEmail    VARCHAR(255),
                 SecurityStamp      VARCHAR(100),
-                ConcurrencyStamp   VARCHAR(100)
+                ConcurrencyStamp   VARCHAR(100),
+                UserName           VARCHAR(100)
             );";
                 using (var cmd = new MySqlCommand(createUsers, conn))
                 {
