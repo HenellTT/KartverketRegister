@@ -82,6 +82,7 @@ namespace KartverketRegister.Utils
                 UserId        INT AUTO_INCREMENT PRIMARY KEY,
                 Name          VARCHAR(100) NOT NULL,
                 LastName      VARCHAR(100) NOT NULL,
+                FirstName      VARCHAR(100) NOT NULL,
                 UserType      ENUM('User','Admin') NOT NULL DEFAULT 'User',
                 Organization  VARCHAR(100),
                 CreatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP,

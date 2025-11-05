@@ -28,11 +28,12 @@ namespace KartverketRegister.Auth
             user.PasswordHash = passwordHasher.HashPassword(user, user.Password);
 
             string query = @"
-                INSERT INTO Users (Name, LastName, Organization, UserType, PasswordHash, Email, CreatedAt)
-                VALUES (@n, @ln, @org, @role, @pw, @email, NOW());";
+                INSERT INTO Users (Name, FirstName, LastName, Organization, UserType, PasswordHash, Email, CreatedAt)
+                VALUES (@n, @fn, @ln, @org, @role, @pw, @email, NOW());";
 
             using var cmd = new MySqlCommand(query, _conn);
             cmd.Parameters.AddWithValue("@n", user.Name);
+            cmd.Parameters.AddWithValue("@fn", user.FirstName);
             cmd.Parameters.AddWithValue("@ln", user.LastName);
             cmd.Parameters.AddWithValue("@org", user.Organization);
             cmd.Parameters.AddWithValue("@role", user.UserType ?? "User");
