@@ -109,6 +109,11 @@ h2 {
     padding: 20px 25px;
 }
 
+#mymrk td button {
+    margin:2px;
+    width:83.2px;
+}
+
 /* --- Individual Marker Card --- */
 .tmk-cont {
     background: #f9fafb;

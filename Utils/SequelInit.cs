@@ -203,7 +203,7 @@ namespace KartverketRegister.Utils
                     IsRead BOOLEAN DEFAULT FALSE,
                     Type ENUM('Info', 'Warning', 'ReviewAssigned', 'MarkerAccepted', 'MarkerRejected') DEFAULT 'Info',
 
-                    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+                    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
                 );";
                 using (var cmd = new MySqlCommand(createMarkers, conn))
                 {
