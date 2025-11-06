@@ -1,16 +1,12 @@
 ﻿/* --- Base Layout --- */
 body {
-    margin: 0;
+   
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     background-color: lightblue;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    line-height: 1.6;
     text-align:center;
 }
 h1{
-    
+    font-size: 40px;
 }
 
 h2{
@@ -37,9 +33,8 @@ h2{
         box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
 
-
-        .LogInButtons button:hover {
-            background-color: #e5e7eb;
-            transform: translateY(-5px);
-        }
+ .LogInButtons button:hover {
+      background-color: lightgrey;
+      transform: translateY(-5px);
+ }
 
