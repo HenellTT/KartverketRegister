@@ -29,12 +29,26 @@ h2{
         border-radius: 12px;
         font-size: 50px;
         cursor: pointer;
-        transition: all 0.2s ease;
         box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
     }
 
- .LogInButtons button:hover {
-      background-color: lightgrey;
-      transform: translateY(-5px);
- }
+
+        .LogInButtons button::after {
+            content: '\00bb';
+           position: absolute;
+            opacity: 0;
+            right: -50px;
+            transition: 0.5s;
+        }
+
+        .LogInButtons button:hover {
+            padding-right: 25px;
+        }
+    .LogInButtons:hover button:after {
+        opacity: 1;
+        right: 0;
+    }
 
