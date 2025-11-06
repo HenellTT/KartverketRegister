@@ -69,10 +69,11 @@ namespace KartverketRegister.Controllers
                     return Json(new GeneralResponse(false, "Email already in use!"));
                 user = new AppUser
                 {
-                    Name = username,
+                    Name = email,
+                    FirstName = username,
                     LastName = lastname,
                     Organization = org,
-                    UserName = username,
+                    UserName = email,
                     UserType = "User", // default role
                     Password = password,
                     Email = email

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KartverketRegister.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/dark-mode.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/WelcomeToCompleteDarkness.css" asp-append-version="true" />
   
 </head>
 
@@ -48,6 +49,12 @@
                                 <button type="button" class="btn btn-primary" id="Dark_btn">Dark</button>
                             </div>
                         </li>
+                            <li class="nav-item">
+                                <div class="btn-group" role="group" aria-label=" k">
+                                    <button type="button" class="btn btn-primary" onclick="dms(false)">light v2</button>
+                                    <button type="button" class="btn btn-primary" onclick="dms(true)">Dark v2</button>
+                                </div>
+                            </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User" >User</a>
 
@@ -66,12 +73,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - KartverketRegister - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-
-    </footer>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -85,6 +87,22 @@
             "Give me an unusual 'Are you sure' message, one sentence long, its to make sure user wants to HARD RESET database, end it with a phase type 'true, yes, accept, positive, etc', Keep the phase in * instead of quotes! and tell userto type it!"
 
         ]
+
+        function dms(bool) {
+            let body = document.querySelector('body')
+            let mappyUwU = document.getElementById("map")
+            
+
+            if (bool) {
+                sessionStorage.setItem('DarkMode', true);
+                body.classList.add("MayDarknessSwallowYourSoul")
+                mappyUwU.classList.add("MayDarknessSwallowYourSoulMap")
+            } else {
+                sessionStorage.setItem('DarkMode', false);
+                body.classList.remove("MayDarknessSwallowYourSoul")
+                mappyUwU.classList.remove("MayDarknessSwallowYourSoulMap")
+            }
+        }
 
         const rdbbut = document.getElementById('resetdbbutton');
         let msgin = null;
@@ -104,7 +122,7 @@
             }
         }
         setTimeout(async ()=>{await setMsginToAi()},1000)
-
+        setTimeout(()=>{dms(sessionStorage.getItem('DarkMode') === 'true')},1);
 
 
 

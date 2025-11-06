@@ -5,6 +5,8 @@
 }
 <link rel="stylesheet" href="~/css/RegisterMarker.css" asp-append-version="true" />
 
+
+
 <form method="post" asp-action="SubmitMarker" asp-controller="Marker">
     <h1>@ViewData["Title"]</h1>
 
@@ -30,7 +32,7 @@
     </div>
 
     <div class="form-group">
-        <label>Height (m)</label>
+        <label>Estimated Height (m)</label>
         <input required type="number" step="0.01" name="HeightM" class="form-control" />
     </div>
 
@@ -39,14 +41,14 @@
         <input required type="number" step="0.01" value="@(Model.HeightMOverSea?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "")" name="HeightMOverSea" class="form-control" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group hidden-input">
         <label>Organization</label>
-        <input required type="text" name="Organization" class="form-control" />
+        <input required type="text" name="Organization" value="Gruppe13" class="form-control" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group hidden-input">
         <label>Accuracy (m)</label>
-        <input required type="number" step="0.01" name="AccuracyM" class="form-control" />
+        <input required type="number" step="0.01" value="1" name="AccuracyM" class="form-control" />
     </div>
 
     <!-- Manually filled fields -->
@@ -69,20 +71,23 @@
         <input type="checkbox" name="IsTemporary" value="true" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group hidden-input">
         <label>Expected Removal Date</label>
         <input type="date" name="ExpectedRemovalDate" class="form-control" />
     </div>
 
     <div class="form-group">
         <label>Lighting / Markings</label>
-        <input type="text" name="Lighting" class="form-control" />
+        <select name="Lighting" class="form-control">
+            <option value="No lightning">No lightning</option>
+            <option value="Yes safety">Yes safety</option>
+            <option value="I dont know">I dont know</option>
+        </select>
     </div>
 
     <div class="form-group">
         <label>Source</label>
         <select required name="Source" class="form-control">
-            <option value="">--Select--</option>
             <option value="Pilot Report">Pilot Report</option>
             <option value="Drone Survey">Drone Survey</option>
             <option value="Public Submission">Public Submission</option>
@@ -93,4 +98,9 @@
     <button type="submit" class="btn btn-primary">Register Marker</button>
     <div id="returnMsg"></div>
 </form>
+<style>
+    .hidden-input {
+        display: none !important;
+    }
+</style>
 <script src="~/js/RegisterMarkerPage.js"></script>

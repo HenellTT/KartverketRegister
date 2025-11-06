@@ -112,17 +112,15 @@ h2 {
 /* --- Individual Marker Card --- */
 .tmk-cont {
     background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    border: 2px solid black;
+    margin:2px;
     border-radius: 10px;
     padding: 18px 20px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     transition: all 0.2s ease;
 }
 
-    .tmk-cont:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    }
+    
 
     .tmk-cont h3 {
         font-size: 1.1rem;
@@ -188,22 +186,6 @@ h2 {
     display:none;
 }
 
-.trw-Accepted {
-    background-color:green;
-}
-    .trw-Accepted p {
-        color: darkturquoise;
-    }
-.trw-Rejected {
-    background-color:orangered;
-    
-}
-    .trw-Rejected p {
-        color: darkturquoise;
-    }
-.trw-Unseen {
-    background-color:aqua;
-}
-.trw-Seen {
-    background-color: aqua;
+#mymrk tr {
+    border-bottom: 2px solid black !important;
 }

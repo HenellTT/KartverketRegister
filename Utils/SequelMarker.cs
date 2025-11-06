@@ -8,7 +8,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace KartverketRegister.Utils
 {
-	// SQL queries for alt som har med Marker/obstacler å gjøre. 
+    // SQL queries for alt som har med Marker/obstacler å gjøre. 
     public class SequelMarker : SequelBase
     {
 
@@ -121,7 +121,7 @@ namespace KartverketRegister.Utils
         }
         public Marker FetchMarkerById(int markerId)
         {
-            Marker mrk = new Marker() ; // Will hold the result
+            Marker mrk = new Marker(); // Will hold the result
 
             conn.Open();
             string sql = @"
@@ -141,7 +141,7 @@ namespace KartverketRegister.Utils
                 {
                     if (reader.Read()) // Only read first row
                     {
-                        
+
 
                         mrk.Type = reader["Type"] as string;
                         mrk.Description = reader["Description"] as string;
@@ -229,7 +229,7 @@ namespace KartverketRegister.Utils
             conn.Open();
             string sql = "UPDATE RegisteredMarkers SET State = 'Rejected', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
 
-            
+
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@MarkerId", markerId);
@@ -241,41 +241,45 @@ namespace KartverketRegister.Utils
             conn.Close();
 
         }
-
-
-    }
-    
-    /*public List<Marker> FetchMarkersByUserId(int userId)
-    {
-        List<Marker> markers = new List<Marker>();
-   
-        
+        public List<MapMarker> GetObstacles(LocationModel LM) { // add lat lng l8r to limit amount of markers fetched by user;
             conn.Open();
-            string query = "SELECT * FROM markers WHERE UserId = @userId";
-            MySqlCommand cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue(@userId, userId);
 
-            using (MySqlDataReader = cmd.ExecuteReader())
+            List<MapMarker> markers = new List<MapMarker>();
+            double latOffset = 0.009;
+            double lngOffset = 0.009 / Math.Cos(LM.Lat * Math.PI / 180);
+
+            string sql = @"
+                SELECT *
+                FROM RegisteredMarkers
+                WHERE Lat BETWEEN @lat - @latOffset AND @lat + 1
+                  AND Lng BETWEEN @lng - @lngOffset AND @lng + 1;
+            ";
+
+
+            using (var cmd = new MySqlCommand(sql, conn))
             {
-                while (reader.Read)
+                cmd.Parameters.AddWithValue("@lat", LM.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                cmd.Parameters.AddWithValue("@lng", LM.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                cmd.Parameters.AddWithValue("@latOffset", latOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                cmd.Parameters.AddWithValue("@lngOffset", lngOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                using (var reader = cmd.ExecuteReader())
                 {
-                    Marker marker = new Marker
+                    while (reader.Read())
                     {
-                        MarkerId = reader.GetInt32("MarkerId"),
-                        Organization = reader.GetString("Organization"),
-                        ObstacleCategory = reader.GetString("ObstacleCategory"),
-                        State = reader.GetString("Status"),
-                        HeightM = reader.IsDBNull("HeightM") ? null : reader.GetDecimal("HeightM"),
-                        ExpectedRemovalDate = reader.IsDBNull("ExpectedremovalDate")
-                            ? null
-                            : reader.GetDecimal("ExpectedRemovalDate"),
-                        ReviewComment = reader.IsDBNull("ReviewComment") ? null : reader.GetString("ReviewComment")
-                    };
-                    markers.Add(marker);
+                        MapMarker mrk = new MapMarker(reader);
+                        
+
+                        markers.Add(mrk);
+                    }
                 }
             }
-        
+            conn.Close();
+            return markers;
+        }
 
-        return markers;
-    }*/
+    }
+
+
 }

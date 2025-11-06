@@ -82,6 +82,7 @@ namespace KartverketRegister.Utils
                 UserId        INT AUTO_INCREMENT PRIMARY KEY,
                 Name          VARCHAR(100) NOT NULL,
                 LastName      VARCHAR(100) NOT NULL,
+                FirstName      VARCHAR(100) NOT NULL,
                 UserType      ENUM('User','Admin') NOT NULL DEFAULT 'User',
                 Organization  VARCHAR(100),
                 CreatedAt     DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -91,7 +92,8 @@ namespace KartverketRegister.Utils
                 Email              VARCHAR(255),
                 NormalizedEmail    VARCHAR(255),
                 SecurityStamp      VARCHAR(100),
-                ConcurrencyStamp   VARCHAR(100)
+                ConcurrencyStamp   VARCHAR(100),
+                UserName           VARCHAR(100)
             );";
                 using (var cmd = new MySqlCommand(createUsers, conn))
                 {
@@ -103,7 +105,7 @@ namespace KartverketRegister.Utils
                 using (var cmd = new MySqlCommand(JohnnyTest, conn))
                 {
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("SequelInit: Added Test User");
+                    Console.WriteLine("[SequelInit] Added Test User");
                 }
 
             }
@@ -128,7 +130,7 @@ namespace KartverketRegister.Utils
                 using (var cmd = new MySqlCommand(createMarkers, conn))
                 {
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("SequelInit: Created Markers Table");
+                    Console.WriteLine("[SequelInit] Created Markers Table");
                 }
             }
 
@@ -166,7 +168,47 @@ namespace KartverketRegister.Utils
                 using (var cmd = new MySqlCommand(createRegisteredMarkers, conn))
                 {
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("SequelInit: Created RegisteredMarkers Table");
+                    Console.WriteLine("[SequelInit] Created RegisteredMarkers Table");
+                }
+            }
+
+            // Create ReviewAssign table if missing
+            if (!TableExists("ReviewAssign"))
+            {
+                string createMarkers = @"
+                CREATE TABLE ReviewAssign (
+                    UserId INT,
+                    MarkerId INT,
+                    PRIMARY KEY (UserId, MarkerId),
+                    FOREIGN KEY (MarkerId) REFERENCES RegisteredMarkers(MarkerId),
+                    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+                );
+                ";
+                using (var cmd = new MySqlCommand(createMarkers, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                    Console.WriteLine("[SequelInit] Created ReviewAssign Table");
+                }
+            }
+            // Create Notifications table if missing
+            if (!TableExists("Notifications"))
+            {
+                string createMarkers = @"
+                CREATE TABLE Notifications (
+                    NotificationId INT AUTO_INCREMENT PRIMARY KEY,
+                    UserId INT NOT NULL,
+                    MarkerId INT NULL,
+                    Message VARCHAR(300) NOT NULL,
+                    Date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    IsRead BOOLEAN DEFAULT FALSE,
+                    Type ENUM('Info', 'Warning', 'ReviewAssigned', 'MarkerAccepted', 'MarkerRejected') DEFAULT 'Info',
+
+                    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+                );";
+                using (var cmd = new MySqlCommand(createMarkers, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                    Console.WriteLine("[SequelInit] Created Notifications Table");
                 }
             }
         }

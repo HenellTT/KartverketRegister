@@ -32,7 +32,7 @@ async function UpdateMarkerListTable(status) {
         <td>Organization</td>
         <td>Accuracy</td>
         <td>Category</td>
-        <td>Review Comment</td>
+        <td>Status</td>
         <td>Actions</td>
     </tr>`;
        
@@ -71,7 +71,7 @@ function CreateMarkerRow(marker) {
         <td>${marker.organization ?? 'N/A'}</td>
         <td>${marker.accuracyM ?? 'N/A'}</td>
         <td>${marker.obstacleCategory ?? 'N/A'}</td>
-        <td>${marker.reviewComment ?? 'N/A'}</td>
+        <td>${marker.state ?? 'N/A'}</td>
         <td style="text-align:right;">
             <button onclick="postRedirect('/Admin/Review', { markerId: ${marker.markerId} })">Review</button>
             <button onclick="DeleteMarker(${marker.markerId})">Delete</button>
