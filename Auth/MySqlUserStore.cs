@@ -215,6 +215,7 @@ namespace KartverketRegister.Auth
                 Id = reader.GetInt32("UserId"),
                 Name = reader.GetString("Name"),
                 LastName = reader.GetString("LastName"),
+                FirstName = reader.GetString("FirstName"),
                 Organization = reader["Organization"]?.ToString(),
                 Email = reader["Email"]?.ToString(),
                 UserType = reader["UserType"]?.ToString(),
