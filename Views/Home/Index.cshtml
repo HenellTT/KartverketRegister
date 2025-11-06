@@ -2,11 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 
+<link rel="stylesheet" href="~/css/LogIn.css" asp-append-version="true" />
+
 
 <h1>Welcome</h1>
-
-<div>
-<a href="/Pilot"><button class="Log-button">Pilot</button></a>
-<a href="/Admin"><button class="Log-button">Admin</button></a>
+<h2>Please choose your Role</h2>
+<div class="LogInButtons">
+    <a href="/Pilot"><button class="GuideButton">Pilot</button></a>
+    <a href="/Admin"><button class="secondGuideButton">Admin</button></a>
 </div>
 

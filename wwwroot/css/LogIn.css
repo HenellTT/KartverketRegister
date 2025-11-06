@@ -1,0 +1,45 @@
+﻿/* --- Base Layout --- */
+body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    background-color: lightblue;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
+    text-align:center;
+}
+h1{
+    
+}
+
+h2{
+   font-size: 30px;
+}
+
+.LogInButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 160px;
+    margin-top: 250px;
+}
+
+    .LogInButtons button {
+        width: 250px;
+        height: 150px;
+        background-color: #f8f8f8;
+        border: 2px solid #333;
+        border-radius: 12px;
+        font-size: 50px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+
+        .LogInButtons button:hover {
+            background-color: #e5e7eb;
+            transform: translateY(-5px);
+        }
+
