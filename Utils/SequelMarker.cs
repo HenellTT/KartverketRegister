@@ -251,8 +251,8 @@ namespace KartverketRegister.Utils
             string sql = @"
                 SELECT *
                 FROM RegisteredMarkers
-                WHERE Lat BETWEEN @lat - @latOffset AND @lat + @latOffset
-                  AND Lng BETWEEN @lng - @lngOffset AND @lng + @lngOffset;
+                WHERE Lat BETWEEN @lat - @latOffset AND @lat + 1
+                  AND Lng BETWEEN @lng - @lngOffset AND @lng + 1;
             ";
 
 
