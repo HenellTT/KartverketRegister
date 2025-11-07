@@ -52,7 +52,8 @@ builder.Services.AddScoped<MySqlConnection>(_ =>
 
 
 // ✅ Identity setup (custom user/role stores)
-builder.Services.AddScoped<IUserStore<AppUser>, MySqlUserStore>();
+builder.Services.AddScoped<IUserStore<AppUser>>(sp => new MySqlUserStore(dbConnString));
+
 builder.Services.AddScoped<IRoleStore<IdentityRole<int>>, MySqlRoleStore>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
