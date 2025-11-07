@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Identity;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,9 @@ namespace KartverketRegister.Auth
 
         public MySqlUserStore(MySqlConnection conn)
         {
-            _conn = conn;
+            SequelBase seq = new SequelBase(Constants.DataBaseIp, Constants.DataBaseName);
+            _conn = seq.GetConnection();
+            _conn.Open();
         }
 
         #region IUserStore<AppUser>
