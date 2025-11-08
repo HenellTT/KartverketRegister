@@ -34,6 +34,28 @@ namespace KartverketRegister.Utils
 
             }
         }
+        public static void SendNotification(int ToUser, string Message, string Type, int MarkerId)
+        {
+            string sqlQuery = @"
+                INSERT INTO Notifications 
+                (UserId, Message, Type, MarkerId) 
+                VALUES 
+                (@UserId, @Message, @Type, @MarkerId);
+            ";
+            using (MySqlConnection conn = new MySqlConnection(_connString))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(sqlQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", ToUser);
+                    cmd.Parameters.AddWithValue("@Message", Message);
+                    cmd.Parameters.AddWithValue("@Type", Type);
+                    cmd.Parameters.AddWithValue("@MarkerId", MarkerId);
+                    cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
         public static void SetToRead(int NotificationId, int UserId)
         {
             string sqlQuery = @"
@@ -75,6 +97,10 @@ namespace KartverketRegister.Utils
                             Notification.Message = reader["Message"].ToString();
                             Notification.IsRead = reader.GetBoolean("IsRead");
                             Notification.Date = reader.GetDateTime("Date");
+
+                            Notification.MarkerId = int.TryParse(reader["MarkerId"]?.ToString(), out int mid) ? mid : 0;
+
+
                             NotificationList.Add(Notification);
                         }
 

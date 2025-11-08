@@ -64,9 +64,21 @@ namespace KartverketRegister.Controllers
             {
                 return Json(new GeneralResponse(false, "No notifications fo u bro"));
             }
-            
-
-            
+        }
+        [HttpGet]
+        public IActionResult MarkNotificationAsRead(int NotificationId)
+        {
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            try
+            {
+                Notificator.SetToRead(NotificationId, UserId);
+                return Json(new GeneralResponse(true, $"Your notification was set as read!"));
+            }
+            catch
+            {
+                return Json(new GeneralResponse(false, "Error: Notification cannot be set as viewed"));
+            }
         }
         [HttpGet]
         public IActionResult SendNotification(int userid, string msg) // ONLY FOR TESTING RESTRICT or DELETE l8r  

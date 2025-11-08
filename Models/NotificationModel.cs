@@ -7,6 +7,7 @@
         public string Message { get; set;}
         public bool IsRead { get; set;}
         public string Type { get; set;}
+        public int MarkerId { get; set; }
         public DateTime? Date { get; set;}
     }
 }
