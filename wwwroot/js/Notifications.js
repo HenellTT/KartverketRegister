@@ -50,13 +50,13 @@
         
     }
     async SendViewedState(nid) {
-        fetch(`/api/MarkNotificationAsRead?NotificationId=${nid}`);
+        await fetch(`/api/MarkNotificationAsRead?NotificationId=${nid}`);
         await this.GetNotifications();
         this.ShooshNotificationsToBox();
         this.SetupNotificationButton();
     }
     async DeleteNotification(nid) {
-        fetch(`/api/DeleteNotification?NotificationId=${nid}`);
+        await fetch(`/api/DeleteNotification?NotificationId=${nid}`);
         await this.GetNotifications();
         this.ShooshNotificationsToBox();
         this.SetupNotificationButton();
