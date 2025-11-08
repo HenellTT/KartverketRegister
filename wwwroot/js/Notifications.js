@@ -35,6 +35,7 @@
             return `
             <div id="notification-id-${Notification.id}" class='notification-container notification-is-read-${Notification.isRead}'>
             <p>${Notification.message}</p>
+            <button class="notification-delete-button" id="notification-delete-id-${Notification.id}">X</button>
             </div>
             `;
         } else {
@@ -42,6 +43,7 @@
             <div id="notification-id-${Notification.id}" class='notification-container notification-is-read-${Notification.isRead}'>
             <p>${Notification.message}</p>
             <a href="/ViewMarker/${Notification.markerId}"><button>View Submission ${Notification.markerId}</button></a>
+            <button class="notification-delete-button" id="notification-delete-id-${Notification.id}">X</button>
             </div>
             `;
         }
@@ -49,6 +51,12 @@
     }
     async SendViewedState(nid) {
         fetch(`/api/MarkNotificationAsRead?NotificationId=${nid}`);
+        await this.GetNotifications();
+        this.ShooshNotificationsToBox();
+        this.SetupNotificationButton();
+    }
+    async DeleteNotification(nid) {
+        fetch(`/api/DeleteNotification?NotificationId=${nid}`);
         await this.GetNotifications();
         this.ShooshNotificationsToBox();
         this.SetupNotificationButton();
@@ -65,6 +73,9 @@
             if (noti) {
                 noti.addEventListener('click', () => this.SendViewedState(notification.id));
             }
+            noti.querySelector(".notification-delete-button").addEventListener('click', () => {
+                this.DeleteNotification(notification.id);
+            })
         });
         this._nbe.querySelector('#notification-close-button').addEventListener('click', () => {
             this._Notifications = [];
@@ -93,7 +104,7 @@
     SetupNotificationButton(notificationAmount) {
 
         this._NotificationButton.addEventListener('click', () => { this.OpenNotificationBox() })
-
-        setTimeout(() => { this._NotificationButton.innerHTML = "🔔" + notificationAmount; },100)
+        if (notificationAmount == undefined) notificationAmount = this.GetUnreadAmount();
+        this._NotificationButton.innerHTML = "🔔" + notificationAmount;
     }
 }

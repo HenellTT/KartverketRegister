@@ -81,6 +81,21 @@ namespace KartverketRegister.Controllers
             }
         }
         [HttpGet]
+        public IActionResult DeleteNotification(int NotificationId)
+        {
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            try
+            {
+                Notificator.DeleteNotificationByUser(UserId, NotificationId);
+                return Json(new GeneralResponse(true, $"Your notification was removed!"));
+            }
+            catch
+            {
+                return Json(new GeneralResponse(false, "Error: Notification cannot be removed"));
+            }
+        }
+        [HttpGet]
         private IActionResult SendNotification(int userid, string msg) // ONLY FOR TESTING RESTRICT or DELETE l8r  
         {
             try

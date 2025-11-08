@@ -76,6 +76,25 @@ namespace KartverketRegister.Utils
 
             }
         }
+        public static void DeleteNotificationByUser(int UserId, int NotificationId)
+        {
+            string sqlQuery = @"
+                DELETE FROM Notifications 
+                WHERE UserId = @UserId
+                AND NotificationId = @NotificationId;
+            ";
+            using (MySqlConnection conn = new MySqlConnection(_connString))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(sqlQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", UserId);
+                    cmd.Parameters.AddWithValue("@NotificationId", NotificationId);
+                    cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
         public static List<NotificationModel> GetNotificationsByUserId(int UserId)
         {
             string sqlQuery = @"
