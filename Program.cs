@@ -85,11 +85,16 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-await using var scope = app.Services.CreateAsyncScope();
-var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-await RoleInitializer.SeedRoles(roleManager);
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
+    await RoleInitializer.SeedRoles(roleManager);
+    await RoleInitializer.SeedDefaultUsers(userManager);
+
+}
 
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
