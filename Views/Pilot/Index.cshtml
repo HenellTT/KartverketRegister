@@ -16,6 +16,7 @@
             <div id="TempMarkerForm">
                 <h3>Temporary Marker Form</h3>
                 <form id="tempMarkerFormForm">
+                    @Html.AntiForgeryToken()
                     <label for="type">Type</label>
                     <input type="text" id="type" name="type" placeholder="Enter type">
 

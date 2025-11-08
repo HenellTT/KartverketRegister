@@ -1,9 +1,14 @@
 ﻿﻿
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+
     <title>@ViewData["Title"] - KartverketRegister</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -83,7 +88,11 @@
     <script src="https://apifreellm.com/apifree.min.js"></script>
     <script src="/js/Dark-mode.js"></script>
     <script>
-        let Notification = new Notifications(document.getElementById('NotificationContainer'),document.getElementById('Notification-Open-Button'));
+        const notiCont = document.getElementById('NotificationContainer');
+        const notiButt = document.getElementById('Notification-Open-Button');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+        let Notification = new Notifications(notiCont,notiButt,csrfToken);
         
 
                 const prompts = [

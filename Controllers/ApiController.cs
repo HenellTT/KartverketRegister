@@ -1,5 +1,6 @@
 ﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -65,24 +66,28 @@ namespace KartverketRegister.Controllers
                 return Json(new GeneralResponse(false, "No notifications fo u bro"));
             }
         }
-        [HttpGet]
-        public IActionResult MarkNotificationAsRead(int NotificationId)
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult MarkNotificationAsRead([FromBody] NotificationRequest request)
         {
+            int NotificationId = request.NotificationId;
             string UserIdString = _userManager.GetUserId(HttpContext?.User);
             int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
             try
             {
                 Notificator.SetToRead(NotificationId, UserId);
-                return Json(new GeneralResponse(true, $"Your notification was set as read!"));
+                return Json(new GeneralResponse(true, $"Your notification was set as read! {NotificationId}"));
             }
             catch
             {
                 return Json(new GeneralResponse(false, "Error: Notification cannot be set as viewed"));
             }
         }
-        [HttpGet]
-        public IActionResult DeleteNotification(int NotificationId)
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult DeleteNotification([FromBody] NotificationRequest request)
         {
+            int NotificationId = request.NotificationId;
             string UserIdString = _userManager.GetUserId(HttpContext?.User);
             int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
             try

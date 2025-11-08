@@ -25,6 +25,7 @@ namespace KartverketRegister.Controllers
         }
 
         // POST: /Auth/LoginHandle
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> LoginHandle(string email, string password)
         {
@@ -57,6 +58,7 @@ namespace KartverketRegister.Controllers
         }
 
         // POST: /Auth/RegisterHandle
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> RegisterHandle(string username, string lastname, string org, string password, string email)
         {

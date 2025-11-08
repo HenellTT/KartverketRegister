@@ -1,8 +1,10 @@
 ﻿class Notifications {
-    constructor(NotificationBoxElement, NotificationButtonElement) {
+    constructor(NotificationBoxElement, NotificationButtonElement, csrfToken) {
         this._nbe = NotificationBoxElement;
         this._NotificationButton = NotificationButtonElement;
         this._Notifications = []
+        this._csrfToken = csrfToken;
+
 
         this.Init();
     }
@@ -50,13 +52,27 @@
         
     }
     async SendViewedState(nid) {
-        await fetch(`/api/MarkNotificationAsRead?NotificationId=${nid}`);
+        await fetch(`/api/MarkNotificationAsRead`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': this._csrfToken
+            },
+            body: JSON.stringify({ NotificationId: nid })
+        });
         await this.GetNotifications();
         this.ShooshNotificationsToBox();
         this.SetupNotificationButton();
     }
     async DeleteNotification(nid) {
-        await fetch(`/api/DeleteNotification?NotificationId=${nid}`);
+        await fetch(`/api/DeleteNotification`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': this._csrfToken
+            },
+            body: JSON.stringify({ NotificationId: nid })
+        });
         await this.GetNotifications();
         this.ShooshNotificationsToBox();
         this.SetupNotificationButton();

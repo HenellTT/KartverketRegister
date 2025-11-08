@@ -86,7 +86,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddAuthorization();
-
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN"; // JS sends token here
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -102,6 +105,7 @@ app.UseRouting();
 // ✅ Identity middleware
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapStaticAssets();
 
