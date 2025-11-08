@@ -1,5 +1,6 @@
-using KartverketRegister.Utils;
 using KartverketRegister.Auth;
+using KartverketRegister.Utilities;
+using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Identity;
 using MySql.Data.MySqlClient;
 using System.Threading;
@@ -83,6 +84,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+await using var scope = app.Services.CreateAsyncScope();
+var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+await RoleInitializer.SeedRoles(roleManager);
+
+
 
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
