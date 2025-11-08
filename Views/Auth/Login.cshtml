@@ -21,6 +21,6 @@
         });
         const data = await res.json();
         document.getElementById('msg').innerText = data.message;
-        if (data.success) window.location.href = '/Home/Index';
+        if (data.success) window.location.href = data.message;
     }
 </script>

@@ -7,6 +7,7 @@
     <input type="text" id="org" placeholder="Organization" />
     <input type="password" id="password" placeholder="Password" />
     <input type="email" id="email" placeholder="email" />
+    <input type="text" id="role" placeholder="Role (e.g. Pilot, Admin)" />
     <button onclick="register()">Register</button>
     <p id="msg"></p>
 </div>
@@ -18,11 +19,13 @@
         const org = document.getElementById('org').value;
         const password = document.getElementById('password').value;
         const email = document.getElementById('email').value;
+        const role = document.getElementById('role').value;
+
 
         const res = await fetch('/Auth/RegisterHandle', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `username=${encodeURIComponent(username)}&lastname=${encodeURIComponent(lastname)}&org=${encodeURIComponent(org)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`
+            body: `username=${encodeURIComponent(username)}&lastname=${encodeURIComponent(lastname)}&org=${encodeURIComponent(org)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)&role=${encodeURIComponent(role)}`
         });
 
         const data = await res.json();

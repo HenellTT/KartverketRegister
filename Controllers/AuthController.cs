@@ -2,6 +2,7 @@
 using KartverketRegister.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
@@ -19,8 +20,9 @@ namespace KartverketRegister.Controllers
 
         // GET: /Auth/Login
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string role)
         {
+            ViewBag.Role = role;
             return View();
         }
 
@@ -46,6 +48,23 @@ namespace KartverketRegister.Controllers
             if (result.Succeeded)
                 return Json(new GeneralResponse(true, "Logged in successfully"));
 
+            result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                var currentRole = roles.FirstOrDefault();
+
+                // Redirect basert på rolle
+                string redirectUrl = currentRole switch
+                {
+                    "Admin" => "/Admin/Dashboard",
+                    "Pilot" => "/Pilot/Overview",
+                    _ => "/Home/Index"
+                };
+
+                return Json(new GeneralResponse(true, redirectUrl));
+            }
+
             return Json(new GeneralResponse(false, "Invalid password"));
         }
 
@@ -58,7 +77,7 @@ namespace KartverketRegister.Controllers
 
         // POST: /Auth/RegisterHandle
         [HttpPost]
-        public async Task<IActionResult> RegisterHandle(string username, string lastname, string org, string password, string email)
+        public async Task<IActionResult> RegisterHandle(string username, string lastname, string org, string password, string email, string role)
         {
             AppUser user;
             try
@@ -74,7 +93,7 @@ namespace KartverketRegister.Controllers
                     LastName = lastname,
                     Organization = org,
                     UserName = email,
-                    UserType = "User", // default role
+                    UserType = role, // default role
                     Password = password,
                     Email = email
                 };
@@ -87,6 +106,7 @@ namespace KartverketRegister.Controllers
             var result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, role);
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return Json(new GeneralResponse(true, "Registered successfully"));
             }
