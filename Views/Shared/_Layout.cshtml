@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="~/KartverketRegister.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/dark-mode.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/WelcomeToCompleteDarkness.css" asp-append-version="true" />
-  
+    <link rel="stylesheet" href="~/css/Notification.css" asp-append-version="true" />
+
 </head>
 
 <body>
@@ -45,16 +46,16 @@
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-primary" id="Light_btn">light</button>
-                                <button type="button" class="btn btn-primary" id="Dark_btn">Dark</button>
+                                    <button type="button" class="btn btn-primary" id="Notification-Open-Button">🔔</button>
+                                
                             </div>
                         </li>
-                            <li class="nav-item">
-                                <div class="btn-group" role="group" aria-label=" k">
-                                    <button type="button" class="btn btn-primary" onclick="dms(false)">light v2</button>
-                                    <button type="button" class="btn btn-primary" onclick="dms(true)">Dark v2</button>
-                                </div>
-                            </li>
+                        <li class="nav-item">
+                            <div class="btn-group" role="group" aria-label=" k">
+                                <button type="button" class="btn btn-primary" onclick="dms(false)">light v2</button>
+                                <button type="button" class="btn btn-primary" onclick="dms(true)">Dark v2</button>
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="User" >User</a>
 
@@ -67,6 +68,7 @@
             </div>
         </nav>
     </header>
+    <div id="NotificationContainer"></div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -77,9 +79,13 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/Notifications.js" asp-append-version="true"></script>
     <script src="https://apifreellm.com/apifree.min.js"></script>
     <script src="/js/Dark-mode.js"></script>
     <script>
+        let Notification = new Notifications(document.getElementById('NotificationContainer'),document.getElementById('Notification-Open-Button'));
+        
+
                 const prompts = [
             "Write a quirky one-sentence 'Are you sure?' message for a HARD RESET. " +
             "End it with a keyword wrapped in *asterisks* (like *YES* or *PURGE*, *etc*). " +

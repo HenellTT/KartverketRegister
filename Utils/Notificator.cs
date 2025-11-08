@@ -97,13 +97,12 @@ namespace KartverketRegister.Utils
                             Notification.Message = reader["Message"].ToString();
                             Notification.IsRead = reader.GetBoolean("IsRead");
                             Notification.Date = reader.GetDateTime("Date");
+                            Notification.Id = reader.GetInt32("NotificationId");
 
                             Notification.MarkerId = int.TryParse(reader["MarkerId"]?.ToString(), out int mid) ? mid : 0;
 
-
                             NotificationList.Add(Notification);
                         }
-
                     }
                 }
             }

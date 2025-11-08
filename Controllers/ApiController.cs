@@ -81,7 +81,7 @@ namespace KartverketRegister.Controllers
             }
         }
         [HttpGet]
-        public IActionResult SendNotification(int userid, string msg) // ONLY FOR TESTING RESTRICT or DELETE l8r  
+        private IActionResult SendNotification(int userid, string msg) // ONLY FOR TESTING RESTRICT or DELETE l8r  
         {
             try
             {
