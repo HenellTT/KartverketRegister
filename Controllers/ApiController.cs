@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using System.Threading.Tasks;
@@ -9,6 +11,11 @@ namespace KartverketRegister.Controllers
 {
     public class ApiController : Controller
     {
+        private readonly UserManager<AppUser> _userManager;
+        public ApiController(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
         [HttpGet]
         public IActionResult Index()
         {
@@ -44,5 +51,36 @@ namespace KartverketRegister.Controllers
                 height = height
             });
         }
+        [HttpGet]
+        public IActionResult GetNotifications()
+        {
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            try
+            {
+                List<NotificationModel> Notifications = Notificator.GetNotificationsByUserId(UserId);
+                return Json(new GeneralResponse(true, $"Here are your msgs bro", Notifications));
+            } catch
+            {
+                return Json(new GeneralResponse(false, "No notifications fo u bro"));
+            }
+            
+
+            
+        }
+        [HttpGet]
+        public IActionResult SendNotification(int userid, string msg) // ONLY FOR TESTING RESTRICT or DELETE l8r  
+        {
+            try
+            {
+                Notificator.SendNotification(userid, msg, "Info");
+                return Json(new GeneralResponse(true, $"Message {msg} sent to {userid}"));
+            } catch
+            {
+                return Json(new GeneralResponse(false, $"Failed sending msg: {msg} to {userid}"));
+
+            }
+        }
+
     }
 }
