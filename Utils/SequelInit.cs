@@ -51,10 +51,14 @@ namespace KartverketRegister.Utils
         {
             if (Constants.ResetDbOnStartup)
             {
+                string DropReviewAssign = @"DROP TABLE ReviewAssign;";
+                string DropNotifications = @"DROP TABLE Notifications;";
                 string DropUsers = @"DROP TABLE Users;";
                 string DropMarkers = @"DROP TABLE Markers;";
                 string DropRegisteredMarkers = @"DROP TABLE RegisteredMarkers;";
-                string[] TablesToRemove =  { DropRegisteredMarkers, DropMarkers, DropUsers };
+                
+                
+                string[] TablesToRemove =  {DropReviewAssign , DropNotifications, DropRegisteredMarkers, DropMarkers, DropUsers };
 
                 for (int i = 0; i < TablesToRemove.Length; i++)
                 {
@@ -63,11 +67,11 @@ namespace KartverketRegister.Utils
                         using (var cmd = new MySqlCommand(TablesToRemove[i], conn))
                         {
                             cmd.ExecuteNonQuery();
-                            Console.WriteLine("Mysql Executed: " + TablesToRemove[i]);
+                            Console.WriteLine("[SequelInit] Mysql Executed: " + TablesToRemove[i]);
                         }
                     } catch
                     {
-                        Console.WriteLine("Command failed, table not found: " + TablesToRemove[i]);
+                        Console.WriteLine("[SequelInit] Command failed, table not found: " + TablesToRemove[i]);
                     }
                     
                 }
@@ -98,7 +102,7 @@ namespace KartverketRegister.Utils
                 using (var cmd = new MySqlCommand(createUsers, conn))
                 {
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("SequelInit: Created Users Table");
+                    Console.WriteLine("[SequelInit] Created Users Table");
                 }
                 // Johnny Test er bare en Test dummy bruker som er laget for utvikling!!
                 string JohnnyTest = "INSERT INTO Users (Name,LastName) VALUES ('Johnny', 'Test')";
