@@ -21,6 +21,7 @@
 
             if (data.success) {
                 this._Notifications = data.data; 
+                this._Notifications.reverse();
                 return data.data; 
             } else {
                 this._Notifications = [];
