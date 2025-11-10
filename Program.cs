@@ -90,6 +90,9 @@ builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN"; // JS sends token here
 });
+builder.Services.AddScoped<DummyCreator>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

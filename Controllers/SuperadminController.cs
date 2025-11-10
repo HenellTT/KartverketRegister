@@ -9,13 +9,25 @@ using KartverketRegister.Models.Other;
 using System.Diagnostics.Eventing.Reader;
 using Microsoft.AspNetCore.Authorization;
 using KartverketRegister.Auth;
-
+using KartverketRegister.Utils;
 
 namespace KartverketRegister.Controllers
 {
     //[Authorize(Roles = "User")] // shit works for now!!! 
     public class SuperadminController : Controller // Arver fra Controller 
     {
+        private readonly DummyCreator _dummyCreator;
+        public SuperadminController(DummyCreator dummyCreator)
+        {
+            _dummyCreator = dummyCreator;
+        }
+        [HttpGet]
+        public async Task<IActionResult> gg()
+        {
+            var result = await _dummyCreator.FillIn();
+            return Ok(result);
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
