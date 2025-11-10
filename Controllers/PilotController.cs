@@ -72,18 +72,34 @@ public class PilotController : Controller
         }
     }
     
-    [Route("EditMarker/{id:int}")]
-    public IActionResult EditMarker(int id)
+    [Route("EditMarker/{MarkerId:int}")]
+    public IActionResult EditMarker(int MarkerId)
     {
         SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(id);
+        Marker marker = seq.FetchMarkerById(MarkerId);
+
+        string UserIdString = _userManager.GetUserId(HttpContext?.User);
+        int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+
+        if (marker.UserId != UserId)
+        {
+            return Forbid();
+        }
         return View(marker);
     }
-    [Route("ViewMarker/{id:int}")]
-    public IActionResult ViewMarker(int id)
+    [Route("ViewMarker/{MarkerId:int}")]
+    public IActionResult ViewMarker(int MarkerId)
     {
         SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(id);
+        Marker marker = seq.FetchMarkerById(MarkerId);
+
+        string UserIdString = _userManager.GetUserId(HttpContext?.User);
+        int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+
+        if (marker.UserId != UserId)
+        {
+            return Forbid();
+        }
         return View(marker);
     }
 

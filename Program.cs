@@ -37,7 +37,9 @@ while (!connectedToDb)
 }
 
 // Capture confirmed non-null connection string for DI registration
-var dbConnString = seq!.dbConnString;
+SequelBase seqConn = new SequelBase(Constants.DataBaseIp, Constants.DataBaseName);
+var dbConnString = seqConn.ConnectionString;
+Console.WriteLine($"[Setup Identity] Conn string for identity: {dbConnString}");
 
 // ✅ Register a scoped MySQL connection factory using SequelInit's connection string
 builder.Services.AddScoped<MySqlConnection>(_ =>
@@ -46,9 +48,12 @@ builder.Services.AddScoped<MySqlConnection>(_ =>
     conn.Open();
     return conn;
 });
+//builder.Services.AddSingleton(dbConnString);
+
 
 // ✅ Identity setup (custom user/role stores)
-builder.Services.AddScoped<IUserStore<AppUser>, MySqlUserStore>();
+builder.Services.AddScoped<IUserStore<AppUser>>(sp => new MySqlUserStore(dbConnString));
+
 builder.Services.AddScoped<IRoleStore<IdentityRole<int>>, MySqlRoleStore>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
@@ -81,7 +86,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddAuthorization();
-
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN"; // JS sends token here
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -97,6 +105,7 @@ app.UseRouting();
 // ✅ Identity middleware
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapStaticAssets();
 

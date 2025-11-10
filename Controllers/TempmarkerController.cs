@@ -29,7 +29,7 @@ namespace KartverketRegister.Controllers
         {
             return BadRequest("Nothing to see here"); 
         }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult SubmitMarker() //tar imot midlertidig markør via post forespørsel
         {
@@ -82,7 +82,7 @@ namespace KartverketRegister.Controllers
             List <TempMarker> MyMarkers = seq.FetchMyMarkers(UserId); // Currently 1 to simulate UserId; 
             return Ok(MyMarkers);
         }
-        [HttpGet]
+        [HttpGet] // Add antiforgery shit, Change to Post 💀
         public IActionResult DeleteMarker(int markerId)
         {
             try

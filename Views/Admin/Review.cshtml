@@ -99,7 +99,7 @@
             if (data.success) {
                 statusDiv.innerText = data.message || 'Marker saved successfully! Redirecting back. . .';
                 form.reset();
-                setTimeout(() => { location.href='./../Admin'; }, 2500);
+                setTimeout(() => { location.href='./../Admin'; }, 750);
 
                 // Optional: remove button highlight
                 document.querySelectorAll(".ar-button-clicked").forEach(el => el.classList.remove("ar-button-clicked"));
