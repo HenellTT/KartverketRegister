@@ -11,7 +11,7 @@ namespace KartverketRegister.Auth
         public string Organization { get; set; }
         public string Password { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string UserType { get; set; }  // maps directly to ENUM('User','Admin')
+        public string UserType { get; set; }  // maps directly to ENUM('User','Admin', 'Employee')
 
         public string Email { get; set; }
     }

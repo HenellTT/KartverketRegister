@@ -13,14 +13,14 @@
   <div class="user-card">
     <h2>Brukerinformasjon</h2>
     <div class="user-info">
-      <div><span>Fullt navn:</span> @Model.Name @Model.LastName</div>
-      <div><span>E-post:</span> @Model.Email</div>
-      <div><span>Organisasjon:</span> @Model.Organization</div>
-      <div><span>Rolle:</span> @Model.UserType</div>
+      <div><span>Full Name:</span> @Model.FirstName @Model.LastName</div>
+      <div><span>Email:</span> @Model.Email</div>
+      <div><span>Organization:</span> @Model.Organization</div>
+      <div><span>Rolele:</span> @Model.UserType</div>
     </div>
   </div>
 
   <div class="user-actions">
-    <a class="logout-button" asp-area="" asp-controller="Auth" asp-action="Logout">Logg ut</a>
+    <a class="logout-button" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
   </div>
 </div>

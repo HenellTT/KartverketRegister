@@ -35,8 +35,16 @@ public class HomeController : Controller
     {
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
-    
-    
+    public IActionResult Pilot()
+    {
+        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
+    }
+    public IActionResult Admin()
+    {
+        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
+    }
+
+
     public async Task<IActionResult> Test()
     {
         var smth = _userManager.GetUserId(HttpContext?.User);

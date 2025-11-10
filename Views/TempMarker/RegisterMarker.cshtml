@@ -16,6 +16,7 @@
     </div>
 
     <div class="form-group">
+<<<<<<< HEAD
         <label>Obstacle Category</label>
         <select required name="ObstacleCategory" class="form-control">
             <option value="">--Select--</option>
@@ -30,10 +31,25 @@
     </div>
 
     <div class="form-group">
+=======
+>>>>>>> 892414156bc46fcec78641df6488fd31ab0745fb
         <label>Comment</label>
         <textarea required name="Description" class="form-control">@Model.Description</textarea>
     </div>
 
+<<<<<<< HEAD
+=======
+    <div class="form-group hidden-input">
+        <label>Latitude</label>
+        <input required type="number" step="0.00000000001" name="Lat" class="form-control" value="@Model.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+    </div>
+
+    <div class="form-group hidden-input">
+        <label>Longitude</label>
+        <input required type="number" step="0.00000000001" name="Lng" class="form-control" value="@Model.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+    </div>
+
+>>>>>>> 892414156bc46fcec78641df6488fd31ab0745fb
     <div class="form-group">
         <label>Estimated Height (m)</label>
         <input required type="number" step="0.01" name="HeightM" class="form-control" />
