@@ -129,5 +129,49 @@ namespace KartverketRegister.Utils
         {
             return r.NextDouble() * (max - min) + min;
         }
+        public async Task<GeneralResponse> GenerateDefaultUsers()
+        {
+            string email = "1234@user.test";
+            AppUser user = new AppUser
+            {
+                Name = email,
+                FirstName = "Johnny",
+                LastName = "Test",
+                Organization = "UiA",
+                UserName = email,
+                UserType = "User",
+                Password = "!Testink69!",
+                Email = email
+            };
+
+            email = "1234@admin.test";
+            AppUser Admin = new AppUser
+            {
+                Name = email,
+                FirstName = "Adminman",
+                LastName = "Testman",
+                Organization = "Kartverket",
+                UserType = "Admin",
+                Password = "!Testink69!",
+                Email = email
+            };
+            email = "1234@employee.test";
+            AppUser Employee = new AppUser
+            {
+                Name = email,
+                FirstName = "Employman",
+                LastName = "Test",
+                Organization = "Kartverket",
+                UserName = email,
+                UserType = "Employee",
+                Password = "!Testink69!",
+                Email = email
+            };
+
+            await _userManager.CreateAsync(user, "!Testink69!");
+            await _userManager.CreateAsync(Admin, "!Testink69!");
+            await _userManager.CreateAsync(Employee, "!Testink69!");
+            return new GeneralResponse(true,"Shit worked");
+        }
     }
 }

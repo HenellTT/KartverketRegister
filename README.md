@@ -46,22 +46,24 @@ ________________________________________________________________________________
 ## Debug
 
 	Om docker compose ikke starter på første forsøk så prøv en gang til, for databasen starter av og til pararelt med MVC appen og derfor kræsjer appen
+	= Den skal være good nå.
 
 	Om lagring av markere feiler, kan det hende du har gammel database oppsett fra tidligere versjon av applikasjonen. Bruk RESET DATABASE knappen, det burde løse problemmet!
-	
+	- Ved final levering blir det fiksa
+
+# Default Brukere
+
+- 1234@user.test
+- 1234@admin.test
+- 1234@employee.test
+
+Passord til alle brukere er !Testink69!
 
 # Drift
 The app can be run locallly or inside Docker.
 For å kjøre systemet uten Docker må du ha .NET 8 SDK installert.
 Bruk deretter følgende kommandoer
 	
-# Kjør med Docker
-
-Prosjektet inneholder både Dockerfile og docker-compose.yml.
-For å bygge og starte systemet med Docker Compose:
-	docker-compose build
-	docker-compose up
-Dette vil starte både applikasjons-containeren og MariaDB-databasen som er definert i compose-filen.
 
 # Requirements
 
@@ -89,6 +91,12 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - GET: Bruker åpner side → Controller henter data fra database → View viser data via ViewModel.
 - POST(skjema): Bruker sender skjema → Controller validerer og lagrer → Redirect til visningsside som henter og viser lagret data.
 - Post(Kart): Bruker klikker på kart → Frontend sender koordinater til backend → Backend lagrer → Visningsside henter og viser på kart/tekst.
+
+## Security
+- XSS
+- Anti Forgery Tokens
+- SQL Injections
+- Password Hashing - Raw passwords not saved
 
 ## Testing Scenario
 
