@@ -50,14 +50,12 @@ namespace KartverketRegister.Controllers
             {
                 return NotFound();
             }
-            Console.WriteLine($"Mrk!!: {markerId}");
             return View(Mrk);
         }
         [HttpPost]
         public IActionResult HandleReview(int MarkerId, string ReviewComment, string Status)
         {
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            Console.WriteLine($"Mid: {MarkerId}, RC: {ReviewComment} St: {Status}");
             try
             {
                 if (Status == "Approve")

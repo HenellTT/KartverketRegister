@@ -55,6 +55,14 @@ namespace KartverketRegister.Controllers
             GeneralResponse response = seq.DeleteUser(UserData.Id);
             return Ok(response);
         }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult SendNotification([FromBody] AppUserDto UserData)
+        {
+            SequelSuperAdmin seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+            GeneralResponse response = seq.SendNotification(UserData.Id, UserData.Email);
+            return Ok(response);
+        }
         [HttpGet]
         public IActionResult FetchUsers(string FullName = "") {
             try

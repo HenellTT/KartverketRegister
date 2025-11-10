@@ -35,7 +35,7 @@
     }
     UpdateSelector() {
         let selectorOptionsHtml = '<option value="fhikdknflsm343443">All</option>';
-        this._organizations.forEach((org) => { selectorOptionsHtml += `<option value=${org}>${org}</option>`});
+        this._organizations.forEach((org) => { selectorOptionsHtml += `<option value="${org}">${org}</option>`});
 
         this._organizationSelector.innerHTML = selectorOptionsHtml;
     }
@@ -75,18 +75,21 @@
 
 }
 class UserManagerPage {
-    constructor(userId, roleSetUser, roleSetAdmin, roleSetEmployee, deleteButton, csrfToken) {
+    constructor(userId, roleSetUser, roleSetAdmin, roleSetEmployee, deleteButton, msgInput, msgSubmit, csrfToken) {
         this._roleSetUser = roleSetUser;
         this._roleSetAdmin = roleSetAdmin;
         this._deleteButton = deleteButton;
         this._userId = userId;
         this._roleSetEmployee = roleSetEmployee;
+        this._msgInput = msgInput;
+        this._msgSubmit = msgSubmit
         this._csrfToken = csrfToken;
 
-        this._roleSetAdmin.addEventListener('click', () => this.SetRole('Admin'))
-        this._roleSetUser.addEventListener('click', () => this.SetRole('User'))
-        this._roleSetEmployee.addEventListener('click', () => this.SetRole('Employee'))
-        this._deleteButton.addEventListener('click', () => this.DeleteUser())
+        this._roleSetAdmin.addEventListener('click', () => this.SetRole('Admin'));
+        this._roleSetUser.addEventListener('click', () => this.SetRole('User'));
+        this._roleSetEmployee.addEventListener('click', () => this.SetRole('Employee'));
+        this._deleteButton.addEventListener('click', () => this.DeleteUser());
+        this._msgSubmit.addEventListener('click', () => this.SendNotification());
 
     }
     async SetRole(role) {
@@ -108,6 +111,19 @@ class UserManagerPage {
                 'X-CSRF-TOKEN': this._csrfToken
             },
             body: JSON.stringify({ Id: this._userId })
+        });
+        window.location.href = '/';
+
+    }
+    async SendNotification() {
+        let msg = this._msgInput.value;
+        await fetch(`/Superadmin/SendNotification`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': this._csrfToken
+            },
+            body: JSON.stringify({ Id: this._userId, Email: msg}) // Email is actually the msg im just tooooooo lazy to add a new var to the model
         });
         window.location.href = '/';
 

@@ -20,6 +20,7 @@
 	<button id="MUD-set-employee">Employee</button>
 </p>
 <p><button id="MUD-delete">Delete User</button></p>
+<p><input id="MUD-msg-input"></input><button id="MUD-msg-submit">Send Message</button></p>
 <script>
 	const csrfToken_MUD = document.querySelector('meta[name="csrf-token"]').content;
 
@@ -27,10 +28,12 @@
 	const msA = document.getElementById("MUD-set-admin");
 	const msE = document.getElementById("MUD-set-employee");
 	const msD = document.getElementById("MUD-delete");
+	const msNI = document.getElementById("MUD-msg-input");
+	const msNS = document.getElementById("MUD-msg-submit");
 
 	const splink = window.location.href.split('/');
 	const UserId = splink[splink.length-1];
-	let UMP = new UserManagerPage(UserId, msU, msA, msE, msD, csrfToken_MUD);
+	let UMP = new UserManagerPage(UserId, msU, msA, msE, msD, msNI, msNS, csrfToken_MUD);
 
 
 </script>

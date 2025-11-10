@@ -2,6 +2,7 @@
 using KartverketRegister.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
@@ -105,5 +106,68 @@ namespace KartverketRegister.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index","Home");
         }
+
+        public async Task<IActionResult> DummyDataFillIn()
+        {
+            Random rnd = new Random();
+
+            string[] firstNames = new string[]
+            {
+                "Liam", "Olivia", "Noah", "Emma", "Elijah",
+                "Ava", "Sophia", "James", "Isabella", "Benjamin",
+                "Mia", "Lucas", "Charlotte", "Henry", "Amelia",
+                "Alexander", "Harper", "Michael", "Evelyn", "Daniel",
+                "Abigail", "Jacob", "Emily", "Jackson", "Ella",
+                "Logan", "Elizabeth", "Sebastian", "Avery", "Jack"
+            };
+
+            string[] lastNames = new string[]
+            {
+                "Smith", "Johnson", "Williams", "Brown", "Jones",
+                "Garcia", "Miller", "Davis", "Rodriguez", "Martinez",
+                "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson",
+                "Thomas", "Taylor", "Moore", "Jackson", "Martin",
+                "Lee", "Perez", "Thompson", "White", "Harris",
+                "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson"
+            };
+            string[] organizations = new string[]
+            {
+                "TechNova Solutions",
+                "GreenLeaf Industries",
+                "BluePeak Software",
+                "SilverGate Logistics",
+                "SunCore Energy",
+                "Apex Robotics",
+                "NorthStar Finance",
+                "UrbanHive Marketing",
+                "QuantumSphere Labs",
+                "BrightPath Consulting"
+            };
+
+            for (int i = 0; i < lastNames.Length; i++)
+            {
+                string randomOrganization = organizations[rnd.Next(organizations.Length)];
+                string email = $"{lastNames[i]}{rnd.Next(1000)}@gmail.com" ;
+                AppUser user = new AppUser
+                {
+                    Name = email,
+                    FirstName = firstNames[i],
+                    LastName = lastNames[i],
+                    Organization = randomOrganization,
+                    UserName = email,
+                    UserType = "User", // default role
+                    Password = "1234",
+                    Email = email
+                };
+                await _userManager.CreateAsync(user);
+
+            }
+
+
+            return Ok();
+        } 
+            
+
+            
     }
 }

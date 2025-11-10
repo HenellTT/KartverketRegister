@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Bcpg;
 
 
 namespace KartverketRegister.Utils
@@ -136,6 +137,18 @@ namespace KartverketRegister.Utils
             }
             conn.Close();
             return Response;
+        }
+        public GeneralResponse SendNotification(int UserId, string Msg)
+        {
+            try
+            {
+                Notificator.SendNotification(UserId, Msg, "Info");
+                return new GeneralResponse(true, $"Notification sent to user {UserId}");
+            }
+            catch (Exception e)
+            {
+                return new GeneralResponse(false, $"Notification failed sending to user {UserId}");
+            }
         }
     }
 }

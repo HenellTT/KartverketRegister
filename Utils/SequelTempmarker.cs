@@ -32,8 +32,6 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@Height", height);
                 cmd.Parameters.AddWithValue("@UserId", UserId);
                 cmd.Parameters.AddWithValue("@GeoJson", GeoJson);
-                Console.WriteLine(lat);
-                Console.WriteLine(lng);
                
                 cmd.ExecuteNonQuery(); // <-- this runs the INSERT
                 
