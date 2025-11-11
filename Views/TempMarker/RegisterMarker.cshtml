@@ -17,16 +17,16 @@
     </div>
 
     <div class="form-group">
-        <label>Description</label>
+        <label>Comment</label>
         <textarea required name="Description" class="form-control">@Model.Description</textarea>
     </div>
 
-    <div class="form-group">
+    <div class="form-group hidden-input">
         <label>Latitude</label>
         <input required type="number" step="0.00000000001" name="Lat" class="form-control" value="@Model.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group hidden-input">
         <label>Longitude</label>
         <input required type="number" step="0.00000000001" name="Lng" class="form-control" value="@Model.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
     </div>

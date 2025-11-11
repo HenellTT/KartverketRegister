@@ -1,14 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
 {
+    [Authorize(Roles = "Employee,Admin,User")]
+
     public class ApiController : Controller
     {
+        private readonly UserManager<AppUser> _userManager;
+        public ApiController(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
         [HttpGet]
         public IActionResult Index()
         {
@@ -44,5 +55,67 @@ namespace KartverketRegister.Controllers
                 height = height
             });
         }
+        [HttpGet]
+        public IActionResult GetNotifications()
+        {
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            try
+            {
+                List<NotificationModel> Notifications = Notificator.GetNotificationsByUserId(UserId);
+                return Json(new GeneralResponse(true, $"Here are your msgs bro", Notifications));
+            } catch
+            {
+                return Json(new GeneralResponse(false, "No notifications fo u bro"));
+            }
+        }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult MarkNotificationAsRead([FromBody] NotificationRequest request)
+        {
+            int NotificationId = request.NotificationId;
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            try
+            {
+                Notificator.SetToRead(NotificationId, UserId);
+                return Json(new GeneralResponse(true, $"Your notification was set as read! {NotificationId}"));
+            }
+            catch
+            {
+                return Json(new GeneralResponse(false, "Error: Notification cannot be set as viewed"));
+            }
+        }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult DeleteNotification([FromBody] NotificationRequest request)
+        {
+            int NotificationId = request.NotificationId;
+            string UserIdString = _userManager.GetUserId(HttpContext?.User);
+            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            try
+            {
+                Notificator.DeleteNotificationByUser(UserId, NotificationId);
+                return Json(new GeneralResponse(true, $"Your notification was removed!"));
+            }
+            catch
+            {
+                return Json(new GeneralResponse(false, "Error: Notification cannot be removed"));
+            }
+        }
+        [HttpGet]
+        private IActionResult SendNotification(int userid, string msg) // ONLY FOR TESTING RESTRICT or DELETE l8r  
+        {
+            try
+            {
+                Notificator.SendNotification(userid, msg, "Info");
+                return Json(new GeneralResponse(true, $"Message {msg} sent to {userid}"));
+            } catch
+            {
+                return Json(new GeneralResponse(false, $"Failed sending msg: {msg} to {userid}"));
+
+            }
+        }
+
     }
 }

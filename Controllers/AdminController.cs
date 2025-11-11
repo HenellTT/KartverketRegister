@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace KartverketRegister.Controllers
 {
-    //[Authorize(Roles = "User")] // shit works for now!!! 
+    [Authorize(Roles = "Employee,Admin")] // shit works for now!!! 
     public class AdminController : Controller // Arver fra Controller for å håndtere markører
     {
         [HttpGet]
@@ -50,14 +50,12 @@ namespace KartverketRegister.Controllers
             {
                 return NotFound();
             }
-            Console.WriteLine($"Mrk!!: {markerId}");
             return View(Mrk);
         }
         [HttpPost]
         public IActionResult HandleReview(int MarkerId, string ReviewComment, string Status)
         {
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            Console.WriteLine($"Mid: {MarkerId}, RC: {ReviewComment} St: {Status}");
             try
             {
                 if (Status == "Approve")

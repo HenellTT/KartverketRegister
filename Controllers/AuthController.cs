@@ -1,7 +1,9 @@
 ﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
@@ -16,6 +18,12 @@ namespace KartverketRegister.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
         // GET: /Auth/Login
         [HttpGet]
@@ -25,6 +33,7 @@ namespace KartverketRegister.Controllers
         }
 
         // POST: /Auth/LoginHandle
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> LoginHandle(string email, string password)
         {
@@ -57,6 +66,7 @@ namespace KartverketRegister.Controllers
         }
 
         // POST: /Auth/RegisterHandle
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> RegisterHandle(string username, string lastname, string org, string password, string email)
         {
@@ -103,5 +113,10 @@ namespace KartverketRegister.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index","Home");
         }
+
+        
+            
+
+            
     }
 }

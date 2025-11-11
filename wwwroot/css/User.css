@@ -6,3 +6,81 @@
     display: inline-block;
     width: fit-content;
 }
+
+
+/* Generell stil */
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #f5f8fc;
+    margin: 0;
+    padding: 0;
+    color: #2c3e50;
+}
+
+/* Sidecontainer */
+.user-page {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Header */
+.user-header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #1a3e72;
+}
+
+.user-header p {
+    font-size: 16px;
+    color: #6c7a89;
+    margin-bottom: 30px;
+}
+
+/* Kort for brukerdata */
+.user-card {
+    background-color: #f0f4fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+    .user-card h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #34495e;
+    }
+
+.user-info div {
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.user-info span {
+    font-weight: 600;
+    display: inline-block;
+    width: 160px;
+    color: #2c3e50;
+}
+
+/* Logout-knapp */
+.user-actions {
+    text-align: right;
+}
+
+.logout-button {
+    background-color: #1a3e72;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+    .logout-button:hover {
+        background-color: #16345e;
+    }

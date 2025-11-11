@@ -71,8 +71,7 @@ namespace KartverketRegister.Utils
 
                 cmd.ExecuteNonQuery();
             }
-            Console.WriteLine($"laat: {lat}");
-            Console.WriteLine($"lnng: {lng}");
+
             conn.Close();
         }
         public List<Marker> FetchMyMarkers(int UserId)
@@ -191,6 +190,8 @@ namespace KartverketRegister.Utils
             }
 
             conn.Close();
+            int UserId = GetUserIdFromMarkerId(markerId);
+            Notificator.SendNotification(UserId, $"Your Submission has been Removed", "Warning", markerId);
 
         }
         public void SetMarkerStatusSeen(int markerId)
@@ -220,8 +221,9 @@ namespace KartverketRegister.Utils
                 cmd.ExecuteNonQuery();
 
             }
-
             conn.Close();
+            int UserId = GetUserIdFromMarkerId(markerId);
+            Notificator.SendNotification(UserId, $"Your Submission has been approved", "Info", markerId);
 
         }
         public void RejectMarker(int markerId, string ReviewComment)
@@ -239,6 +241,28 @@ namespace KartverketRegister.Utils
             }
 
             conn.Close();
+            int UserId = GetUserIdFromMarkerId(markerId);
+            Notificator.SendNotification(UserId, $"Your Submission has been rejected", "Info", markerId);
+
+        }
+        public int GetUserIdFromMarkerId(int MarkerId)
+        {
+            conn.Open();
+            string sql = "SELECT UserId FROM RegisteredMarkers WHERE MarkerId = @MarkerId";
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", MarkerId);
+                using (var Reader = cmd.ExecuteReader())
+                {
+                    int UserId = 0;
+                    if (Reader.Read())
+                    {
+                        UserId = Reader.GetInt32("UserId");
+                    }
+
+                    return UserId;
+                }
+            }
 
         }
         public List<MapMarker> GetObstacles(LocationModel LM) { // add lat lng l8r to limit amount of markers fetched by user;

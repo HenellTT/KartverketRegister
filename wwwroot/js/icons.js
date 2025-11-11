@@ -2,6 +2,7 @@
 const basicIcons = ["potato"];
 // That's it, don't touch the rest it's very fragile 🥺
 // Mucho Fragileses! ._.
+const IconSize = 24;
 class Icons {
     #icons
     constructor(IconList = basicIcons) {
@@ -16,9 +17,9 @@ class Icons {
     AddIcon(IconName) {
         this.icons[IconName] = L.icon({
             iconUrl: `../img/icons/${IconName}.png`,
-            iconSize: [38, 38],
-            iconAnchor: [19, 38],
-            popupAnchor: [0, -38]
+            iconSize: [IconSize, IconSize],
+            iconAnchor: [IconSize/2, IconSize],
+            popupAnchor: [0, -IconSize/2]
         });
     }
     GetIcons() {
