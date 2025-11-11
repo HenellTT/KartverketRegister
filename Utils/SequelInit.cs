@@ -56,9 +56,19 @@ namespace KartverketRegister.Utils
                 string DropUsers = @"DROP TABLE Users;";
                 string DropMarkers = @"DROP TABLE Markers;";
                 string DropRegisteredMarkers = @"DROP TABLE RegisteredMarkers;";
-                
-                
-                string[] TablesToRemove =  {DropReviewAssign , DropNotifications, DropRegisteredMarkers, DropMarkers, DropUsers };
+
+
+                string[] TablesToRemove =  {
+                    "SET FOREIGN_KEY_CHECKS = 0;",
+                    DropReviewAssign,
+                    DropNotifications,
+                    DropRegisteredMarkers,
+                    DropMarkers,
+                    DropUsers,
+                    "SET FOREIGN_KEY_CHECKS = 1;"
+                };
+            
+            
 
                 for (int i = 0; i < TablesToRemove.Length; i++)
                 {
@@ -118,19 +128,20 @@ namespace KartverketRegister.Utils
             if (!TableExists("Markers"))
             {
                 string createMarkers = @"
-            CREATE TABLE Markers (
-                MarkerId    INT AUTO_INCREMENT PRIMARY KEY,
-                Lat         DOUBLE NOT NULL,
-                Lng         DOUBLE NOT NULL,
-                Description VARCHAR(500),
-                UserId      INT NULL,
-                HeightMOverSea    DECIMAL(6,2),
-                Type        VARCHAR(100) DEFAULT NULL,
-                Date        DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+                CREATE TABLE Markers (
+                    MarkerId    INT AUTO_INCREMENT PRIMARY KEY,
+                    Lat         DOUBLE NOT NULL,
+                    Lng         DOUBLE NOT NULL,
+                    Description VARCHAR(500),
+                    UserId      INT NULL,
+                    HeightMOverSea DECIMAL(6,2),
+                    Type        VARCHAR(100) DEFAULT NULL,
+                    Date        DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-                GeoJson     JSON
-            );";
+                    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL,
+
+                    GeoJson JSON
+                );";
                 using (var cmd = new MySqlCommand(createMarkers, conn))
                 {
                     cmd.ExecuteNonQuery();
@@ -144,31 +155,32 @@ namespace KartverketRegister.Utils
                 string createRegisteredMarkers = @"
             CREATE TABLE RegisteredMarkers (
                 MarkerId          INT AUTO_INCREMENT PRIMARY KEY,
-                Lat               DOUBLE NOT NULL,
-                Lng               DOUBLE NOT NULL,
-                Description       VARCHAR(500),
-                UserId            INT,
-                Organization      VARCHAR(100),
-                State             ENUM('Unseen','Seen','Rejected','Accepted') DEFAULT 'Unseen',
-                Type              VARCHAR(100),
-                HeightM           DECIMAL(6,2),
-                HeightMOverSea    DECIMAL(6,2),
-                AccuracyM         DECIMAL(5,2),
-                ObstacleCategory  VARCHAR(50),
-                IsTemporary       BOOLEAN DEFAULT FALSE,
-                Lighting          VARCHAR(100),
-                SubmittedBy       INT,
-                ReviewedBy        INT NULL,
-                ReviewComment     VARCHAR(500),
-                LastUpdated       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                Source            VARCHAR(100),
-                Date              DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL,
-                FOREIGN KEY (SubmittedBy) REFERENCES Users(UserId) ON DELETE SET NULL,
-                FOREIGN KEY (ReviewedBy) REFERENCES Users(UserId) ON DELETE SET NULL,
+                    Lat               DOUBLE NOT NULL,
+                    Lng               DOUBLE NOT NULL,
+                    Description       VARCHAR(500),
+                    UserId            INT NULL,
+                    Organization      VARCHAR(100),
+                    State             ENUM('Unseen','Seen','Rejected','Accepted') DEFAULT 'Unseen',
+                    Type              VARCHAR(100),
+                    HeightM           DECIMAL(6,2),
+                    HeightMOverSea    DECIMAL(6,2),
+                    AccuracyM         DECIMAL(5,2),
+                    ObstacleCategory  VARCHAR(50),
+                    IsTemporary       BOOLEAN DEFAULT FALSE,
+                    Lighting          VARCHAR(100),
+                    SubmittedBy       INT NULL,
+                    ReviewedBy        INT NULL,
+                    ReviewComment     VARCHAR(500),
+                    LastUpdated       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    Source            VARCHAR(100),
+                    Date              DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-                GeoJson           JSON
-            );";
+                    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL,
+                    FOREIGN KEY (SubmittedBy) REFERENCES Users(UserId) ON DELETE SET NULL,
+                    FOREIGN KEY (ReviewedBy) REFERENCES Users(UserId) ON DELETE SET NULL,
+
+                    GeoJson JSON
+                );";
                 using (var cmd = new MySqlCommand(createRegisteredMarkers, conn))
                 {
                     cmd.ExecuteNonQuery();
@@ -181,11 +193,12 @@ namespace KartverketRegister.Utils
             {
                 string createMarkers = @"
                 CREATE TABLE ReviewAssign (
-                    UserId INT,
-                    MarkerId INT,
+                    UserId INT NOT NULL,
+                    MarkerId INT NOT NULL,
                     PRIMARY KEY (UserId, MarkerId),
-                    FOREIGN KEY (MarkerId) REFERENCES RegisteredMarkers(MarkerId),
-                    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+
+                    FOREIGN KEY (MarkerId) REFERENCES RegisteredMarkers(MarkerId) ON DELETE CASCADE,
+                    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
                 );
                 ";
                 using (var cmd = new MySqlCommand(createMarkers, conn))
