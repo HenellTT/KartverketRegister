@@ -2,6 +2,7 @@
 using KartverketRegister.Models;
 using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProjNet.CoordinateSystems;
@@ -10,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
 {
+    [Authorize(Roles = "Employee,Admin,User")]
+
     public class ApiController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

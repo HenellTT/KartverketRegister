@@ -18,6 +18,12 @@ namespace KartverketRegister.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
         // GET: /Auth/Login
         [HttpGet]

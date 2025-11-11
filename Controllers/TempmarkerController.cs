@@ -1,6 +1,7 @@
 ﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ using System.Text;
 
 namespace KartverketRegister.Controllers
 {
-    
+    [Authorize(Roles = "User,Employee,Admin")]
     public class TempmarkerController : Controller //arver fra controller for å håndtere midlertidige markører
     {
         private readonly UserManager<AppUser> _userManager;

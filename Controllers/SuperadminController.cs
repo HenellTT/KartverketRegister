@@ -13,7 +13,7 @@ using KartverketRegister.Utils;
 
 namespace KartverketRegister.Controllers
 {
-    //[Authorize(Roles = "User")] // shit works for now!!! 
+    [Authorize(Roles = "Admin")]
     public class SuperadminController : Controller // Arver fra Controller 
     {
         private readonly DummyCreator _dummyCreator;

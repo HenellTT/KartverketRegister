@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace KartverketRegister.Controllers
 {
-    //[Authorize(Roles = "User")] // shit works for now!!! 
+    [Authorize(Roles = "Employee,Admin")] // shit works for now!!! 
     public class AdminController : Controller // Arver fra Controller for å håndtere markører
     {
         [HttpGet]
