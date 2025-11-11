@@ -95,6 +95,24 @@ builder.Services.AddScoped<DummyCreator>();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+
+    var dummyCreator = new DummyCreator(userManager);
+    try
+    {
+        await dummyCreator.GenerateDefaultUsers();
+        Console.WriteLine("[Initialization] Generated Default Users");
+    } catch
+    {
+        Console.WriteLine("[Initialization] Default Users already exist");
+    }
+    
+}
+
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {

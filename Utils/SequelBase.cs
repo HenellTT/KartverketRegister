@@ -16,6 +16,11 @@ namespace KartverketRegister.Utils
             ConnectionString = $"Server={dbIP};Port={Constants.DataBasePort};Database={dbname};User ID=root;Password={Constants.DataBaseRootPassword};";
             conn = new MySqlConnection(ConnectionString);
         }
+        public SequelBase()
+        {
+            ConnectionString = $"Server={Constants.DataBaseIp};Port={Constants.DataBasePort};Database={Constants.DataBaseName};User ID=root;Password={Constants.DataBaseRootPassword};";
+            conn = new MySqlConnection(ConnectionString);
+        }
 
         // Optional: Helper methods that all derived classes can use
         public void Open()

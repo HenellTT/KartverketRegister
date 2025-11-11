@@ -57,7 +57,7 @@ ________________________________________________________________________________
 - 1234@admin.test
 - 1234@employee.test
 
-Passord til alle brukere er !Testink69!
+Passord til alle brukere er !Testink00!
 
 # Drift
 The app can be run locallly or inside Docker.

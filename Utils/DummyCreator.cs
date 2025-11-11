@@ -108,7 +108,7 @@ namespace KartverketRegister.Utils
                     description: "Dummy marker",
                     lat: lat,
                     lng: lng,
-                    userId: rnd.Next(25),
+                    userId: rnd.Next(20) + 1,
                     organization: "Dummy",
                     heightM: rnd.Next(5, 150),
                     heightMOverSea: rnd.Next(5, 1500),
@@ -168,9 +168,9 @@ namespace KartverketRegister.Utils
                 Email = email
             };
 
-            await _userManager.CreateAsync(user, "!Testink69!");
-            await _userManager.CreateAsync(Admin, "!Testink69!");
-            await _userManager.CreateAsync(Employee, "!Testink69!");
+            await _userManager.CreateAsync(user, "!Testink00!");
+            await _userManager.CreateAsync(Admin, "!Testink00!");
+            await _userManager.CreateAsync(Employee, "!Testink00!");
             return new GeneralResponse(true,"Shit worked");
         }
     }
