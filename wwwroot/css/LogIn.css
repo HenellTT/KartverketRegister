@@ -2,7 +2,6 @@
 body {
    
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    background-color: lightblue;
     text-align:center;
 }
 h1{
@@ -35,20 +34,4 @@ h2{
         transition: 0.5s;
     }
 
-
-        .LogInButtons button::after {
-            content: '\00bb';
-           position: absolute;
-            opacity: 0;
-            right: -50px;
-            transition: 0.5s;
-        }
-
-        .LogInButtons button:hover {
-            padding-right: 25px;
-        }
-    .LogInButtons:hover button:after {
-        opacity: 1;
-        right: 0;
-    }
 
