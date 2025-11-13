@@ -32,5 +32,28 @@ body {
   text-align: start;
 }
 
+/* USER knapp */
+.user-nav-btn {
+    background-color: #007bff !important;
+    color: white !important;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+    .user-nav-btn:hover {
+        background-color: #0056b3 !important;
+        color: white !important;
+        text-decoration: none;
+    }
 
 
+/* Knapp SPACING */
+.navbar-nav .btn {
+    margin-left: 6px;
+    margin-right: 6px;
+}
