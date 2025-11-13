@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Xml.Linq;
 
 namespace KartverketRegister.Utils
@@ -45,6 +46,43 @@ namespace KartverketRegister.Utils
                 }
             }
             return result;
+
+        }
+        
+        public void InitDb(bool DoMigration) {
+            SequelMigrator seq = new SequelMigrator();
+            seq.Open();
+            List<string> TablesToCreate = new List<string> { "Users", "Markers", "RegisteredMarkers", "Notifications", "ReviewAssign" };
+            foreach (var tblName in TablesToCreate)
+            {
+                if (!TableExists(tblName))
+                {
+                    switch (tblName)
+                    {
+                        case "Users":
+                            seq.CreateTable(SequelTables.Users_Table(tblName), tblName);
+                            break;
+                        case "Markers":
+                            seq.CreateTable(SequelTables.Markers_Table(tblName), tblName);
+                            break;
+                        case "RegisteredMarkers":
+                            seq.CreateTable(SequelTables.RegisteredMarkers_Table(tblName), tblName);
+                            break;
+                        case "Notifications":
+                            seq.CreateTable(SequelTables.Notifications_Table(tblName), tblName);
+                            break;
+                        case "ReviewAssign":
+                            seq.CreateTable(SequelTables.ReviewAssign_Table(tblName), tblName);
+                            break;
+
+                    }
+                }
+            }
+            seq.Close();
+            if (DoMigration)
+            {
+                seq.Migrate();
+            }
 
         }
         public void InitDb()

@@ -51,6 +51,10 @@ ________________________________________________________________________________
 	Om lagring av markere feiler, kan det hende du har gammel database oppsett fra tidligere versjon av applikasjonen. Bruk RESET DATABASE knappen, det burde løse problemmet!
 	- Ved final levering blir det fiksa
 
+# DATABASE MIGRASJON
+	Automatisk - Eller:
+	Start applikasjonen, Gå til /Migrate . Der kommer opp et passord input. Passordet er secrethash. Om du skriver riktig passord så skal database migrasjonen kjøre.
+
 # Default Brukere
 
 - 1234@user.test
