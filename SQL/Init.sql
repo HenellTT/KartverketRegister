@@ -1,3 +1,5 @@
+-- FOR MAPPEOPPGAVE 2 I IS-201 - DATABASESYSTEMER. Mulig å implementere dette til prosjektet.
+
 -- Enkel "Reset" for å slette tabeller og views hvis de finnes
 DROP VIEW IF EXISTS vw_TopObstacleTypes;
 DROP TABLE IF EXISTS ReviewAssign;
