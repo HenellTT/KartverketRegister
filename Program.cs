@@ -12,7 +12,7 @@ builder.Services.AddControllersWithViews();
 // ✅ Initialize DB (using your existing logic)
 bool connectedToDb = false;
 SequelInit? seq = null;
-int attempt = 0;
+int attempt = -1;
 
 while (!connectedToDb)
 {
@@ -21,16 +21,16 @@ while (!connectedToDb)
     {
         seq = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
         seq.conn.Open();
-        seq.InitDb();
+        seq.InitDb(Constants.AutoDbMigration);
         seq.conn.Close();
         connectedToDb = true;
-        Console.WriteLine($"Connected to DB at {Constants.DataBaseIp}:{Constants.DataBasePort} (attempt {attempt}).");
+        Console.WriteLine($"[SequelInit] Connected to DB at {Constants.DataBaseIp}:{Constants.DataBasePort} (attempt {attempt}).");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Connection to DB failed at {Constants.DataBaseIp}:{Constants.DataBasePort} with password: {Constants.DataBaseRootPassword}");
-        Console.WriteLine($"Error message {ex.Message}");
-        Console.WriteLine("Retrying in 2s...");
+        Console.WriteLine($"[SequelInit] Connection to DB failed at {Constants.DataBaseIp}:{Constants.DataBasePort} with password: {Constants.DataBaseRootPassword}");
+        Console.WriteLine($"[SequelInit] Error message {ex.Message}");
+        Console.WriteLine("[SequelInit] Retrying in 2s...");
         Constants.DataBaseRootPassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
         Thread.Sleep(2000);
     }
