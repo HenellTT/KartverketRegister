@@ -111,21 +111,29 @@ namespace KartverketRegister.Utils
                 {
                     while (reader.Read())
                     {
-                        string insertQuery = $"INSERT INTO {newTable} ({columnList}) VALUES ({paramList})";
-                        using (var innerConn = new MySqlConnection(ConnectionString))
+                        try
                         {
-                            innerConn.Open();
-                            using (var insertCmd = new MySqlCommand(insertQuery, innerConn))
+                            string insertQuery = $"INSERT INTO {newTable} ({columnList}) VALUES ({paramList})";
+                            using (var innerConn = new MySqlConnection(ConnectionString))
                             {
-                                foreach (var col in commonColumns)
+                                innerConn.Open();
+                                using (var insertCmd = new MySqlCommand(insertQuery, innerConn))
                                 {
-                                    insertCmd.Parameters.AddWithValue("@" + col, reader[col]);
+                                    foreach (var col in commonColumns)
+                                    {
+                                        insertCmd.Parameters.AddWithValue("@" + col, reader[col]);
+                                    }
+                                    insertCmd.ExecuteNonQuery();
+                                    Console.WriteLine($"[SequelMigrator] Copied data from {oldTable} to {newTable}");
                                 }
-                                insertCmd.ExecuteNonQuery();
-                                Console.WriteLine($"[SequelMigrator] Copied data from {oldTable} to {newTable}");
+                                innerConn.Close();
                             }
-                            innerConn.Close();
+                        } catch
+                        {
+                            Console.WriteLine($"[SequelMigrator] COPY - INCOMPATIBLE DATA FROM {oldTable} TO {newTable}");
+
                         }
+
 
                     }
                 } 
