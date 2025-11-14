@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq.Expressions;
-using KartverketRegister.Models.Other;
-using System.Diagnostics.Eventing.Reader;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 
 namespace KartverketRegister.Controllers
@@ -15,6 +18,11 @@ namespace KartverketRegister.Controllers
     [Authorize(Roles = "Employee,Admin")] // shit works for now!!! 
     public class AdminController : Controller // Arver fra Controller for å håndtere markører
     {
+        private readonly UserManager<AppUser> _userManager;
+        public AdminController(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
         [HttpGet]
         public IActionResult Index()
         {
@@ -81,7 +89,7 @@ namespace KartverketRegister.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllMarkers(string markerStatus)
+        public async Task<IActionResult> GetAllMarkers(string markerStatus) // RESTRICT TO ONLY ASSIGNED MARKERS 
         {
             if (Enum.TryParse(typeof(MarkerStatus), markerStatus, true, out var result))
             {
@@ -89,11 +97,13 @@ namespace KartverketRegister.Controllers
                 var status = (MarkerStatus)result;
 
                 List<Marker> MarkerList;
+                AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
+                Console.WriteLine($"GetAllMarkers requested by UserId {appUser.Id}");
 
                 try
                 {
                     SequelAdmin sequel = new SequelAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-                    MarkerList = sequel.FetchAllMarkers(markerStatus);
+                    MarkerList = sequel.FetchAllMarkers(markerStatus, appUser.Id);
 
                 }
                 catch (Exception e)

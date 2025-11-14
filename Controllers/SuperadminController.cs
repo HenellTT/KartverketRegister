@@ -40,6 +40,14 @@ namespace KartverketRegister.Controllers
             return View();
 
         }
+        [HttpGet]
+        public IActionResult AssignSubmissions()
+        {
+            return View();
+
+        }
+        
+
         [HttpGet("Superadmin/ManageUsers/{UserId}")]
         public IActionResult ManageUsersDetails(int UserId)
         {
@@ -85,6 +93,34 @@ namespace KartverketRegister.Controllers
             } catch (Exception ex)
             {
                 return Ok(new GeneralResponse(false,$"No users found {ex.Message} "));
+            }
+        }
+        [HttpGet]
+        public IActionResult FetchEmployees(string FullName = "")
+        {
+            try
+            {
+                SequelSuperAdmin seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+                List<AppUserDto> Users = seq.AdvUserFetcher("Employee",FullName);
+                return Ok(new GeneralResponse(true, "User list was indeed found", Users));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new GeneralResponse(false, $"No users found {ex.Message} "));
+            }
+        }
+        [HttpGet]
+        public IActionResult FetchUnassignedMarkers()
+        {
+            try
+            {
+                SequelSuperAdmin seq = new SequelSuperAdmin();
+                List<Marker> mrks = seq.FetchAllMarkers();
+                return Json(new GeneralResponse(true, "Here are yo markers bro", mrks));
+            }
+            catch (Exception ex)
+            {
+                return Json(new GeneralResponse(false, $"error: {ex.Message}"));
             }
         }
     }
