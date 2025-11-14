@@ -123,5 +123,20 @@ namespace KartverketRegister.Controllers
                 return Json(new GeneralResponse(false, $"error: {ex.Message}"));
             }
         }
+        [HttpPost]
+        public IActionResult PostAssignReviews([FromBody] List<ReviewAssign> AssignedReviews) {
+            SequelSuperAdmin seq = new SequelSuperAdmin();
+            seq.Open();
+            int Succeeded = 0;
+            int Failed = 0;
+            foreach (ReviewAssign RA in AssignedReviews)
+            {
+                GeneralResponse r = seq.AssignReview(RA);
+                if (r.Success) Succeeded++;
+                else Failed++;
+            }
+            seq.Close();
+            return Json("ok");
+        }
     }
 }
