@@ -66,8 +66,6 @@ namespace KartverketRegister.Utils
                     }
                 }
             }
-            Console.WriteLine($"Adm mrk lat1: {Markers[0].Lat}");
-            Console.WriteLine($"Adm mrk lng: {Markers[0].Lng}");
 
             conn.Close();
             return Markers;

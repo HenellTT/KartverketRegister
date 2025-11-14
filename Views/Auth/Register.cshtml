@@ -1,4 +1,5 @@
 ﻿<link rel="stylesheet" href="~/css/Auth.css" />
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
 <div class="container">
     <h2>Register</h2>
@@ -11,6 +12,7 @@
     <button onclick="register()">Register</button>
     <p id="msg"></p>
 </div>
+<meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
 
 <script>
     async function register() {
@@ -19,12 +21,14 @@
         const org = document.getElementById('org').value;
         const password = document.getElementById('password').value;
         const email = document.getElementById('email').value;
-        const role = document.getElementById('role').value;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
 
         const res = await fetch('/Auth/RegisterHandle', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {  'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': csrfToken
+            },
             body: `username=${encodeURIComponent(username)}&lastname=${encodeURIComponent(lastname)}&org=${encodeURIComponent(org)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`
         });
 

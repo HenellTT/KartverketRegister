@@ -4,22 +4,22 @@
 <link rel="stylesheet" href="~/css/User.css" asp-append-version="true" />
 
 <div class="user-page">
-    <div class="user-header">
-        <h1>Min Profil</h1>
-        <p>Her finner du informasjon knyttet til din bruker og organisasjon.</p>
-    </div>
+  <div class="user-header">
+    <h1>Min Profil</h1>
+    <p>Her finner du informasjon knyttet til din bruker og organisasjon.</p>
+  </div>
 
-    <div class="user-card">
-        <h2>Brukerinformasjon</h2>
-        <div class="user-info">
-            <div><span>Full Name:</span> @Model.FirstName @Model.LastName</div>
-            <div><span>Email:</span> @Model.Email</div>
-            <div><span>Organization:</span> @Model.Organization</div>
-            <div><span>Rolele:</span> @Model.UserType</div>
-        </div>
+  <div class="user-card">
+    <h2>Brukerinformasjon</h2>
+    <div class="user-info">
+      <div><span>Full Name:</span> @Model.FirstName @Model.LastName</div>
+      <div><span>Email:</span> @Model.Email</div>
+      <div><span>Organization:</span> @Model.Organization</div>
+      <div><span>Rolele:</span> @Model.UserType</div>
     </div>
+  </div>
 
-    <div class="user-actions">
-        <a class="logout-button" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
-    </div>
+  <div class="user-actions">
+    <a class="logout-button" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
+  </div>
 </div>

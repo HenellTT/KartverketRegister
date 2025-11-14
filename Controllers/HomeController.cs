@@ -44,12 +44,6 @@ public class HomeController : Controller
         return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
     }
 
-
-    public async Task<IActionResult> Test()
-    {
-        var smth = _userManager.GetUserId(HttpContext?.User);
-        return Json(smth);
-    }
     public async Task<IActionResult> User()
     {
 

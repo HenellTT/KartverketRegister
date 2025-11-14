@@ -18,6 +18,12 @@ namespace KartverketRegister.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
         [HttpGet]
         public IActionResult AccessDenied()
@@ -116,9 +122,9 @@ namespace KartverketRegister.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        
+            
 
-
-
-
+            
     }
 }

@@ -1,6 +1,7 @@
 ﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Runtime;
 
 namespace KartverketRegister.Controllers
 {
+    [Authorize(Roles = "User,Employee,Admin")]
 
     public class MarkerController : Controller // Arver fra Controller for å håndtere markører
     {

@@ -1,0 +1,39 @@
+﻿@model KartverketRegister.Models.AppUserDto
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+@{
+}
+<link rel="stylesheet" href="~/css/SuperAdmin.css" />
+<script src="~/js/SuperAdminUserManager.js"></script>
+<meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+
+
+
+<h2>Hello mr superadmin! Here you can manage your dear slaves</h2>
+<p>Name: @Model.FirstName @Model.LastName</p>
+<p>Id: @Model.Id</p>
+<p>Role: @Model.UserType</p>
+<p>email: @Model.Email</p>
+<p>Set role to:
+	<button id="MUD-set-user">User</button>
+	<button id="MUD-set-admin">Admin</button>
+	<button id="MUD-set-employee">Employee</button>
+</p>
+<p><button id="MUD-delete">Delete User</button></p>
+<p><input id="MUD-msg-input"></input><button id="MUD-msg-submit">Send Message</button></p>
+<script>
+	const csrfToken_MUD = document.querySelector('meta[name="csrf-token"]').content;
+
+	const msU = document.getElementById("MUD-set-user");
+	const msA = document.getElementById("MUD-set-admin");
+	const msE = document.getElementById("MUD-set-employee");
+	const msD = document.getElementById("MUD-delete");
+	const msNI = document.getElementById("MUD-msg-input");
+	const msNS = document.getElementById("MUD-msg-submit");
+
+	const splink = window.location.href.split('/');
+	const UserId = splink[splink.length-1];
+	let UMP = new UserManagerPage(UserId, msU, msA, msE, msD, msNI, msNS, csrfToken_MUD);
+
+
+</script>
