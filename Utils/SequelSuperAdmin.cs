@@ -251,7 +251,7 @@ namespace KartverketRegister.Utils
         {
             string sql = @"
                 INSERT INTO ReviewAssign (UserId, MarkerId)
-                Values (@UserId, @ReviewId)
+                Values (@UserId, @MarkerId)
             ";
             try
             {

@@ -1,32 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
+using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq.Expressions;
-using KartverketRegister.Models.Other;
-using System.Diagnostics.Eventing.Reader;
-using Microsoft.AspNetCore.Authorization;
-using KartverketRegister.Auth;
-using KartverketRegister.Utils;
 
 namespace KartverketRegister.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class SuperadminController : Controller // Arver fra Controller 
     {
-        private readonly DummyCreator _dummyCreator;
-        public SuperadminController(DummyCreator dummyCreator)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+
+        public SuperadminController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
-            _dummyCreator = dummyCreator;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
-        [HttpGet]
-        public async Task<IActionResult> gg()
-        {
-            var result = await _dummyCreator.FillIn();
-            return Ok(result);
-        }
+
 
         [HttpGet]
         public IActionResult Index()
@@ -124,19 +123,45 @@ namespace KartverketRegister.Controllers
             }
         }
         [HttpPost]
-        public IActionResult PostAssignReviews([FromBody] List<ReviewAssign> AssignedReviews) {
+        public async Task<IActionResult> PostAssignReviews([FromBody] List<ReviewAssign> AssignedReviews) {
+
+            var firstUserId = AssignedReviews?.FirstOrDefault()?.UserId;
+
+            if (firstUserId == null)
+                return Json(new GeneralResponse(false, "AssignedReviews list is empty"));
+
+            // lar ikke Assigne reviews til de som ikke er employee
+            AppUser SelectedEmployee = await _userManager.FindByIdAsync(firstUserId.ToString());
+        
+            if (SelectedEmployee?.UserType != "Employee")
+                return Json(new GeneralResponse(false, "Fr if you get this reply, you must've really played with the feelings of our security measures. btw, User is not an Employee"));
+        
             SequelSuperAdmin seq = new SequelSuperAdmin();
             seq.Open();
-            int Succeeded = 0;
-            int Failed = 0;
-            foreach (ReviewAssign RA in AssignedReviews)
+            try
             {
-                GeneralResponse r = seq.AssignReview(RA);
-                if (r.Success) Succeeded++;
-                else Failed++;
+                
+                int Succeeded = 0;
+                int Failed = 0;
+                foreach (ReviewAssign RA in AssignedReviews)
+                {
+                    GeneralResponse r = seq.AssignReview(RA);
+                    Console.WriteLine($"[RA] uid:{RA.UserId} mid:{RA.MarkerId}");
+                    if (r.Success) Succeeded++;
+                    else { 
+                        Failed++;
+                        Console.WriteLine($"[RA] seq error: {r.Message}");
+                    }
+                }
+                return Json(new GeneralResponse(true, $"Everything gucci", new { Success = Succeeded, Fail = Failed }));
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new GeneralResponse(false, $"Something went wrong: {ex.Message}"));
             }
             seq.Close();
-            return Json("ok");
+
         }
     }
 }
