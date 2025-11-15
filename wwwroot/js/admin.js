@@ -1,8 +1,15 @@
 ﻿
 async function FetchMarkers(status) {
     try {
-        const response = await fetch('/Admin/GetAllMarkers?markerStatus=' + status);
-        if (!response.ok) throw new Error('Network response was not ok');
+
+        let response = await fetch('/Superadmin/FetchAllMarkers?markerStatus=' + status);
+        
+        if (!response.ok || response.redirected) {
+            response = await fetch('/Admin/GetAllMarkers?markerStatus=' + status);
+            if (!response.ok) {
+                throw new Error("fuck");
+            }
+        }
 
         const data = await response.json();
         return data.success ? data.markers : [];

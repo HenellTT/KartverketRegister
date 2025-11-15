@@ -209,15 +209,16 @@ namespace KartverketRegister.Utils
             conn.Close();
 
         }
-        public void ApproveMarker(int markerId, string ReviewComment)
+        public void ApproveMarker(int markerId, string ReviewComment, int ReviewerId)
         {
             conn.Open();
-            string sql = "UPDATE RegisteredMarkers SET State = 'Accepted', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+            string sql = "UPDATE RegisteredMarkers SET State = 'Accepted', ReviewComment = @ReviewComment, ReviewedBy = @UserId WHERE MarkerId = @MarkerId";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@MarkerId", markerId);
                 cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.Parameters.AddWithValue("@UserId", ReviewerId);
                 cmd.ExecuteNonQuery();
 
             }
@@ -226,16 +227,17 @@ namespace KartverketRegister.Utils
             Notificator.SendNotification(UserId, $"Your Submission has been approved", "Info", markerId);
 
         }
-        public void RejectMarker(int markerId, string ReviewComment)
+        public void RejectMarker(int markerId, string ReviewComment, int ReviewerId)
         {
             conn.Open();
-            string sql = "UPDATE RegisteredMarkers SET State = 'Rejected', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+            string sql = "UPDATE RegisteredMarkers SET State = 'Rejected', ReviewComment = @ReviewComment, ReviewedBy = @UserId WHERE MarkerId = @MarkerId";
 
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@MarkerId", markerId);
                 cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.Parameters.AddWithValue("@UserId", ReviewerId);
                 cmd.ExecuteNonQuery();
 
             }
