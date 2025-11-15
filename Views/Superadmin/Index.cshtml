@@ -4,35 +4,21 @@
 }
 <link rel="stylesheet" href="~/css/SuperAdmin.css" />
 
-
+<body>
 <h2>Hello mr superadmin! Here are things you can do</h2>
 
-<div class="sa-butt-cont">
-	<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="ManageUsers"><button>Manage Users</button></a>
-	<p>Here you can change user Types of other people and delete accounts!</p>
-	<li>✅Change user type</li>
-	<li>✅List all users</li>
-	<li>✅Fancy Regex search???</li>
-	<li>✅Select CONCAT(FirstName, ' ', LastName) from Users WHERE LOWER(CONCAT(FirstName, ' ', LastName )) LIKE '&#64;SearchInput %' ;</li>
-	<li>✅Click on user to go to Edit page / Pop-up edit</li>
-	<li>💀💀💀Make it nicer💀💀💀</li>
-</div>
-<div class="sa-butt-cont">
-	<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="AssignSubmissions"><button>Assign submissions</button></a>
-	<p>Exactly what the button says</p>
-	<li>All unassigned submissions in table</li>
-	<li>Checkboxes to assign multiple at once</li>
-	<li>Auto assign button</li>
-</div>
-<div class="sa-butt-cont">
-	<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="Statistics"><button>Statistics</button></a>
+<div class="Container">
+	<div class="sa-butt-cont">
+		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="ManageUsers"><button>Manage Users</button></a>
 
-	<p>Based off Deliverable in is-201</p>
-	<li>List the first five rows of the most important tables (according to your assessment), sorted in a reasonable way.</li>
-	<li>List all pilots who have submitted more than five reports, sorted by the number of reports they have submitted.</li>
-	<li>List the average number of reports submitted, grouped by year.</li>
-	<li>List the person who has reported the most aviation obstacles in 2025.</li>
-	<li>List which types of obstacles have been used the most in reports (top 3).</li>
-	<li>List all pilots who have reported more obstacles in 2025 than the average reported in 2023 (you may need to add some more test data to achieve this).</li>
+	</div>
+	<div class="sa-butt-cont">
+		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="AssignSubmissions"><button>Assign submissions</button></a>
 
+	</div>
+	<div class="sa-butt-cont">
+		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="Statistics"><button>Statistics</button></a>
+	</div>
 </div>
+
+</body>
