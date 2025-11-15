@@ -114,8 +114,29 @@ namespace KartverketRegister.Controllers
             try
             {
                 SequelSuperAdmin seq = new SequelSuperAdmin();
-                List<Marker> mrks = seq.FetchAllMarkers();
+                List<Marker> mrks = seq.FetchAllUnassignedMarkers();
                 return Json(new GeneralResponse(true, "Here are yo markers bro", mrks));
+            }
+            catch (Exception ex)
+            {
+                return Json(new GeneralResponse(false, $"error: {ex.Message}"));
+            }
+        }
+        [HttpGet]
+        public IActionResult FetchAllMarkers(string markerStatus)
+        {
+            try
+            {
+                SequelSuperAdmin seq = new SequelSuperAdmin();
+                List<Marker> mrks = seq.FetchAllMarkers(markerStatus);
+                
+                return Ok(new
+                {
+                    Success = true,
+                    Name = markerStatus.ToString(),
+                    Value = 69,
+                    Markers = mrks
+                });
             }
             catch (Exception ex)
             {
