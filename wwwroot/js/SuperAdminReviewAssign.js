@@ -55,6 +55,10 @@
         let ids = OnlyChecked.map(el => Number(el.id.split('-')[1]));
         return ids;
     }
+    GetAvailableIds() {
+        let ids = this.CheckBoxes.map(el => Number(el.id.split('-')[1]));
+        return ids;
+    }
 
     CreateTableRow(mrk) {
         return `
@@ -123,7 +127,27 @@
 
         return gresp;
     }
-    
+    async AutoAssign() {
+        console.log("shit");
+        // markers / employess
+        //
+        const Mlength = this.GetAvailableIds().length;
+        const Elength = this.Employees.length;
+        const MarkersPerEmployee = Math.ceil(Mlength / Elength);
+
+        for (const e of this.Employees) {
+            this.EmployeeSelect.value = e.id;
+            for (let i = 0; i < MarkersPerEmployee; i++) {
+                try {
+                    this.CheckBoxes[i].checked = true;
+                } catch {
+
+                }
+            }
+            await this.PostBulkAssign();
+        }
+
+    }
 
 }
 class ReviewAssign {
