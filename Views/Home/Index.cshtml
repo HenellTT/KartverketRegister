@@ -2,11 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="user-page">
-    <h1>@ViewData["Title"]</h1>
+<link rel="stylesheet" href="~/css/LogIn.css" asp-append-version="true" />
 
-    <div class="button-container">
-        <a asp-controller="Pilot" asp-action="Index" class="btn btn-primary">Go to Pilot Page</a>
-        <a asp-controller="Pilot" asp-action="Registry" class="btn btn-primary">Register Marker</a>
-    </div>
+
+<h1>Welcome</h1>
+<h2>Please choose your Role</h2>
+<div class="LogInButtons">
+    <a asp-controller="Auth" asp-action="Login" asp-route-role="Pilot"><button class="GuideButton">Pilot</button></a>
+    <a asp-controller="Auth" asp-action="Login" asp-route-role="Admin"><button class="secondGuideButton">Admin</button></a>
 </div>
+
