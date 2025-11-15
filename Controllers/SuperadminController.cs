@@ -153,6 +153,7 @@ namespace KartverketRegister.Controllers
                         Console.WriteLine($"[RA] seq error: {r.Message}");
                     }
                 }
+                Notificator.SendNotification(Convert.ToInt32(firstUserId),$"You have been assigned to review {Succeeded} submissions<br><a href='/Admin'><button>To Submissions</button></a>", "Info");
                 return Json(new GeneralResponse(true, $"Everything gucci", new { Success = Succeeded, Fail = Failed }));
 
             }

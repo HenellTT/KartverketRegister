@@ -11,6 +11,7 @@
     async Init() {
         await this.SetupTable();
         await this.SetupSelector();
+        window.SARA = this;
     }
 
     async FetchMarkers() {
@@ -63,8 +64,8 @@
                 <td>${mrk.organization}</td>
                 <td>${mrk.source}</td>
                 <td>${mrk.heightM} m</td>
-                <td><input class="checkbox-submission-assign" id="submisstion-${mrk.markerId}" type="checkbox" /> id: ${mrk.markerId}</td>
-                <td><button onclick="alert('Nuh uh yet')">Quick assign</button></td>
+                <td><input class="checkbox-submission-assign" id="submisstion-${mrk.markerId}" type="checkbox" /></td>
+                <td><button onclick="window.SARA.PostQuickAssign(${mrk.markerId})">Quick assign</button></td>
             </tr>
             `;
     }
@@ -100,6 +101,29 @@
 
         return gresp;
     }
+    async PostQuickAssign(mrkId) {
+        const ids = [mrkId];
+        const SelectedUser = Number(this.EmployeeSelect.value);
+        const RARRAY = ids.map(id => new ReviewAssign(SelectedUser, id));
+
+        console.log(RARRAY);
+        const resp = await fetch("/Superadmin/PostAssignReviews", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "RequestVerificationToken": this.csrf
+            },
+            body: JSON.stringify(RARRAY)
+        })
+        const gresp = await resp.json();
+        console.log(gresp);
+        if (gresp.success) {
+            await this.SetupTable();
+        }
+
+        return gresp;
+    }
+    
 
 }
 class ReviewAssign {
