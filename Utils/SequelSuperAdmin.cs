@@ -306,6 +306,9 @@ namespace KartverketRegister.Utils
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
                         mrk.UserName = reader["Name"] as string;
+                        mrk.Date = Convert.ToDateTime(reader["Date"]);
+
+
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 
                         mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;

@@ -27,6 +27,7 @@ namespace KartverketRegister.Models
         public decimal? HeightMOverSea { get; set; }
 
         public string GeoJson { get; set; }
+        public DateTime? Date { get; set; }
 
         // Parameterless constructor – allows empty instance
         public TempMarker()

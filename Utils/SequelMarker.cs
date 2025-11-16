@@ -103,6 +103,8 @@ namespace KartverketRegister.Utils
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
+                        mrk.Date = Convert.ToDateTime(reader["Date"]);
+
 
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 

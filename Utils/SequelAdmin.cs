@@ -87,8 +87,9 @@ namespace KartverketRegister.Utils
                         mrk.State = reader["State"] as string;
                         mrk.UserName = reader["Name"] as string;
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
+                        mrk.Date = Convert.ToDateTime(reader["Date"]);
 
-                        
+
                         mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;
                         mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
                         mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
