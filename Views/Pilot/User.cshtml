@@ -1,0 +1,16 @@
+@{
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/css/User.css" asp-append-version="true" />
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="button-container">
+    <a asp-controller="Auth" asp-action="Login" class="btn">Login</a>
+    <a asp-controller="Auth" asp-action="Register" class="btn">Register</a>
+
+    <a asp-controller="Auth" asp-action="Login" class="btn">Employee Login</a>
+    <a asp-controller="Auth" asp-action="Login" class="btn">Crew Login</a>
+    <a asp-controller="Auth" asp-action="Login" class="btn">Admin Login</a>
+</div>
