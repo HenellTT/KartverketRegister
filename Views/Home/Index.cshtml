@@ -3,10 +3,102 @@
 }
 
 <div class="user-page">
-    <h1>@ViewData["Title"]</h1>
+    <h1>NRL Aviation obstacle Register</h1>
+
+    <p>Welcome to the Luftfartshindre Reporting System! This web application allows pilots and flight crews to report simple aviation obstacles to the <strong>Nasjonalt register over luftfartshindre (NRL)</strong>. It is developed as a project assignment in collaboration with the University of Agder (UiA), Kartverket, and Norsk Luftambulanse (NLA).</p>
+
+    <h2>About the Project</h2>
+    <p>The system is designed for pilots and flight crews from NLA, the Air Force, and Police Helicopter Services to safely report man-made obstacles that may pose a risk to aviation. Objects over 15 meters in height must be reported (30 meters in densely populated areas), as well as power or signal lines regardless of height. For more details, see the <a href="https://luftfartshinderforskriften.no" target="_blank">Aviation Obstacles Regulation</a>.</p>
+
+    <h2>Functional Requirements</h2>
+    <ul>
+        <li><strong>Users:</strong> Can create an account, log in, and report obstacles on a map (Leaflet preferred).</li>
+        <li>Web app must work on tablets and allow quick reporting.</li>
+        <li>Each report can include minimal attributes and comments. Pilots can submit incomplete data, which will later be reviewed by the NRL registry staff.</li>
+        <li>Optional: Attach a photo of the obstacle to the report.</li>
+        <li><strong>Registry Staff:</strong> Can manage reports, assign tasks, approve or reject submissions, and view them on a map.</li>
+    </ul>
+
+    <h2>Technical Requirements</h2>
+    <ul>
+        <li>Use MariaDB and GitHub for development.</li>
+        <li>Leaflet with OpenStreetMap or ortho/satellite imagery.</li>
+        <li>Support WGS84 coordinates using GeoJSON standards.</li>
+        <li>Offline map support is desirable for areas with no mobile coverage.</li>
+    </ul>
+
+    <h2>Future Enhancements</h2>
+    <ul>
+        <li>Data flow integration with the NRL API.</li>
+        <li>Bookmark or permalinks to zoom to specific obstacles on the map.</li>
+        <li>Support multiple map layers (Topographic map, Norge i Bilder via WMS).</li>
+        <li>Secure authentication and access control for users reporting obstacles.</li>
+    </ul>
 
     <div class="button-container">
-        <a asp-controller="Pilot" asp-action="Index" class="btn btn-primary">Go to Pilot Page</a>
-        <a asp-controller="Pilot" asp-action="Registry" class="btn btn-primary">Register Marker</a>
+        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Login</a>
+        <a asp-controller="Auth" asp-action="Register" class="btn btn-primary">Register</a>
     </div>
 </div>
+<style>
+    .user-page {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+    }
+
+        .user-page h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .user-page h2 {
+            color: #4a6fa5;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #4a6fa5;
+            padding-bottom: 5px;
+        }
+
+        .user-page p {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .user-page ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+        .button-container .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+            .button-container .btn:hover {
+                transform: scale(1.05);
+                background-color: #1d4f91;
+                color: white;
+            }
+    header {
+        display:none;
+    }
+    footer {
+        display:none;
+    }
+
+</style>
