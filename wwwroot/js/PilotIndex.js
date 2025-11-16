@@ -33,11 +33,7 @@ function MyMarkerListElement(Marker) {
                     <button>Continue registration</button>
                 </a>
                 <button onclick='DeleteMarkerReq(${markerId})'>Delete</button>
-                <button onclick='mf.setMarkerPosition(${lat}, ${lng}, mf.icons.Get["pin_crook"]); 
-                                 shlongPositionIntoForm(${lat}, ${lng}); 
-                                 mf.moveViewTo(${lat}, ${lng})'>
-                    Show on Map
-                </button>
+                
             </td>
         </tr>`;
 }
@@ -54,24 +50,14 @@ function SubmissionElement(marker) {
         <tr>
             <td>${type || "N/A"}</td>
             <td>${description || "N/A"}</td>
-            <td>${organization || "N/A"}</td>
             <td>${heightM ?? "N/A"}</td>
-            <td>${heightMOverSea ?? "N/A"}</td>
-            <td>${accuracyM ?? "N/A"}</td>
+            <td>${heightMOverSea ?? "N/A"}</td>    
             <td>${obstacleCategory || "N/A"}</td>
-            <td>${isTemporary ? "Yes" : "No"}</td>
-            <td>${expectedRemovalDate || "N/A"}</td>
-            <td>${lighting || "N/A"}</td>
-            <td>${source || "N/A"}</td>
-            <td>${lat.toFixed(3)}</td>
-            <td>${lng.toFixed(3) }</td>
-            <td>${userId ?? "N/A"}</td>
             <td>${reviewedBy ?? "N/A"}</td>
             <td>${reviewComment || "N/A"}</td>
             <td>
-                <button onclick='mf.setMarkerPosition(${lat}, ${lng}, mf.icons.Get["pin_crook"]);
-                                  mf.moveViewTo(${lat}, ${lng})'>
-                    Show on Map
+                <button onclick='location.href = "viewmarker/${marker.markerId}"'>
+                    Full info
                 </button>
             </td>
         </tr>`;
@@ -114,18 +100,10 @@ async function UpdateMySubmissionList() {
                 <tr>
                     <th>Type</th>
                     <th>Description</th>
-                    <th>Organization</th>
                     <th>Height (m)</th>
                     <th>Height over sea (m)</th>
-                    <th>Accuracy (m)</th>
                     <th>Obstacle Category</th>
-                    <th>Temporary</th>
-                    <th>Expected Removal</th>
-                    <th>Lighting</th>
-                    <th>Source</th>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
-                    <th>User ID</th>
+                    
                     <th>Reviewed By</th>
                     <th>Review Comment</th>
                     <th>Actions</th>
