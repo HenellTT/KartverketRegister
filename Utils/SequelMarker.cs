@@ -31,7 +31,8 @@ namespace KartverketRegister.Utils
             int? submittedBy = null,
             int? reviewedBy = null,
             string? reviewComment = null,
-            string? source = null
+            string? source = null,
+            string? geojson = null
         )
         {
             conn.Open();
@@ -39,10 +40,10 @@ namespace KartverketRegister.Utils
             string sql = @"
                 INSERT INTO RegisteredMarkers 
                 (Type, Description, Lat, Lng, UserId, Organization, State, HeightM, HeightMOverSea, AccuracyM, 
-                 ObstacleCategory, IsTemporary, Lighting, SubmittedBy, ReviewedBy, ReviewComment, LastUpdated, Source)
+                 ObstacleCategory, IsTemporary, Lighting, SubmittedBy, ReviewedBy, ReviewComment, LastUpdated, Source, GeoJson)
                 VALUES 
                 (@Type, @Description, @Lat, @Lng, @UserId, @Organization, @State, @HeightM, @HeightMOverSea, @AccuracyM,
-                 @ObstacleCategory, @IsTemporary, @Lighting, @SubmittedBy, @ReviewedBy, @ReviewComment, @LastUpdated, @Source);
+                 @ObstacleCategory, @IsTemporary, @Lighting, @SubmittedBy, @ReviewedBy, @ReviewComment, @LastUpdated, @Source, @GeoJson);
                 ";
 
             using (var cmd = new MySqlCommand(sql, conn))
@@ -69,6 +70,8 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@LastUpdated", DateTime.UtcNow);
                 cmd.Parameters.AddWithValue("@Source", source ?? (object)DBNull.Value);
 
+                cmd.Parameters.AddWithValue("@GeoJson", geojson);
+
                 cmd.ExecuteNonQuery();
             }
 
@@ -91,6 +94,7 @@ namespace KartverketRegister.Utils
 
                         mrk.Type = reader["Type"] as string;
                         mrk.Description = reader["Description"] as string;
+                        
                         mrk.Lat = reader.GetDouble("Lat");
                         mrk.Lng = reader.GetDouble("Lng");
 
@@ -104,6 +108,7 @@ namespace KartverketRegister.Utils
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
                         mrk.Date = Convert.ToDateTime(reader["Date"]);
+                        mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
 
 
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
@@ -158,6 +163,7 @@ namespace KartverketRegister.Utils
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
+                        mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
 
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 

@@ -140,6 +140,19 @@
         
         
     })
+    const GeoJson = @Html.Raw(Model.GeoJson != null ? Model.GeoJson : "null");
+    let bounds;
+    if (GeoJson) {
+        const geoLayer = L.geoJSON(GeoJson).addTo(map);
+
+        // Fit map view to all features
+        bounds = geoLayer.getBounds();
+        if (bounds.isValid()) {
+            setTimeout( () => {
+                map.fitBounds(bounds, { padding: [40, 40] })
+            },1000);
+        }
+    }
 </script>
 
 

@@ -107,9 +107,8 @@ namespace KartverketRegister.Controllers
 
             SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
             TempMarker mrk = seq.FetchMarkerById(markerId);
-
+            if (mrk.UserId == -1) return Forbid();
             return View(mrk);
-        }
-        
+        }        
     }
 }

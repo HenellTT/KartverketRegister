@@ -88,6 +88,7 @@ namespace KartverketRegister.Utils
                         mrk.UserName = reader["Name"] as string;
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
                         mrk.Date = Convert.ToDateTime(reader["Date"]);
+                        mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
 
 
                         mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;

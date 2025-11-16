@@ -42,7 +42,7 @@ namespace KartverketRegister.Utils
         {
             conn.Open();
             List<TempMarker> Markers = new List<TempMarker>();
-            string sql = "SELECT MarkerId,Lat,Lng,Description,UserId,Type,HeightMOverSea,GeoJson FROM Markers WHERE UserId = @userId";
+            string sql = "SELECT * FROM Markers WHERE UserId = @userId";
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@userId", UserId);
@@ -66,7 +66,7 @@ namespace KartverketRegister.Utils
             TempMarker mrk = null; // Will hold the result
 
             conn.Open();
-            string sql = "SELECT MarkerId, Lat, Lng, Description, UserId, HeightMOverSea, Type FROM Markers WHERE MarkerId = @markerId LIMIT 1";
+            string sql = "SELECT * FROM Markers WHERE MarkerId = @markerId LIMIT 1";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {

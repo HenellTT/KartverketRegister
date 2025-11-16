@@ -56,6 +56,9 @@ namespace KartverketRegister.Models
             HeightMOverSea = r.IsDBNull(r.GetOrdinal("HeightMOverSea"))
                 ? (decimal?)null
                 : r.GetDecimal(r.GetOrdinal("HeightMOverSea"));
+            GeoJson = r.IsDBNull(r.GetOrdinal("GeoJson"))
+                ? null
+                : r.GetString(r.GetOrdinal("GeoJson"));
 
 
         }
