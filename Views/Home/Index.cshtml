@@ -102,3 +102,13 @@
     }
 
 </style>
+<link rel="stylesheet" href="~/css/LogIn.css" asp-append-version="true" />
+
+
+<h1>Welcome</h1>
+<h2>Please choose your Role</h2>
+<div class="LogInButtons">
+    <a asp-controller="Auth" asp-action="Login" asp-route-role="Pilot"><button class="GuideButton">Pilot</button></a>
+    <a asp-controller="Auth" asp-action="Login" asp-route-role="Admin"><button class="secondGuideButton">Admin</button></a>
+</div>
+
