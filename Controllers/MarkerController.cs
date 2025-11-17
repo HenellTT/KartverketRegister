@@ -45,7 +45,7 @@ namespace KartverketRegister.Controllers
 
             try //try-catch for å håndtere feil
             {
-                
+
                 seq.SaveMarker(
                     marker.Type,
                     marker.Description,
@@ -59,7 +59,8 @@ namespace KartverketRegister.Controllers
                     obstacleCategory: marker.ObstacleCategory,
                     isTemporary: marker.IsTemporary,
                     lighting: marker.Lighting,
-                    source: marker.Source
+                    source: marker.Source,
+                    geojson: marker.GeoJson
                 );
                 
                 return Ok(new GeneralResponse(true, "The marker has been registered!"));
@@ -89,6 +90,8 @@ namespace KartverketRegister.Controllers
             }
             
         }
+        // fetch all stripped markers (for view on map, no user data)
+
         public IActionResult GetObstacles([FromBody] LocationModel model)
         {
             Console.WriteLine($"[GetObstacles] Lng: {model.Lng}");

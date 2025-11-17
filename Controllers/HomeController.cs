@@ -1,4 +1,4 @@
-using KartverketRegister.Auth;
+﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Identity;
@@ -26,23 +26,42 @@ public class HomeController : Controller
         _signInManager = signInManager;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View(); //returnerer viewet Index.cshtml (hjemmesiden)
+        AppUser appUser = null;
+        try
+        {
+            appUser = await _userManager.GetUserAsync(HttpContext?.User);
+        } catch
+        {
+            return View();
+        }
+
+        // If the user is NOT logged in
+        if (appUser == null)
+        {
+             // Loads the homepage (Index.cshtml)
+             return View();
+        }
+
+        // User is logged in → redirect based on UserType
+        switch (appUser.UserType)
+        {
+            case "User":
+                return RedirectToAction("Index", "Pilot");
+
+            case "Admin":
+                return RedirectToAction("Index", "Superadmin");
+
+            case "Employee":
+                return RedirectToAction("Index", "Admin");
+
+            default:
+                // fallback if UserType is unknown
+                return RedirectToAction("Index", "Home");
+        }
     }
 
-    public IActionResult Privacy()
-    {
-        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
-    }
-    public IActionResult Pilot()
-    {
-        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
-    }
-    public IActionResult Admin()
-    {
-        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
-    }
 
     public async Task<IActionResult> User()
     {

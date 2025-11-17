@@ -5,6 +5,9 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Bcpg;
+using Org.BouncyCastle.Tls;
+using Org.BouncyCastle.Bcpg.OpenPgp;
+using System.Diagnostics;
 
 
 namespace KartverketRegister.Utils
@@ -14,6 +17,8 @@ namespace KartverketRegister.Utils
     {
 
         public SequelSuperAdmin(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
+        { }
+        public SequelSuperAdmin() : base() 
         { }
         public List<AppUserDto> UserFetcher(string FullName = "")
         {
@@ -26,6 +31,44 @@ namespace KartverketRegister.Utils
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@SearchInput", $"%{FullName.ToLower()}%");
+
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        AppUserDto User = new AppUserDto
+                        {
+                            Id = Convert.ToInt32(reader["UserId"]),
+                            LastName = reader["LastName"]?.ToString(),
+                            FirstName = reader["FirstName"]?.ToString(),
+                            Organization = reader["Organization"]?.ToString(),
+                            Email = reader["Email"]?.ToString(),
+                            UserType = reader["UserType"]?.ToString(),
+                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"])
+                        };
+                        Users.Add(User);
+                    }
+                }
+
+
+            }
+            conn.Close();
+            return Users;
+        }
+        public List<AppUserDto> AdvUserFetcher(string UserType, string FullName = "")
+        {
+            List<AppUserDto> Users = new List<AppUserDto>();
+            conn.Open();
+            string sql = @"SELECT UserId,FirstName,LastName,Organization,Email,UserType,CreatedAt 
+                FROM Users 
+                WHERE LOWER(CONCAT(FirstName, ' ', LastName)) LIKE @SearchInput
+                AND UserType = @UserType
+            ;";
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@SearchInput", $"%{FullName.ToLower()}%");
+                cmd.Parameters.AddWithValue("@UserType", UserType);
 
 
                 using (var reader = cmd.ExecuteReader())
@@ -149,6 +192,160 @@ namespace KartverketRegister.Utils
             {
                 return new GeneralResponse(false, $"Notification failed sending to user {UserId}");
             }
+        }
+        // NEW SHIT
+        public List<Marker> FetchAllUnassignedMarkers()
+        {
+            conn.Open();
+            
+            List<Marker> Markers = new List<Marker>();
+            string sql = @"
+            SELECT rm.*
+            FROM RegisteredMarkers rm
+            LEFT JOIN ReviewAssign ra
+                ON rm.MarkerId = ra.MarkerId
+            WHERE ra.MarkerId IS NULL
+                AND rm.State = 'Unseen';
+            ";
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                //cmd.Parameters.AddWithValue("@markerStatus", markerStatus);
+
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Marker mrk = new Marker();
+
+                        mrk.Type = reader["Type"] as string;
+                        mrk.Description = reader["Description"] as string;
+                        mrk.Lat = Convert.ToDouble(reader["Lat"]);
+                        mrk.Lng = Convert.ToDouble(reader["Lng"]);
+
+                        mrk.HeightM = reader["HeightM"] != DBNull.Value ? reader.GetDecimal("HeightM") : (decimal?)null;
+                        mrk.HeightMOverSea = reader["HeightMOverSea"] != DBNull.Value ? reader.GetDecimal("HeightMOverSea") : (decimal?)null;
+                        mrk.Organization = reader["Organization"] as string;
+                        mrk.AccuracyM = reader["AccuracyM"] != DBNull.Value ? reader.GetDecimal("AccuracyM") : (decimal?)null;
+                        mrk.ObstacleCategory = reader["ObstacleCategory"] as string;
+                        mrk.IsTemporary = reader["IsTemporary"] != DBNull.Value && Convert.ToBoolean(reader["IsTemporary"]);
+                        mrk.Lighting = reader["Lighting"] as string;
+                        mrk.Source = reader["Source"] as string;
+                        mrk.State = reader["State"] as string;
+                        //mrk.UserName = reader["Name"] as string;
+                        mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
+
+                        mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;
+                        mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
+                        mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
+                        mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
+
+                        Markers.Add(mrk);
+                    }
+                }
+            }
+
+            conn.Close();
+            return Markers;
+        }
+      
+        public List<Marker> FetchAllMarkers(string markerStatus)
+        {
+            conn.Open();
+
+            List<Marker> Markers = new List<Marker>();
+            string sql;
+            if (markerStatus == "Everything")
+            {
+                sql = @"
+                    SELECT 
+                        rm.*,
+                        CONCAT(sub.FirstName, ' ', sub.LastName) AS Name,
+                        sub.Email AS SubmitterEmail
+                    FROM RegisteredMarkers AS rm
+                    LEFT JOIN Users AS sub
+                        ON rm.UserId = sub.UserId
+                    WHERE rm.State != @markerStatus
+                ;";
+            } else
+            {
+                sql = @"
+                    SELECT 
+                        rm.*,
+                        CONCAT(sub.FirstName, ' ', sub.LastName) AS Name,
+                        sub.Email AS SubmitterEmail
+                    FROM RegisteredMarkers AS rm
+                    LEFT JOIN Users AS sub
+                        ON rm.UserId = sub.UserId
+                    WHERE rm.State = @markerStatus
+                ;";
+            }
+                 
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@markerStatus", markerStatus);
+
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Marker mrk = new Marker();
+
+                        mrk.Type = reader["Type"] as string;
+                        mrk.Description = reader["Description"] as string;
+                        mrk.Lat = Convert.ToDouble(reader["Lat"]);
+                        mrk.Lng = Convert.ToDouble(reader["Lng"]);
+
+                        mrk.HeightM = reader["HeightM"] != DBNull.Value ? reader.GetDecimal("HeightM") : (decimal?)null;
+                        mrk.HeightMOverSea = reader["HeightMOverSea"] != DBNull.Value ? reader.GetDecimal("HeightMOverSea") : (decimal?)null;
+                        mrk.Organization = reader["Organization"] as string;
+                        mrk.AccuracyM = reader["AccuracyM"] != DBNull.Value ? reader.GetDecimal("AccuracyM") : (decimal?)null;
+                        mrk.ObstacleCategory = reader["ObstacleCategory"] as string;
+                        mrk.IsTemporary = reader["IsTemporary"] != DBNull.Value && Convert.ToBoolean(reader["IsTemporary"]);
+                        mrk.Lighting = reader["Lighting"] as string;
+                        mrk.Source = reader["Source"] as string;
+                        mrk.State = reader["State"] as string;
+                        mrk.UserName = reader["Name"] as string;
+                        mrk.Date = Convert.ToDateTime(reader["Date"]);
+
+
+                        mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
+
+                        mrk.UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : (int?)null;
+                        mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
+                        mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
+
+                        Markers.Add(mrk);
+                    }
+                }
+            }
+
+            conn.Close();
+            return Markers;
+        }
+        public GeneralResponse AssignReview(ReviewAssign RA)
+        {
+            string sql = @"
+                INSERT INTO ReviewAssign (UserId, MarkerId)
+                Values (@UserId, @MarkerId)
+            ";
+            try
+            {
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("UserId", RA.UserId);
+                    cmd.Parameters.AddWithValue("MarkerId", RA.MarkerId);
+                    cmd.ExecuteNonQuery();
+                }
+                return new GeneralResponse(true, "Assigned to review");
+
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse(false, $"Failed: {ex.Message}");
+            }
+            
         }
     }
 }

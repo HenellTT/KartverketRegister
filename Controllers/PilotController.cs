@@ -1,14 +1,16 @@
 using KartverketRegister.Auth;
 using KartverketRegister.Models;
-using KartverketRegister.Utils;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using KartverketRegister.Models;
 using KartverketRegister.Utils;
+using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace KartverketRegister.Controllers;
+[Authorize(Roles = "User")]
 
 public class PilotController : Controller
 {
@@ -31,14 +33,23 @@ public class PilotController : Controller
         return View(); //returnerer viewet Index.cshtml (hjemmesiden)
     }
 
-    public IActionResult Privacy()
+    public async Task<IActionResult> User()
     {
-        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
+        try
+        {
+            var appUser = await _userManager.GetUserAsync(HttpContext?.User);
+            if (appUser != null)
+
+                return View("UserLogged", appUser);
+        }
+        catch
+        {
+            return View(); //returnerer viewet User.cshtml (brukersiden)
+
+        }
+        return View();
     }
-    public IActionResult Flightmode()
-    {
-        return View(); //returnerer viewet Privacy.cshtml (personvernsiden)
-    }
+   
     
     public async Task<IActionResult> Test()
     {

@@ -36,12 +36,7 @@
 
                 <!-- LEFT SIDE -->
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Flightmode" asp-action="Index">FlightMode</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Pilot" asp-action="Registry">Registry</a>
-                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Registerman</a>
                     </li>
@@ -103,7 +98,6 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/Notifications.js" asp-append-version="true"></script>
-<script src="https://apifreellm.com/apifree.min.js"></script>
 <script src="/js/Dark-mode.js"></script>
 
 <script>
@@ -136,18 +130,8 @@
     const rdbbut = document.getElementById('resetdbbutton');
     let msgin = null;
 
-    async function setMsginToAi() {
-        if (msgin == null) {
-            try {
-                msgin = await ApiFreeLLM.chat(prompts[0]);
-                rdbbut.style.backgroundColor = 'lightblue';
-            } catch {
-                await setMsginToAi();
-            }
-        }
-    }
+    
 
-    setTimeout(async () => { await setMsginToAi() }, 1000);
     setTimeout(() => { dms(sessionStorage.getItem('DarkMode') === 'true') }, 1);
 
     async function resetdb() {

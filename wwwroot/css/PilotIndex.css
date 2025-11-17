@@ -1,0 +1,173 @@
+﻿/* Big container stacking the table cards vertically */
+.obstacleContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; /* Full width */
+    background-color: white; /* Background color */
+    display: flex; /* Horizontal flex layout */
+    justify-content: space-around; /* Spread buttons evenly */
+    gap: 10px; /* Optional spacing between buttons */
+    padding: 10px; /* Padding around buttons */
+    z-index: 1000; /* Make sure it stays on top */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow */
+    height: 10vh;
+}
+
+    .obstacleContainer button {
+        flex: 1; /* Make buttons stretch equally */
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        font-size: xx-large;
+    }
+
+.BigContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* center horizontally */
+    gap: 30px;
+    padding: 20px;
+    background: none;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Table card container */
+#SomeOtherForm {
+    width: 90vw;
+    height: 40vh;
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden; /* hide overflow outside the container */
+}
+
+    #SomeOtherForm:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    /* Table wrapper for scroll */
+    #SomeOtherForm table {
+        width: 100%;
+        border-collapse: collapse;
+        display: block; /* allows scrolling */
+        max-height: 100%; /* limit height to container */
+        overflow-y: auto; /* scroll vertically if content overflows */
+    }
+
+/* Table head styling */
+thead {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    color: white;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+    thead th {
+        padding: 12px;
+        text-align: left;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+
+/* Table body scrollable */
+tbody {
+    display: block;
+    max-height: calc(40vh - 50px); /* container height minus head */
+    overflow-y: auto;
+    width: 100%;
+}
+
+    tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        background: #fefefe;
+        transition: background 0.3s;
+    }
+
+        tbody tr:nth-child(even) {
+            background: #f7f7f7;
+        }
+
+        tbody tr:hover {
+            background: #d1e7ff;
+        }
+
+/* Table cells */
+td, th {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+/* Buttons styling */
+button {
+    padding: 6px 12px;
+    margin: 2px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    /* Button colors */
+    button:nth-child(1) {
+        background: #4caf50;
+        color: white;
+    }
+    /* Continue Registration */
+    button:nth-child(2) {
+        background: #f44336;
+        color: white;
+    }
+    /* Delete */
+    button:nth-child(3) {
+        background: #2196f3;
+        color: white;
+    }
+/* Show on Map */
+
+/* Scrollbar customization */
+#SomeOtherForm tbody::-webkit-scrollbar {
+    width: 8px;
+}
+
+#SomeOtherForm tbody::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+}
+
+#SomeOtherForm tbody::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+    #SomeOtherForm tbody::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+/* Responsive tweaks */
+@media (max-width: 800px) {
+    #SomeOtherForm {
+        width: 95vw;
+        height: 35vh;
+    }
+
+    td, th {
+        font-size: 13px;
+        padding: 8px;
+    }
+}

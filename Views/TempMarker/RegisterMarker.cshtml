@@ -13,7 +13,7 @@
     <!-- Prefilled fields from TempMarker -->
     <div class="form-group">
         <label>Type</label>
-        <input required type="text" name="Type" class="form-control" value="@Model.Type" />
+        <input required type="text" name="Type" class="form-control" value="" />
     </div>
 
     <div class="form-group">
@@ -49,6 +49,10 @@
     <div class="form-group hidden-input">
         <label>Accuracy (m)</label>
         <input required type="number" step="0.01" value="1" name="AccuracyM" class="form-control" />
+    </div>
+    <div class="form-group hidden-input">
+        <label>GeoJson</label>
+        <input required type="text" value="@Model.GeoJson.ToString(System.Globalization.CultureInfo.InvariantCulture)" name="GeoJson" />
     </div>
 
     <!-- Manually filled fields -->
