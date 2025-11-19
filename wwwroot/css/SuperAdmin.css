@@ -1,9 +1,8 @@
-﻿.sa-butt-cont
-{
-    display:inline-block;
-    padding:10px;
-    margin:10px;
-    border:solid black 2px;
+﻿.sa-butt-cont {
+    display: inline-block;
+    padding: 10px;
+    margin: 10px;
+    border: solid black 2px;
 }
 
 .UserTable {
@@ -54,12 +53,13 @@
 
 .container {
     width: 100%;
-    max-width: 300px;
-    margin: 10px; 
+    max-width: 700px;
+    margin: 10px;
     padding: 40px;
-    background-color: lightslategray; /* endre fargen senere*/
+    background-color: white; /* endre fargen senere*/
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: left;
+    outline: blue;
+    text-align: center;
 }
 
