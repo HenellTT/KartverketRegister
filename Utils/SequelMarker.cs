@@ -14,6 +14,8 @@ namespace KartverketRegister.Utils
 
         public SequelMarker(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
         { }
+        public SequelMarker() : base() // calls base constructor
+        { }
         public void SaveMarker(
             string type,
             string description,
@@ -275,37 +277,31 @@ namespace KartverketRegister.Utils
             }
 
         }
-        public List<MapMarker> GetObstacles(LocationModel LM) { // add lat lng l8r to limit amount of markers fetched by user;
+        public List<LocationModel> GetObstacles() { // add lat lng l8r to limit amount of markers fetched by user;
             conn.Open();
 
-            List<MapMarker> markers = new List<MapMarker>();
-            double latOffset = 0.009;
-            double lngOffset = 0.009 / Math.Cos(LM.Lat * Math.PI / 180);
-
+            List<LocationModel> markers = new List<LocationModel>();
+            
             string sql = @"
-                SELECT *
+                SELECT Lat,Lng,ObstacleCategory,GeoJson
                 FROM RegisteredMarkers
-                WHERE Lat BETWEEN @lat - @latOffset AND @lat + 1
-                  AND Lng BETWEEN @lng - @lngOffset AND @lng + 1;
+               
             ";
 
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@lat", LM.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                cmd.Parameters.AddWithValue("@lng", LM.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
-                cmd.Parameters.AddWithValue("@latOffset", latOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                cmd.Parameters.AddWithValue("@lngOffset", lngOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
+               
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        MapMarker mrk = new MapMarker(reader);
-                        
-
-                        markers.Add(mrk);
+                        LocationModel LM = new LocationModel();
+                        LM.ObstacleCategory = reader["ObstacleCategory"] as string;
+                        LM.GeoJson = reader["GeoJson"] as string;
+                        LM.Lat = reader.GetDouble("Lat");
+                        LM.Lng = reader.GetDouble("Lng");
+                        markers.Add(LM);
                     }
                 }
             }
@@ -317,3 +313,4 @@ namespace KartverketRegister.Utils
 
 
 }
+
