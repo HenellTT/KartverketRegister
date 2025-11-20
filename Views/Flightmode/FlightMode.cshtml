@@ -5,6 +5,7 @@
 <!-- Leaflet Map Container -->
 <div class="BigContainer">
     <div class="obstacleContainer">
+        <button onclick="dms()">Theme</button>
         <button onclick="PFM.RevertLastAction()">Revert</button>
         <button onclick="PFM.SetMode('Marker')">Point</button>
         <button onclick="PFM.SetMode('Line')">Line</button>
@@ -35,6 +36,8 @@
 
     <button type="submit">Save Marker</button>
 </form>
+
+
 
 <link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/FlightMode.css" asp-append-version="true" />
@@ -84,7 +87,7 @@
         formElement.type.value = "Fill in";
         formElement.description.value = prompt('Brief Description / Note for yourself');
 
-        // DO NOT redeclare form — use formElement
+        // DO NOT redeclare form â€” use formElement
         const formData = new FormData(formElement);
 
         fetch('/Tempmarker/SubmitMarker', {

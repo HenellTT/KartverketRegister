@@ -112,9 +112,17 @@
         "Give me an unusual 'Are you sure' message, one sentence, ending with a keyword in *asterisks*."
     ];
 
-    function dms(bool) {
+    function dms(bool = "wetSocks") {
         let body = document.querySelector('body');
         let mappyUwU = document.getElementById("map");
+
+        if (bool == "wetSocks") {
+            if (body.classList.contains("MayDarknessSwallowYourSoul")) {
+                bool = false;
+            } else {
+                bool = true;
+            }
+        }
 
         if (bool) {
             sessionStorage.setItem('DarkMode', true);
