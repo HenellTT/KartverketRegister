@@ -1,90 +1,120 @@
-﻿/* Container for the form */
+﻿/* ====== Global Layout ====== */
 body {
-    background-image: url('../img/topomap_2.png');
-    background-size: cover;
-    background-repeat:no-repeat;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+    margin: 0;
+    padding: 0;
 }
+
 form {
-    max-width: 500px;
-    margin: 30px auto;
-    padding: 25px 30px;
-    background-color: #fefefe;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    background: #ffffff;
+    padding: 40px 50px;
+    margin: 10px auto;
     border: 1px solid #ddd;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-    /* Form labels */
-    form label {
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 5px;
+form-row{
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+.form-row .form-group {
+    flex: 1; /* slik at de deler plass jevnt */
+}
+
+/*Align Left-Side-Content and Right-Side-Content Next to eachother in .container-content*/
+.container-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+
+h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2a2a2a;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #0078d7;
+    padding-bottom: 10px;
+}
+
+/* ====== Form Fields ====== */
+.form-group {
+    width: 300px;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+    padding: 10px 12px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+}
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+        border-color: #0078d7;
+        background-color: #fff;
     }
 
-    /* Input fields and textarea */
-    form input[type="text"],
-    form input[type="number"],
-    form textarea,
-    form select {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-        box-shadow: grey 0px 2px;
+/* ====== Buttons ====== */
+button.btn {
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 0; /* ingen runde kanter */
+    transition: background-color 0.2s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+    button.btn:hover {
+        background-color: #005ea6;
     }
 
+/* ====== Feedback ====== */
+#returnMsg {
+    margin-top: 20px;
+    font-weight: 500;
+}
 
-        form input[type="text"]:hover,
-        form input[type="number"]:hover,
-        form textarea:hover,
-        form select:hover {
-            transform: translateY(-3px);
-            box-shadow: grey 0px 1px;
-        }
+/* ====== Hidden Inputs ====== */
+.hidden-input {
+    display: none !important;
+}
 
-        /* Focus effect for inputs */
-        form input:focus,
-        form textarea:focus,
-        form select:focus {
-            outline: none;
-            border-color: #0078d7;
-            box-shadow: 0 0 5px rgba(0,120,215,0.3);
-        }
+header {
+    display: none;
+}
 
-    /* Textarea auto-resize */
-    form textarea {
-        min-height: 80px;
-        resize: vertical;
+/* ====== Responsive ====== */
+@media (max-width: 600px) {
+    form {
+        padding: 25px 30px;
+        margin: 30px 15px;
     }
 
-    /* Button */
-    form button {
-        padding: 12px 20px;
-        background-color: #0078d7;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s, transform 0.1s;
+    h1 {
+        font-size: 1.5rem;
     }
-
-        form button:hover {
-            background-color: #005fa3;
-            transform: translateY(-1px);
-        }
-
-    /* Optional: smooth gap between form elements */
-    form .form-group {
-        display: flex;
-        flex-direction: column;
-    }
+}
