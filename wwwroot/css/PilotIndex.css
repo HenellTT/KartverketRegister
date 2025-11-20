@@ -51,6 +51,7 @@
     }
 
     /* Table wrapper for scroll */
+/* Table head styling */
     #SomeOtherForm table {
         width: 100%;
         border-collapse: collapse;
@@ -59,7 +60,6 @@
         overflow-y: auto; /* scroll vertically if content overflows */
     }
 
-/* Table head styling */
 thead {
     background: linear-gradient(to right, #667eea, #764ba2);
     color: white;
@@ -125,12 +125,12 @@ button {
 
     /* Button colors */
     button:nth-child(1) {
-        background: #4caf50;
+        background: #f44336 ;
         color: white;
     }
     /* Continue Registration */
     button:nth-child(2) {
-        background: #f44336;
+        background: #4caf50;
         color: white;
     }
     /* Delete */
@@ -170,4 +170,14 @@ button {
         font-size: 13px;
         padding: 8px;
     }
+}
+.darkmodeButton{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    margin: 10px;
+    font-size: 14px;
+    padding: 20px 40px;
+    background-color: darkgray;
 }
