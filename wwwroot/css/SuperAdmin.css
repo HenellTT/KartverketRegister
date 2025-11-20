@@ -1,13 +1,13 @@
-﻿.sa-butt-cont
-{
-    display:inline-block;
-    padding:10px;
-    margin:10px;
-    border:solid black 2px;
+﻿.sa-butt-cont {
+    display: inline-block;
+    padding: 10px;
+    margin: 10px;
+   
 }
-.sa-butt-cont li {
-    margin-left:10px;
-}
+    .sa-butt-cont button {
+        padding: 30px !important;
+    }
+
 .UserTable {
     width: 100%;
     border-collapse: collapse;
@@ -44,6 +44,7 @@
         background-color: #f1f1f1;
     }
 
+
 /* Optional: rounded corners for table */
 .UserTable {
     border-radius: 6px;
@@ -52,4 +53,19 @@
 .user-row:hover {
     background-color: #f1f1f1;
     cursor: pointer;
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    padding: 40px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 0;
+
+    position:relative;
+    left:50%;
+    transform:translate(-50%,0);
 }
