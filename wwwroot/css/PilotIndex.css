@@ -127,17 +127,17 @@ button {
 
     /* Button colors */
     button:nth-child(1) {
-        background: #f44336 ;
+        background: #4caf50;
         color: white;
     }
     /* Continue Registration */
     button:nth-child(2) {
-        background: #4caf50;
+        background: #2196f3;
         color: white;
     }
     /* Delete */
     button:nth-child(3) {
-        background: #2196f3;
+        background: #f44336 ;
         color: white;
     }
 /* Show on Map */
@@ -196,4 +196,5 @@ button {
    
    
 }
+
 
