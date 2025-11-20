@@ -13,13 +13,19 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow */
     height: 10vh;
 }
+div .obstacleContainer{
+    height: 100px;
+}
 
     .obstacleContainer button {
         flex: 1; /* Make buttons stretch equally */
-        padding: 10px;
+        padding:0;
         font-size: 16px;
         cursor: pointer;
         font-size: xx-large;
+        text-align:center;
+        height: 80px;
+        
     }
 
 .BigContainer {
@@ -39,10 +45,11 @@
     height: 40vh;
     background: white;
     border-radius: 15px;
-    padding: 15px;
+    padding: 20px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     transition: transform 0.3s, box-shadow 0.3s;
     overflow: hidden; /* hide overflow outside the container */
+    margin: 10px;
 }
 
     /* Table wrapper for scroll */
@@ -56,7 +63,7 @@
     }
 
 thead {
-    background: linear-gradient(to right, #667eea, #764ba2);
+    background: #428fd6;
     color: white;
     display: table;
     width: 100%;
