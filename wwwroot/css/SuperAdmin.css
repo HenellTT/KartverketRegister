@@ -2,7 +2,6 @@
     display: inline-block;
     padding: 10px;
     margin: 10px;
-    border: solid black 2px;
 }
 
 .UserTable {
@@ -41,6 +40,7 @@
         background-color: #f1f1f1;
     }
 
+
 /* Optional: rounded corners for table */
 .UserTable {
     border-radius: 6px;
@@ -54,12 +54,10 @@
 .container {
     width: 100%;
     max-width: 700px;
-    margin: 10px;
     padding: 40px;
-    background-color: white; /* endre fargen senere*/
+    background-color: white;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    outline: blue;
     text-align: center;
+    margin: 0;
 }
-
