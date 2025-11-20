@@ -6,98 +6,110 @@
 <link rel="stylesheet" href="~/css/RegisterMarker.css" asp-append-version="true" />
 
 
-
+<a asp-controller="Pilot" asp-action="Index">&larr; Back</a>
 <form method="post" asp-action="SubmitMarker" asp-controller="Marker">
     <h1>@ViewData["Title"]</h1>
 
+    <div class="container-content">
     <!-- Prefilled fields from TempMarker -->
-    <div class="form-group">
-        <label>Type</label>
-        <input required type="text" name="Type" class="form-control" value="" />
-    </div>
+    <div class="Left-Side-Content">
+        
+        <div class="form-group">
+            <label>Type</label>
+            <input required type="text" name="Type" class="form-control" value="" />
+        </div>
 
-    <div class="form-group">
-        <label>Comment</label>
-        <textarea required name="Description" class="form-control">@Model.Description</textarea>
-    </div>
+        <div class="form-group">
+            <label>Comment</label>
+            <textarea required name="Description" class="form-control">@Model.Description</textarea>
+        </div>
 
-    <div class="form-group hidden-input">
-        <label>Latitude</label>
-        <input required type="number" step="0.00000000001" name="Lat" class="form-control" value="@Model.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
-    </div>
+        <div class="form-group hidden-input">
+            <label>Latitude</label>
+            <input required type="number" step="0.00000000001" name="Lat" class="form-control" value="@Model.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+        </div>
 
-    <div class="form-group hidden-input">
-        <label>Longitude</label>
-        <input required type="number" step="0.00000000001" name="Lng" class="form-control" value="@Model.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
-    </div>
+        <div class="form-group hidden-input">
+            <label>Longitude</label>
+            <input required type="number" step="0.00000000001" name="Lng" class="form-control" value="@Model.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+        </div>
 
-    <div class="form-group">
-        <label>Estimated Height (m)</label>
-        <input required type="number" step="0.01" name="HeightM" class="form-control" />
-    </div>
+        <div class="form-group">
+            <label>Estimated Height (m)</label>
+            <input required type="number" step="0.01" name="HeightM" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label>Height Over Sea (m)</label>
-        <input required type="number" step="0.01" value="@(Model.HeightMOverSea?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "")" name="HeightMOverSea" class="form-control" />
-    </div>
+        <div class="form-group">
+            <label>Height Over Sea (m)</label>
+            <input required type="number" step="0.01" value="@(Model.HeightMOverSea?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "")" name="HeightMOverSea" class="form-control" />
+        </div>
 
-    <div class="form-group hidden-input">
-        <label>Organization</label>
-        <input required type="text" name="Organization" value="Gruppe13" class="form-control" />
-    </div>
+        <div class="form-group hidden-input">
+            <label>Organization</label>
+            <input required type="text" name="Organization" value="Gruppe13" class="form-control" />
+        </div>
 
-    <div class="form-group hidden-input">
-        <label>Accuracy (m)</label>
-        <input required type="number" step="0.01" value="1" name="AccuracyM" class="form-control" />
+        <div class="form-group hidden-input">
+            <label>Accuracy (m)</label>
+            <input required type="number" step="0.01" value="1" name="AccuracyM" class="form-control" />
+        </div>
+        <div class="form-group hidden-input">
+            <label>GeoJson</label>
+            <input required type="text" value="@Model.GeoJson.ToString(System.Globalization.CultureInfo.InvariantCulture)" name="GeoJson" />
+        </div>
     </div>
-    <div class="form-group hidden-input">
-        <label>GeoJson</label>
-        <input required type="text" value="@Model.GeoJson.ToString(System.Globalization.CultureInfo.InvariantCulture)" name="GeoJson" />
-    </div>
+    
+
 
     <!-- Manually filled fields -->
-    <div class="form-group">
-        <label>Obstacle Category</label>
-        <select required name="ObstacleCategory" class="form-control">
-            <option value="">--Select--</option>
-            <option value="Tower">Tower</option>
-            <option value="Crane">Crane</option>
-            <option value="Wind Turbine">Wind Turbine</option>
-            <option value="Mast">Mast</option>
-            <option value="Building">Building</option>
-            <option value="Power Line">Power Line</option>
-            <option value="Other">Other</option>
-        </select>
-    </div>
+    <div class="Right-Side-Content">
+        <div class="form-group">
+            <label>Obstacle Category</label>
+            <select required name="ObstacleCategory" class="form-control">
+                <option value="">--Select--</option>
+                <option value="Tower">Tower</option>
+                <option value="Crane">Crane</option>
+                <option value="Wind Turbine">Wind Turbine</option>
+                <option value="Mast">Mast</option>
+                <option value="Building">Building</option>
+                <option value="Power Line">Power Line</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
 
-    <div class="form-group">
-        <label>Temporary Obstacle?</label>
-        <input type="checkbox" name="IsTemporary" value="true" />
-    </div>
+        <div class="form-group">
+            <label>Temporary Obstacle?</label>
+            <input type="checkbox" name="IsTemporary" value="true" />
+        </div>
 
-    <div class="form-group hidden-input">
-        <label>Expected Removal Date</label>
-        <input type="date" name="ExpectedRemovalDate" class="form-control" />
-    </div>
+        <div class="form-group hidden-input">
+            <label>Expected Removal Date</label>
+            <input type="date" name="ExpectedRemovalDate" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label>Lighting / Markings</label>
-        <select name="Lighting" class="form-control">
-            <option value="No lightning">No lightning</option>
-            <option value="Yes safety">Yes safety</option>
-            <option value="I dont know">I dont know</option>
-        </select>
-    </div>
+        <div class="form-group">
+            <label>Lighting / Markings</label>
+            <select name="Lighting" class="form-control">
+                <option value="No lightning">No lightning</option>
+                <option value="Yes safety">Yes safety</option>
+                <option value="I dont know">I dont know</option>
+            </select>
+        </div>
 
-    <div class="form-group">
-        <label>Source</label>
-        <select required name="Source" class="form-control">
-            <option value="Pilot Report">Pilot Report</option>
-            <option value="Drone Survey">Drone Survey</option>
-            <option value="Public Submission">Public Submission</option>
-            <option value="Official Notice">Official Notice</option>
-        </select>
+        <div class="form-group">
+            <label>Source</label>
+            <select required name="Source" class="form-control">
+                <option value="Pilot Report">Pilot Report</option>
+                <option value="Drone Survey">Drone Survey</option>
+                <option value="Public Submission">Public Submission</option>
+                <option value="Official Notice">Official Notice</option>
+            </select>
+        </div>
     </div>
+    </div>
+    
+    
+   
 
     <button type="submit" class="btn btn-primary">Register Marker</button>
     <div id="returnMsg"></div>

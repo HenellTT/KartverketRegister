@@ -1,4 +1,8 @@
-﻿/* Generell stil */
+﻿header{
+    display: none !important; 
+}
+
+/* Generell stil */
 body {
     font-family: 'Inter', 'Segoe UI', sans-serif;
     background-color: #f5f8fc;

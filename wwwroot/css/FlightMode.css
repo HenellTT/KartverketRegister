@@ -21,9 +21,6 @@ header {
     z-index: 10;
 }
 
-
-
-
 .obstacleContainer {
     position: fixed;
     top: 0;
@@ -43,6 +40,7 @@ header {
         flex: 1; /* Make buttons stretch equally */
         padding: 10px;
         font-size: 16px;
+        justify-items: center;
         cursor: pointer;
         font-size: xx-large;
     }
@@ -52,7 +50,7 @@ header {
 }
 #map {
 
-    height: 90vh; /* Full viewport height */
+    height: 100vh; /* Full viewport height */
     width: 100%; /* Full viewport width */
     position: fixed;
     bottom:0;

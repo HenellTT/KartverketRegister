@@ -94,7 +94,7 @@ namespace KartverketRegister.Controllers
             }
             catch (Exception e)
             {
-                return Json(new GeneralResponse(false, $"You must fill out all the fields! {e}"));
+                return Json(new GeneralResponse(false, $"You must fill out all the fields!"));
             }
 
 

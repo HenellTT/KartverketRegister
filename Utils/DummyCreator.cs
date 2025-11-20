@@ -171,7 +171,7 @@ namespace KartverketRegister.Utils
             await _userManager.CreateAsync(user, "!Testink00!");
             await _userManager.CreateAsync(Admin, "!Testink00!");
             await _userManager.CreateAsync(Employee, "!Testink00!");
-            return new GeneralResponse(true,"Shit worked");
+            return new GeneralResponse(true,"Accomplished");
         }
     }
 }
