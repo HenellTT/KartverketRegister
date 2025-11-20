@@ -183,3 +183,17 @@ button {
     padding: 20px 40px;
     background-color: darkgray;
 }
+.ContinueButton {
+    background-color: #4caf50 !important; /* grønn */
+    color: white !important;
+  
+   
+}
+
+.DeleteButton {
+    background-color: #f44336 !important; /* rød */
+    color: white !important;
+   
+   
+}
+
