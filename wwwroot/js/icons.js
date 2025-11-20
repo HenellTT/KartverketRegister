@@ -2,7 +2,7 @@
 const basicIcons = ["potato"];
 // That's it, don't touch the rest it's very fragile 🥺
 // Mucho Fragileses! ._.
-const IconSize = 24;
+const IconSize = 40;
 class Icons {
     #icons
     constructor(IconList = basicIcons) {

@@ -13,6 +13,11 @@
         // Clickies
         this.Mode = "Marker";
         this._lastClick = null;
+
+        // Other shit
+        this.vehiclePosition = L.marker([58.1608783456262, 7.9985872834629], { draggable: false, icon: Window.icons.Get['helicopter'] });
+        this.UpdatePosition = true;
+
         
     }
 
@@ -43,6 +48,46 @@
             }
             this.ActionList[this.ActionList.length - 1].SetHeight();
         });
+        this.map.setZoom(20)
+        //this.map.setView([58.1637, 8.0031])
+        setTimeout(this.startVehicleTracking(), 200);
+    }
+    setVehiclePosition(lat, lng) {
+        PFM.map.setView([lat, lng])
+        if (!this.map.hasLayer(this.vehiclePosition)) {
+            this.vehiclePosition.addTo(this.map);
+        }
+        this.vehiclePosition.setLatLng([lat, lng])
+            .bindPopup(`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`)
+        //.openPopup();
+    }
+    startVehicleTracking() {
+        if (!navigator.geolocation) {
+            console.error('Geolocation is not supported by this browser.');
+            return;
+        }
+
+        navigator.geolocation.watchPosition(
+            (position) => {
+                if (this.UpdatePosition) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    this.setVehiclePosition(lat, lng);
+
+                    // Pan map smoothly to current position
+                    this.map.panTo([lat, lng], { animate: true, duration: 0.5 });
+                }
+
+            },
+            (err) => {
+                console.error('Geolocation error:', err);
+            },
+            {
+                enableHighAccuracy: true,
+                maximumAge: 1000,   // use cached location up to 1 second
+                timeout: 5000
+            }
+        );
     }
     SetMode(mode) {
         this.Mode = mode;
