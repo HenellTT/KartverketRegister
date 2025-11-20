@@ -140,7 +140,7 @@ namespace KartverketRegister.Utils
                 Organization = "UiA",
                 UserName = email,
                 UserType = "User",
-                Password = "!Testink69!",
+                Password = "!Testink00!",
                 Email = email
             };
 
@@ -152,7 +152,7 @@ namespace KartverketRegister.Utils
                 LastName = "Testman",
                 Organization = "Kartverket",
                 UserType = "Admin",
-                Password = "!Testink69!",
+                Password = "!Testink00!",
                 Email = email
             };
             email = "1234@employee.test";
@@ -164,7 +164,7 @@ namespace KartverketRegister.Utils
                 Organization = "Kartverket",
                 UserName = email,
                 UserType = "Employee",
-                Password = "!Testink69!",
+                Password = "!Testink00!",
                 Email = email
             };
 

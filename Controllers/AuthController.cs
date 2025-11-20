@@ -25,6 +25,8 @@ namespace KartverketRegister.Controllers
             return View();
         }
 
+
+
         // GET: /Auth/Login
         [HttpGet]
         public IActionResult Login()
@@ -43,7 +45,8 @@ namespace KartverketRegister.Controllers
                 user = await _userManager.FindByEmailAsync(email);
                 if (user == null)
                     return Json(new GeneralResponse(false, "User not found"));
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return Json(new GeneralResponse(false, $"Email not found"));
 
@@ -74,7 +77,7 @@ namespace KartverketRegister.Controllers
             try
             {
                 var existing = await _userManager.FindByEmailAsync(email);
-                
+
                 if (existing != null)
                     return Json(new GeneralResponse(false, "Email already in use!"));
                 user = new AppUser
@@ -88,11 +91,12 @@ namespace KartverketRegister.Controllers
                     Password = password,
                     Email = email
                 };
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return Json(new GeneralResponse(false, $"You must fill out all the fields! {e}"));
             }
-            
+
 
             var result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
@@ -111,7 +115,7 @@ namespace KartverketRegister.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
 
         
