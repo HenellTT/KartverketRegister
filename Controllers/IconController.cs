@@ -20,12 +20,16 @@ namespace KartverketRegister.Controllers
         public IActionResult GetIcons() // Henter alle ikonene fra wwwroot/img/icons-mappen 
 		{
             var iconDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/icons");
-            var icons = Directory.GetFiles(iconDir)
+            List<string> icons = Directory.GetFiles(iconDir)
                          .Select(f => Path.GetFileNameWithoutExtension(f))
                          .ToList();
-            
+            var gifDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/gifs");
+            List<string> gifs = Directory.GetFiles(gifDir)
+                         .Select(f => Path.GetFileNameWithoutExtension(f))
+                         .ToList();
 
-            return Json(icons); 
+
+            return Json(new { Icons = icons, Gifs = gifs}); 
 		}
         
     }
