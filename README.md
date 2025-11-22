@@ -101,6 +101,7 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - Anti Forgery Tokens
 - SQL Injections
 - Password Hashing - Raw passwords not saved
+- HTML Injections
 
 ## Testing Scenario
 
