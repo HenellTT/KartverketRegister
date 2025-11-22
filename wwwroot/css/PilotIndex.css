@@ -13,13 +13,19 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow */
     height: 10vh;
 }
+div .obstacleContainer{
+    height: 100px;
+}
 
     .obstacleContainer button {
         flex: 1; /* Make buttons stretch equally */
-        padding: 10px;
+        padding:0;
         font-size: 16px;
         cursor: pointer;
         font-size: xx-large;
+        text-align:center;
+        height: 80px;
+        
     }
 
 .BigContainer {
@@ -39,18 +45,15 @@
     height: 40vh;
     background: white;
     border-radius: 15px;
-    padding: 15px;
+    padding: 20px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     transition: transform 0.3s, box-shadow 0.3s;
     overflow: hidden; /* hide overflow outside the container */
+    margin: 10px;
 }
 
-    #SomeOtherForm:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    }
-
     /* Table wrapper for scroll */
+/* Table head styling */
     #SomeOtherForm table {
         width: 100%;
         border-collapse: collapse;
@@ -59,9 +62,8 @@
         overflow-y: auto; /* scroll vertically if content overflows */
     }
 
-/* Table head styling */
 thead {
-    background: linear-gradient(to right, #667eea, #764ba2);
+    background: #428fd6;
     color: white;
     display: table;
     width: 100%;
@@ -130,12 +132,12 @@ button {
     }
     /* Continue Registration */
     button:nth-child(2) {
-        background: #f44336;
+        background: #2196f3;
         color: white;
     }
     /* Delete */
     button:nth-child(3) {
-        background: #2196f3;
+        background: #f44336 ;
         color: white;
     }
 /* Show on Map */
@@ -171,3 +173,28 @@ button {
         padding: 8px;
     }
 }
+.darkmodeButton{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    margin: 10px;
+    font-size: 14px;
+    padding: 20px 40px;
+    background-color: darkgray;
+}
+.ContinueButton {
+    background-color: #4caf50 !important; /* grønn */
+    color: white !important;
+  
+   
+}
+
+.DeleteButton {
+    background-color: #f44336 !important; /* rød */
+    color: white !important;
+   
+   
+}
+
+

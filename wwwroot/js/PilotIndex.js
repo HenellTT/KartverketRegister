@@ -30,9 +30,9 @@ function MyMarkerListElement(Marker) {
             <td>${lng.toFixed(3) }</td>
             <td>
                 <a href="/TempMarker/RegisterMarker?markerId=${markerId}">
-                    <button>Continue registration</button>
+                    <button class="ContinueButton">Continue registration</button>
                 </a>
-                <button onclick='DeleteMarkerReq(${markerId})'>Delete</button>
+                <button class="DeleteButton" onclick='DeleteMarkerReq(${markerId})'>Delete</button>
                 
             </td>
         </tr>`;

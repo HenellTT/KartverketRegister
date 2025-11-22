@@ -92,19 +92,17 @@ namespace KartverketRegister.Controllers
         }
         // fetch all stripped markers (for view on map, no user data)
 
-        public IActionResult GetObstacles([FromBody] LocationModel model)
+        public IActionResult GetObstacles()
         {
-            Console.WriteLine($"[GetObstacles] Lng: {model.Lng}");
-            Console.WriteLine($"[GetObstacles] Lat: {model.Lat}");
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
-                List<MapMarker> Markers = seq.GetObstacles(model); 
-                return Ok(Markers);
+                List<LocationModel> Markers = seq.GetObstacles(); 
+                return Ok(new GeneralResponse(true, "Here yo markers man", Markers));
             }
             catch
             {
-                return NoContent();
+                return Ok(new GeneralResponse(false, "no markers"));
             }
         }
 
