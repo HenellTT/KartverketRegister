@@ -33,14 +33,17 @@ namespace KartverketRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitMarker([FromBody] Marker marker) // Tar imot en markør via POST-forespørsel
         {
+            SequelTempmarker seqT = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
+            TempMarker tempMarker = seqT.FetchMarkerById(marker.TempMarkerId);
+
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName); // Oppretter en databaseforbindelse
             
             string UserIdString = _userManager.GetUserId(HttpContext?.User);
             int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
             var appUser = await _userManager.GetUserAsync(HttpContext?.User);
 
-            Console.WriteLine($"Cap shit {UserId}");
-            Console.WriteLine($"User org {appUser.Organization}");
+            //Console.WriteLine($"Cap shit {UserId}");
+            //Console.WriteLine($"User org {appUser.Organization}");
 
 
             try //try-catch for å håndtere feil
@@ -49,18 +52,18 @@ namespace KartverketRegister.Controllers
                 seq.SaveMarker(
                     marker.Type,
                     marker.Description,
-                    marker.Lat,
-                    marker.Lng,
+                    tempMarker.Lat,
+                    tempMarker.Lng,
                     userId: UserId,
                     organization: appUser.Organization,
                     heightM: marker.HeightM,
-                    heightMOverSea: marker.HeightMOverSea,
+                    heightMOverSea: tempMarker.HeightMOverSea,
                     accuracyM: marker.AccuracyM,
                     obstacleCategory: marker.ObstacleCategory,
                     isTemporary: marker.IsTemporary,
                     lighting: marker.Lighting,
                     source: marker.Source,
-                    geojson: marker.GeoJson
+                    geojson: tempMarker.GeoJson
                 );
                 
                 return Ok(new GeneralResponse(true, "The marker has been registered!"));

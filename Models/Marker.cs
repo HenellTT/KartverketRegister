@@ -39,6 +39,8 @@
 
         public string State { get; set; }
         public int? MarkerId { get; set; }
-        
+
+        public int TempMarkerId { get; set; }
+
     }
 }
