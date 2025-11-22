@@ -140,7 +140,15 @@
         
         
     })
-    const GeoJson = @Html.Raw(Model.GeoJson != null ? Model.GeoJson : "null");
+    const encoded = "@Html.Raw(Model.GeoJson ?? "null")";
+
+    // Create a temporary element to decode HTML entities
+    const parser = new DOMParser();
+    const decoded = parser.parseFromString(encoded, "text/html").documentElement.textContent;
+
+    // Now parse JSON
+    const GeoJson = JSON.parse(decoded);
+    console.log(GeoJson);
     let bounds;
     if (GeoJson) {
         const geoLayer = L.geoJSON(GeoJson).addTo(map);

@@ -347,5 +347,30 @@ namespace KartverketRegister.Utils
             }
             
         }
+        public GeneralResponse UnAssignAll()
+        {
+            Open();
+            string sql = @"
+                DELETE FROM ReviewAssign;
+            ";
+            try
+            {
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                
+                return new GeneralResponse(true, "Assigned to review");
+
+            }
+            catch (Exception ex)
+            {
+                
+                return new GeneralResponse(false, $"Failed: {ex.Message}");
+            } finally
+            {
+                Close();
+            }
+        }
     }
 }
