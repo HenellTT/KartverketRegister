@@ -47,7 +47,7 @@ namespace KartverketRegister.Utils
                             UserType = reader["UserType"]?.ToString(),
                             CreatedAt = Convert.ToDateTime(reader["CreatedAt"])
                         };
-                        Users.Add(User);
+                        Users.Add(User.HtmlEncodeStrings());
                     }
                 }
 
@@ -85,7 +85,7 @@ namespace KartverketRegister.Utils
                             UserType = reader["UserType"]?.ToString(),
                             CreatedAt = Convert.ToDateTime(reader["CreatedAt"])
                         };
-                        Users.Add(User);
+                        Users.Add(User.HtmlEncodeStrings());
                     }
                 }
 
@@ -127,7 +127,7 @@ namespace KartverketRegister.Utils
 
             }
             conn.Close();
-            return User;
+            return User.HtmlEncodeStrings();
         }
         public GeneralResponse SetUserRole(AppUserDto UserData)
         {
@@ -240,7 +240,7 @@ namespace KartverketRegister.Utils
                         mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
                         mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
 
-                        Markers.Add(mrk);
+                        Markers.Add(mrk.HtmlEncodeStrings());
                     }
                 }
             }
@@ -316,7 +316,7 @@ namespace KartverketRegister.Utils
                         mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
                         mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
 
-                        Markers.Add(mrk);
+                        Markers.Add(mrk.HtmlEncodeStrings());
                     }
                 }
             }
@@ -346,6 +346,31 @@ namespace KartverketRegister.Utils
                 return new GeneralResponse(false, $"Failed: {ex.Message}");
             }
             
+        }
+        public GeneralResponse UnAssignAll()
+        {
+            Open();
+            string sql = @"
+                DELETE FROM ReviewAssign;
+            ";
+            try
+            {
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                
+                return new GeneralResponse(true, "Assigned to review");
+
+            }
+            catch (Exception ex)
+            {
+                
+                return new GeneralResponse(false, $"Failed: {ex.Message}");
+            } finally
+            {
+                Close();
+            }
         }
     }
 }

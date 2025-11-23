@@ -1,8 +1,9 @@
-using MySql.Data.MySqlClient;
 using KartverketRegister.Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -72,7 +73,7 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@LastUpdated", DateTime.UtcNow);
                 cmd.Parameters.AddWithValue("@Source", source ?? (object)DBNull.Value);
 
-                cmd.Parameters.AddWithValue("@GeoJson", geojson);
+                cmd.Parameters.AddWithValue("@GeoJson", WebUtility.HtmlDecode(geojson));
 
                 cmd.ExecuteNonQuery();
             }
@@ -119,7 +120,7 @@ namespace KartverketRegister.Utils
                         mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
                         mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
 
-                        Markers.Add(mrk);
+                        Markers.Add(mrk.HtmlEncodeStrings());
                     }
                 }
             }
@@ -185,7 +186,7 @@ namespace KartverketRegister.Utils
                 return null;
             }
 
-            return mrk;
+            return mrk.HtmlEncodeStrings();
         }
         public void DeleteMarkerById(int markerId)
         {

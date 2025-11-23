@@ -15,7 +15,6 @@ ________________________________________________________________________________
 Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luftambulanse (NLA)
 _______________________________________________________________________________________________
 
->_<
 
 # Hvordan starte applikasjonen??
 
@@ -101,6 +100,7 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - Anti Forgery Tokens
 - SQL Injections
 - Password Hashing - Raw passwords not saved
+- HTML Injections
 
 ## Testing Scenario
 
@@ -130,4 +130,63 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - - Skjema og visning av data
 - - Kartintegrasjon
 - - Dokumentasjon av drift, arkitektur, testing og resultater
+
+## User Tests
+
+
+### Administrating
+**Mål:** Evaluere hvor enkelt det er for en administrator å delegere en oppgave ved å tildele en markør til en ubehandlet innsending.
+
+Main landing page - Admin
+><img width="50%" height="50%" alt="Main landing page - Admin" src="https://github.com/user-attachments/assets/855e425a-8ad1-455d-a5f1-5ef527b53149" />
+
+Assign submissions
+><img width="50%" height="50%" alt="Assign submissions" src="https://github.com/user-attachments/assets/3cdaa3ab-014a-4dbc-9fe8-4511a8e88968"  />
+| Bruker | Observasjoner og Problemer | Resultat | Forslag til forbedring |
+| :---: | :--- | :---: | :--- |
+| **U1**  | Gikk rett til "Assign submissions" via toppmenyen og fullførte oppgaven raskt. | ✅ | Ingen. |
+| **U2**  | Kikket først på "Manage Users", før de fant "Assign submissions". | 🟡 | Gi "Assign submissions" en mer tydelig merking, f.eks. med et tydelig ikon. |
+| **U3**  | Fant "Assign submissions" umiddelbart, men brukte tid på å forstå hvilken kolonne/knapp som utløste tildelingsdialogen. | 🟡 | Gjør knappen for **"Assign"** mer synlig og brukervennlig, f.eks. med et tydelig ikon. |
+| **U4**  | Klikket på "Submissions" i stedet for "Assign Submissions" først. Måtte gå tilbake. | 🟡 | Tydeliggjør forskjellene mellom **"Submission"** i toppmenyen og **"Assign"** (visuell adskillelse eller endret plassering). |
+| **U5**  | Fullførte oppgaven feilfritt og raskt. | ✅ | Ingen. |
+
+
+
+### Employee
+**Mål:** Evaluere brukervennligheten ved vurdering av innsendt rapport
+
+Main landing page - Employee
+> <img width="50%" height="50%" alt="Main landing page - Employee" src="https://github.com/user-attachments/assets/239f1d20-083a-4321-8562-2781e083a88d" />
+
+Review report
+> <img width="50%" height="50%" alt="Review report" src="https://github.com/user-attachments/assets/b607b4e2-f665-42c0-a75e-bf0041eae7c4" />
+| Bruker | Observasjoner og Problemer | Resultat | Forslag til forbedring |
+| :---: | :--- | :---: | :--- |
+| **U1**  | Klikket på den første rapporten i listen merket 'Review'. Fullførte vurderingen raskt. | ✅ | Ingen. |
+| **U2**  | Var usikker på om de skulle bruke knappen i raden eller klikke på selve rapportnavnet for å starte vurdering. | 🟡 | Standardiser interaksjonen: Gjør hele raden eller et eksplisitt **"Review"-ikon** klikkbart. |
+| **U3**  | Klikket på 'Review', men slet med å finne gokjent/ikke godkjent-knapp. | 🟡 | Gjør **'Approve/Reject'** knappen mer fremtredende, f.eks. ved å ha knappene farget med grønt og rødt. |
+| **U4**  | Feilfritt og raskt. | ✅ | Ingen. |
+| **U5**  | Klarte å navigere til vurderingen, men klaget over at tekstfeltet for kommentarer var for lite. | 🟡 | Øk størrelsen på tekstfeltet for kommentarer i vurderingsskjemaet. |
+
+### User - Pilot
+Spørte brukeren om å logge seg inn som bruker - pilot, og sende inn en rapport:
+
+Main landing page - User
+> <img width="50%" height="50%" alt="Main landing page - User" src="https://github.com/user-attachments/assets/43770c58-6388-4cf1-b699-e21fd627ef3f" />
+
+FlightMode
+> <img width="50%" height="50%" alt="FlightMode w/ marker" src="https://github.com/user-attachments/assets/acf41db8-5b9a-43d7-b76e-84fd7ea21d48" />
+
+Register Marker
+> <img width="50%" height="50%" alt="Register Marker" src="https://github.com/user-attachments/assets/f53ad8ce-0ad4-4725-b875-4fbebbace789" />
+| Bruker | Observasjoner og Problemer | Resultat | Forslag til forbedring |
+| :---: | :--- | :---: | :--- |
+| **U1**  | Trykket på 'FlightMode' | ❌ | Gjør overgangen fra 'Start Report' på hovedsiden til **'FlightMode'** mer lineær/tydelig. |
+| **U2**  | Fant knappen 'FlightMode' umiddelbart, markerte et punkt og sendte inn. Fullførte registrering feilfritt. | ✅ | Ingen. |
+| **U3**  | Var usikker på om de måtte trykke på kartet først eller **'Register Marker'**-knappen. Prøvde kartet uten resultat. | 🟡 | Legg til veiledningstekst: "Trykk 'Register Marker' for å aktivere markørplassering." |
+| **U4**  | Utmerket navigasjon. Likte flyten i å velge flyvning før markøren ble registrert. | ✅ | Ingen. |
+| **U5**  | Ble overveldet med mange knapper i FlightMode, slet med å finne fram | ❌ | Fjerne unødvendige knapper. |
+
+
+
 
