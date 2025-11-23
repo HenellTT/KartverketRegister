@@ -181,7 +181,7 @@ Register Marker
 > <img width="50%" height="50%" alt="Register Marker" src="https://github.com/user-attachments/assets/f53ad8ce-0ad4-4725-b875-4fbebbace789" />
 | Bruker | Observasjoner og Problemer | Resultat | Forslag til forbedring |
 | :---: | :--- | :---: | :--- |
-| **U1**  | Trykket på 'FlightMode' | ❌ | Gjør overgangen fra 'Start Report' på hovedsiden til **'FlightMode'** mer lineær/tydelig. |
+| **U1**  | Navigerte gjennom prosessen uten problem | ✅ | Ingen. |
 | **U2**  | Fant knappen 'FlightMode' umiddelbart, markerte et punkt og sendte inn. Fullførte registrering feilfritt. | ✅ | Ingen. |
 | **U3**  | Var usikker på om de måtte trykke på kartet først eller **'Register Marker'**-knappen. Prøvde kartet uten resultat. | 🟡 | Legg til veiledningstekst: "Trykk 'Register Marker' for å aktivere markørplassering." |
 | **U4**  | Utmerket navigasjon. Likte flyten i å velge flyvning før markøren ble registrert. | ✅ | Ingen. |
