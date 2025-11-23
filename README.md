@@ -15,7 +15,6 @@ ________________________________________________________________________________
 Prosjektoppgave UiA Institutt for informasjonssystemer, Kartverket og Norsk Luftambulanse (NLA)
 _______________________________________________________________________________________________
 
->_<
 
 # Hvordan starte applikasjonen??
 
@@ -132,3 +131,10 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - - Kartintegrasjon
 - - Dokumentasjon av drift, arkitektur, testing og resultater
 
+## User Tests
+
+# Administrating
+![Admin Panel](image.png)
+![Assign submissions](wwwroot\img\image.png ) 
+
+## Employee
