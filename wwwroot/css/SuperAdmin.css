@@ -199,12 +199,14 @@
     color: #444;
     margin-top:20px;
     border-top:thin ridge;
+    
 }
 
 .message-controls {
     display: flex;
     gap: 10px;
     margin-top: 15px;
+
 }
 
 #MUD-msg-input {
@@ -213,13 +215,19 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 15px;
-       
+    
+}
+.message-footer {
+    border-top: thin ridge;
+    text-align: center;
+    margin-top:30px;
 }
 
 #MUD-msg-submit {
-    align-self: flex-end; /* eller center hvis du vil ha den midtstilt */
-    padding: 12px 24px;
-    font-size: 16px;
+    display: block;
+    margin: 40px auto 0; /* auto på sidene gir horisontal sentrering */
+    padding: 10px 20px;
+    font-size: 20px;
     font-weight: 600;
     color: #fff;
     background-color: #0066b2;
@@ -227,7 +235,9 @@
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    border-top:thin ridge;
 }
+
 
     #MUD-msg-submit:hover {
         background-color: #004f8a;
