@@ -3,6 +3,7 @@ using System;
 
 namespace KartverketRegister.Auth
 {
+    //representerer en bruker i systemet
     public class AppUser : IdentityUser<int>
     {
         public string Name { get; set; }

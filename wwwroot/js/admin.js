@@ -1,4 +1,4 @@
-﻿
+﻿//henter markers fra serveren basert på statusen 
 async function FetchMarkers(status) {
     try {
 
@@ -7,7 +7,7 @@ async function FetchMarkers(status) {
         if (!response.ok || response.redirected) {
             response = await fetch('/Admin/GetAllMarkers?markerStatus=' + status);
             if (!response.ok) {
-                throw new Error("fuck");
+                throw new Error("Error");
             }
         }
 
@@ -22,6 +22,7 @@ async function FetchMarkers(status) {
 const mymrk = document.getElementById('mymrk');
 let SortBy = 'markerId';
 let SortRev = true;
+//oppdaterer marker-listen
 async function UpdateMarkerList(status) {
     let markers = await FetchMarkers(status);
 
@@ -31,6 +32,7 @@ async function UpdateMarkerList(status) {
     });
     mymrk.innerHTML = stringToAdd;
 }
+//endrer sorteringsfilteret og oppdaterer tabellen
 async function UpdateMarkerListTableFilter(filter) {
     let status = sts.value;
     if (SortBy == filter) {
@@ -43,6 +45,7 @@ async function UpdateMarkerListTableFilter(filter) {
 
 }
 
+//oppdaterer listen marker i tabellvisning med sortering
 async function UpdateMarkerListTable(status) {
     let markers = await FetchMarkers(status);
     markers.sort((a, b) => {
@@ -80,6 +83,7 @@ async function UpdateMarkerListTable(status) {
     mymrk.innerHTML = stringToAdd + "</table>";
 } 
 
+//lager html for en marker
 function CreateMarkerElement(marker) {
 
     return `
@@ -102,6 +106,8 @@ function CreateMarkerElement(marker) {
     </div>
     `;
 }
+
+//lager rad i tabellen for en marker
 function CreateMarkerRow(marker) {
     let date = marker.date.replaceAll("-","/").split("T");
     return `
@@ -122,12 +128,14 @@ function CreateMarkerRow(marker) {
     `;
 }
 const sts = document.getElementById("stateToSee");
+//sletter markers og oppdaterer tabellen
 function DeleteMarker(MarkerId) {
     fetch(`./Admin/DeleteMarker?MarkerId=${MarkerId}`).then(() => {
         UpdateMarkerListTable(sts.value);
     })
     
 }
+//utfører post med skjult form
 function postRedirect(url, params = { }) {
     // Create a hidden form
     const form = document.createElement('form');
@@ -148,6 +156,8 @@ function postRedirect(url, params = { }) {
     document.body.appendChild(form);
     form.submit();
 }
+
+// scroller siden ned til en bestemt posisjon
 function SmoothScroll(topPx) {
     window.scrollTo({
         top: -2000000000,
@@ -160,11 +170,13 @@ function SmoothScroll(topPx) {
         behavior: 'smooth' 
     });
 }
+//Scroller til en spesifikk markør 
 function scrollToMarker(markerId) {
     const topsset = document.getElementById(`markerBox-${markerId}`).offsetTop;
     SmoothScroll(topsset);
 }
 
+// klasse for å beregne gjennomsnitt 
 class OverComplicatedAverage {
     constructor() {
         this.numbers = [];
@@ -178,7 +190,7 @@ class OverComplicatedAverage {
         this.numbers.push(n);
     }
 }
-
+//justerer ikomonstørrelse og popup-anker
 function ResizeIcons(size, ICONS) {
     const keys = Object.keys(ICONS.icons);
     keys.forEach((key) => {
@@ -190,6 +202,7 @@ function ResizeIcons(size, ICONS) {
     })
 }
 
+//oppdaterer markører på kartet
 async function UpdateMapMarkers(map, L, type = 'Everything') {
     const markers = await FetchMarkers(type);
     if (markers.length == 0) {
