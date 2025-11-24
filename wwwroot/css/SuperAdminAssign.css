@@ -1,0 +1,9 @@
+﻿.AssignOptionMenu {
+    
+}
+    .AssignOptionMenu select {
+        height: 2.3em;
+    }
+    .AssignOptionMenu button {
+        height: 2.3em;
+    }

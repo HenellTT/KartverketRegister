@@ -36,14 +36,9 @@
 
                 <!-- LEFT SIDE -->
                 <ul class="navbar-nav flex-grow-1">
+                    
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Flightmode" asp-action="Index">FlightMode</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Pilot" asp-action="Registry">Registry</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Registerman</a>
+                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Submissions</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-controller="Superadmin" asp-action="Index">Admin</a>
@@ -52,24 +47,15 @@
 
                 <!-- RIGHT SIDE BUTTONS -->
                     <ul class="navbar-nav">
-                           <li class="nav-item">
-                                <div class="btn-group" role="group" aria-label=" k">
-                                    <button type="button" class="btn btn-primary" onclick="dms(false)">light v2</button>
-                                    <button type="button" class="btn btn-primary" onclick="dms(true)">Dark v2</button>
-                                </div>
-                            </li>
+                          
                         
                          <li class="nav-item">
                         <button class="nav-btn" id="Notification-Open-Button">🔔</button>
                         </li>
 
-                         <li class="nav-item">
-                    <button class="nav-btn" onclick="dms(false)">light v2</button>
+                        <li class="nav-item">
+                            <button class="nav-btn" onclick="dms()">Theme</button>
                         </li>
-
-                      <li class="nav-item">
-                     <button class="nav-btn" onclick="dms(true)">Dark v2</button>
-                         </li>
 
                          <li class="nav-item">
                  <a asp-controller="Home" asp-action="User" class="nav-btn">User</a>
@@ -103,7 +89,6 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/Notifications.js" asp-append-version="true"></script>
-<script src="https://apifreellm.com/apifree.min.js"></script>
 <script src="/js/Dark-mode.js"></script>
 
 <script>
@@ -118,9 +103,17 @@
         "Give me an unusual 'Are you sure' message, one sentence, ending with a keyword in *asterisks*."
     ];
 
-    function dms(bool) {
+    function dms(bool = "wetSocks") {
         let body = document.querySelector('body');
         let mappyUwU = document.getElementById("map");
+
+        if (bool == "wetSocks") {
+            if (body.classList.contains("MayDarknessSwallowYourSoul")) {
+                bool = false;
+            } else {
+                bool = true;
+            }
+        }
 
         if (bool) {
             sessionStorage.setItem('DarkMode', true);
@@ -136,18 +129,8 @@
     const rdbbut = document.getElementById('resetdbbutton');
     let msgin = null;
 
-    async function setMsginToAi() {
-        if (msgin == null) {
-            try {
-                msgin = await ApiFreeLLM.chat(prompts[0]);
-                rdbbut.style.backgroundColor = 'lightblue';
-            } catch {
-                await setMsginToAi();
-            }
-        }
-    }
+    
 
-    setTimeout(async () => { await setMsginToAi() }, 1000);
     setTimeout(() => { dms(sessionStorage.getItem('DarkMode') === 'true') }, 1);
 
     async function resetdb() {

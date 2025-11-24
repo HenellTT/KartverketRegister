@@ -120,7 +120,7 @@ namespace KartverketRegister.Utils
 
                             Notification.MarkerId = int.TryParse(reader["MarkerId"]?.ToString(), out int mid) ? mid : 0;
 
-                            NotificationList.Add(Notification);
+                            NotificationList.Add(Notification.HtmlEncodeStrings());
                         }
                     }
                 }

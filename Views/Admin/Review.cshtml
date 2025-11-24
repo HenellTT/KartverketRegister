@@ -140,6 +140,27 @@
         
         
     })
+    const encoded = "@Html.Raw(Model.GeoJson ?? "null")";
+
+    // Create a temporary element to decode HTML entities
+    const parser = new DOMParser();
+    const decoded = parser.parseFromString(encoded, "text/html").documentElement.textContent;
+
+    // Now parse JSON
+    const GeoJson = JSON.parse(decoded);
+    console.log(GeoJson);
+    let bounds;
+    if (GeoJson) {
+        const geoLayer = L.geoJSON(GeoJson).addTo(map);
+
+        // Fit map view to all features
+        bounds = geoLayer.getBounds();
+        if (bounds.isValid()) {
+            setTimeout( () => {
+                map.fitBounds(bounds, { padding: [40, 40] })
+            },1000);
+        }
+    }
 </script>
 
 

@@ -1,8 +1,9 @@
-using MySql.Data.MySqlClient;
 using KartverketRegister.Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -13,6 +14,8 @@ namespace KartverketRegister.Utils
     {
 
         public SequelMarker(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
+        { }
+        public SequelMarker() : base() // calls base constructor
         { }
         public void SaveMarker(
             string type,
@@ -31,7 +34,8 @@ namespace KartverketRegister.Utils
             int? submittedBy = null,
             int? reviewedBy = null,
             string? reviewComment = null,
-            string? source = null
+            string? source = null,
+            string? geojson = null
         )
         {
             conn.Open();
@@ -39,10 +43,10 @@ namespace KartverketRegister.Utils
             string sql = @"
                 INSERT INTO RegisteredMarkers 
                 (Type, Description, Lat, Lng, UserId, Organization, State, HeightM, HeightMOverSea, AccuracyM, 
-                 ObstacleCategory, IsTemporary, Lighting, SubmittedBy, ReviewedBy, ReviewComment, LastUpdated, Source)
+                 ObstacleCategory, IsTemporary, Lighting, SubmittedBy, ReviewedBy, ReviewComment, LastUpdated, Source, GeoJson)
                 VALUES 
                 (@Type, @Description, @Lat, @Lng, @UserId, @Organization, @State, @HeightM, @HeightMOverSea, @AccuracyM,
-                 @ObstacleCategory, @IsTemporary, @Lighting, @SubmittedBy, @ReviewedBy, @ReviewComment, @LastUpdated, @Source);
+                 @ObstacleCategory, @IsTemporary, @Lighting, @SubmittedBy, @ReviewedBy, @ReviewComment, @LastUpdated, @Source, @GeoJson);
                 ";
 
             using (var cmd = new MySqlCommand(sql, conn))
@@ -69,6 +73,8 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@LastUpdated", DateTime.UtcNow);
                 cmd.Parameters.AddWithValue("@Source", source ?? (object)DBNull.Value);
 
+                cmd.Parameters.AddWithValue("@GeoJson", WebUtility.HtmlDecode(geojson));
+
                 cmd.ExecuteNonQuery();
             }
 
@@ -91,6 +97,7 @@ namespace KartverketRegister.Utils
 
                         mrk.Type = reader["Type"] as string;
                         mrk.Description = reader["Description"] as string;
+                        
                         mrk.Lat = reader.GetDouble("Lat");
                         mrk.Lng = reader.GetDouble("Lng");
 
@@ -103,6 +110,9 @@ namespace KartverketRegister.Utils
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
+                        mrk.Date = Convert.ToDateTime(reader["Date"]);
+                        mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
+
 
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 
@@ -110,7 +120,7 @@ namespace KartverketRegister.Utils
                         mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
                         mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
 
-                        Markers.Add(mrk);
+                        Markers.Add(mrk.HtmlEncodeStrings());
                     }
                 }
             }
@@ -156,6 +166,7 @@ namespace KartverketRegister.Utils
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
+                        mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
 
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 
@@ -175,7 +186,7 @@ namespace KartverketRegister.Utils
                 return null;
             }
 
-            return mrk;
+            return mrk.HtmlEncodeStrings();
         }
         public void DeleteMarkerById(int markerId)
         {
@@ -209,15 +220,16 @@ namespace KartverketRegister.Utils
             conn.Close();
 
         }
-        public void ApproveMarker(int markerId, string ReviewComment)
+        public void ApproveMarker(int markerId, string ReviewComment, int ReviewerId)
         {
             conn.Open();
-            string sql = "UPDATE RegisteredMarkers SET State = 'Accepted', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+            string sql = "UPDATE RegisteredMarkers SET State = 'Accepted', ReviewComment = @ReviewComment, ReviewedBy = @UserId WHERE MarkerId = @MarkerId";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@MarkerId", markerId);
                 cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.Parameters.AddWithValue("@UserId", ReviewerId);
                 cmd.ExecuteNonQuery();
 
             }
@@ -226,16 +238,17 @@ namespace KartverketRegister.Utils
             Notificator.SendNotification(UserId, $"Your Submission has been approved", "Info", markerId);
 
         }
-        public void RejectMarker(int markerId, string ReviewComment)
+        public void RejectMarker(int markerId, string ReviewComment, int ReviewerId)
         {
             conn.Open();
-            string sql = "UPDATE RegisteredMarkers SET State = 'Rejected', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+            string sql = "UPDATE RegisteredMarkers SET State = 'Rejected', ReviewComment = @ReviewComment, ReviewedBy = @UserId WHERE MarkerId = @MarkerId";
 
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@MarkerId", markerId);
                 cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.Parameters.AddWithValue("@UserId", ReviewerId);
                 cmd.ExecuteNonQuery();
 
             }
@@ -265,37 +278,31 @@ namespace KartverketRegister.Utils
             }
 
         }
-        public List<MapMarker> GetObstacles(LocationModel LM) { // add lat lng l8r to limit amount of markers fetched by user;
+        public List<LocationModel> GetObstacles() { // add lat lng l8r to limit amount of markers fetched by user;
             conn.Open();
 
-            List<MapMarker> markers = new List<MapMarker>();
-            double latOffset = 0.009;
-            double lngOffset = 0.009 / Math.Cos(LM.Lat * Math.PI / 180);
-
+            List<LocationModel> markers = new List<LocationModel>();
+            
             string sql = @"
-                SELECT *
+                SELECT Lat,Lng,ObstacleCategory,GeoJson
                 FROM RegisteredMarkers
-                WHERE Lat BETWEEN @lat - @latOffset AND @lat + 1
-                  AND Lng BETWEEN @lng - @lngOffset AND @lng + 1;
+               
             ";
 
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@lat", LM.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                cmd.Parameters.AddWithValue("@lng", LM.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
-                cmd.Parameters.AddWithValue("@latOffset", latOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                cmd.Parameters.AddWithValue("@lngOffset", lngOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
+               
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        MapMarker mrk = new MapMarker(reader);
-                        
-
-                        markers.Add(mrk);
+                        LocationModel LM = new LocationModel();
+                        LM.ObstacleCategory = reader["ObstacleCategory"] as string;
+                        LM.GeoJson = reader["GeoJson"] as string;
+                        LM.Lat = reader.GetDouble("Lat");
+                        LM.Lng = reader.GetDouble("Lng");
+                        markers.Add(LM);
                     }
                 }
             }
@@ -307,3 +314,4 @@ namespace KartverketRegister.Utils
 
 
 }
+

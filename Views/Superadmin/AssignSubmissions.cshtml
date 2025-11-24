@@ -1,0 +1,54 @@
+﻿@page
+
+
+@{
+}
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+<link rel="stylesheet" href="~/css/SuperAdmin.css" />
+<link rel="stylesheet" href="~/css/SuperAdminAssign.css" />
+
+
+<script src="~/js/SuperAdminReviewAssign.js"> </script>
+
+<h1>Assign task to employee</h1>
+
+<div id="SubmissionsContainer">
+	<div class="AssignOptionMenu">Assign to selected submissions to: 
+		<select id="SARA-SELECT">
+		</select>
+		<button onclick="SARA.PostBulkAssign()">Assign</button>
+		<button onclick="SARA.AutoAssign()">Auto Assign</button>
+		<button onclick="fetch('/Superadmin/UnAssignAll');location.reload()">Unassign all</button>
+
+	</div>
+	<div id="SARA-OUTPUT">
+		<table class="UserTable">
+			<tr>
+				<td>Type</td>
+				<td>something</td>
+				<td>yyee</td>
+				<td>whatever</td>
+				<td>idnk man</td>
+				<td><input class="checkbox-submission-assign" id="submisstion-43" type="checkbox" /></td>
+				<td><button>Quick assign</button></td>
+			</tr>
+			<tr>
+				<td>Type</td>
+				<td>something</td>
+				<td>yyee</td>
+				<td>whatever</td>
+				<td>idnk man</td>
+				<td><input class="checkbox-submission-assign" id="submisstion-61" type="checkbox" /></td>
+				<td><button>Quick assign</button></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<script>
+	let SARA = new SuperAdminReviewAssign("none");
+	SARA.Init();
+
+	
+</script>
