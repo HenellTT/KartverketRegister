@@ -1,0 +1,186 @@
+﻿
+.user-heading {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-align: center;
+    color: #2c2c2c;
+}
+
+/* === Filterfelt === */
+#UserSearchInput,
+#OrganizationSelector {
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    min-width: 240px;
+    margin: 10px 10px 30px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    background-color: #fff;
+}
+
+/* === Tabell === */
+.UserTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.20);
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+    .UserTable tr:first-child td {
+        background-color: #2f3542; /* Mørk grå */
+        color: #fff;
+        font-weight: 600;
+        padding: 16px 20px;
+        border-bottom: 2px solid #ccc;
+    }
+    .UserTable td {
+        padding: 14px 20px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        color: #444;
+        vertical-align: middle;
+    }
+
+    .UserTable tr:hover,
+    .user-row:hover {
+        background-color: #f2f2f2; /* Nøytral grå hover */
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+    }
+
+
+
+
+/*endre rolle (details) side*/
+
+.user-management-container {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 40px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.user-info p {
+    font-size: 16px;
+    margin: 8px 0;
+    color: #333;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 15px;
+}
+
+/* Role section */
+.role-actions label {
+    font-weight: 600;
+    margin: 20px 0 10px;
+    display: block;
+    color: #444;
+}
+
+.role-buttons {
+    display: flex;
+    justify-content: left;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#MUD-set-user,
+#MUD-set-admin,
+#MUD-set-employee {
+    padding: 10px 20px;
+    background-color: #0077cc;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    #MUD-set-user:hover,
+    #MUD-set-admin:hover,
+    #MUD-set-employee:hover {
+        background-color: #005fa3;
+    }
+
+/* Delete button */
+.delete-action {
+    margin-bottom: 30px;
+    text-align: left;
+    border-top: thin ridge;
+}
+
+#MUD-delete {
+    background-color: #cc0000;
+    color: #fff;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 20px;
+}
+
+    #MUD-delete:hover {
+        background-color: #a80000;
+    }
+
+.message-action label {
+    font-weight: 600;
+    display: block;
+    color: #444;
+    margin-top: 20px;
+    border-top: thin ridge;
+}
+
+.message-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#MUD-msg-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.message-footer {
+    border-top: thin ridge;
+    text-align: center;
+    margin-top: 30px;
+}
+
+#MUD-msg-submit {
+    display: block;
+    margin: 40px auto 0; /* auto på sidene gir horisontal sentrering */
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #0066b2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-top: thin ridge;
+}
+
+
+    #MUD-msg-submit:hover {
+        background-color: #004f8a;
+    }
