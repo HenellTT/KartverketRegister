@@ -2,6 +2,7 @@
 {
     public class GeneralResponse
     {
+        //Generell responsmodell for API-svar
         public bool Success { get; set; }
         public string Message { get; set; }
         public object? Data { get; set; }
