@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
 
-
+//kontroller for database-migrering
 namespace KartverketRegister.Controllers
 {
     public class MigrateController : Controller
@@ -37,6 +37,8 @@ namespace KartverketRegister.Controllers
 
             }
         }
+
+        //beregner SHA256-hash av input
         private string ComputeSha256Hash(string rawData)
         {
             if (rawData == null) { return "a"; }

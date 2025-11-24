@@ -45,7 +45,7 @@ namespace KartverketRegister.Controllers
             return View();
 
         }
-        
+        //viser detaljer for en spesifikk bruker
 
         [HttpGet("Superadmin/ManageUsers/{UserId}")]
         public IActionResult ManageUsersDetails(int UserId)
@@ -58,6 +58,7 @@ namespace KartverketRegister.Controllers
 
             }
         }
+        //setter rolle for en bruker
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult SetUserRole([FromBody] AppUserDto UserData)
@@ -66,6 +67,8 @@ namespace KartverketRegister.Controllers
             GeneralResponse response = seq.SetUserRole(UserData);
             return Ok(response);
         }
+
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult DeleteUser([FromBody] AppUserDto UserData)
@@ -74,6 +77,8 @@ namespace KartverketRegister.Controllers
             GeneralResponse response = seq.DeleteUser(UserData.Id);
             return Ok(response);
         }
+
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult SendNotification([FromBody] AppUserDto UserData)
@@ -82,6 +87,8 @@ namespace KartverketRegister.Controllers
             GeneralResponse response = seq.SendNotification(UserData.Id, UserData.Email);
             return Ok(response);
         }
+
+        //henter alle brukerne 
         [HttpGet]
         public IActionResult FetchUsers(string FullName = "") {
             try
@@ -94,6 +101,8 @@ namespace KartverketRegister.Controllers
                 return Ok(new GeneralResponse(false,$"No users found {ex.Message} "));
             }
         }
+
+        //henter alle ansatte
         [HttpGet]
         public IActionResult FetchEmployees(string FullName = "")
         {
@@ -108,6 +117,8 @@ namespace KartverketRegister.Controllers
                 return Ok(new GeneralResponse(false, $"No users found {ex.Message} "));
             }
         }
+
+        //henter ikke tildelte markører for å sende videre til en registerfører for godkjenning
         [HttpGet]
         public IActionResult FetchUnassignedMarkers()
         {
@@ -115,13 +126,14 @@ namespace KartverketRegister.Controllers
             {
                 SequelSuperAdmin seq = new SequelSuperAdmin();
                 List<Marker> mrks = seq.FetchAllUnassignedMarkers();
-                return Json(new GeneralResponse(true, "Here are yo markers bro", mrks));
+                return Json(new GeneralResponse(true, "Here are a new marker assigned to you", mrks));
             }
             catch (Exception ex)
             {
                 return Json(new GeneralResponse(false, $"error: {ex.Message}"));
             }
         }
+
         [HttpGet]
         public IActionResult FetchAllMarkers(string markerStatus)
         {
@@ -155,7 +167,7 @@ namespace KartverketRegister.Controllers
             AppUser SelectedEmployee = await _userManager.FindByIdAsync(firstUserId.ToString());
         
             if (SelectedEmployee?.UserType != "Employee")
-                return Json(new GeneralResponse(false, "Fr if you get this reply, you must've really played with the feelings of our security measures. btw, User is not an Employee"));
+                return Json(new GeneralResponse(false, "Review assignment failed: User is not an Employee"));
         
             SequelSuperAdmin seq = new SequelSuperAdmin();
             seq.Open();
@@ -175,7 +187,7 @@ namespace KartverketRegister.Controllers
                     }
                 }
                 Notificator.SendNotification(Convert.ToInt32(firstUserId),$"You have been assigned to review {Succeeded} submissions<br><a href='/Admin'><button>To Submissions</button></a>", "Info");
-                return Json(new GeneralResponse(true, $"Everything gucci", new { Success = Succeeded, Fail = Failed }));
+                return Json(new GeneralResponse(true, $"Reviews assigned successfully", new { Success = Succeeded, Fail = Failed }));
 
             }
             catch (Exception ex)

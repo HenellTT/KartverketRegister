@@ -26,6 +26,8 @@ public class HomeController : Controller
         _signInManager = signInManager;
     }
 
+
+    //viser startsuden eller sender bruker videre basert på rolle
     public async Task<IActionResult> Index()
     {
         AppUser appUser = null;
@@ -62,7 +64,7 @@ public class HomeController : Controller
         }
     }
 
-
+    //viser brukersiden hvis brukeren er logget inn
     public async Task<IActionResult> User()
     {
 
