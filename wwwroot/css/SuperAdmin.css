@@ -103,20 +103,137 @@
     cursor: pointer;
 }
 
-.container {
-    width: 100%;
-    max-width: 1400px;
+/*endre rolle side*/
+.user-management-container {
+    max-width: 700px;
+    margin: 60px auto;
     padding: 40px;
-    background-color: white;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin: 0;
-    position: relative;
-    left: 50%;
-    transform: translate(-50%,0);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
+
+
+.user-heading {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.user-info p {
+    font-size: 16px;
+    margin: 8px 0;
+    color: #333;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 15px;
+}
+
+/* Role section */
+.role-actions label {
+    font-weight: 600;
+    margin: 20px 0 10px;
+    display: block;
+    color: #444;
+}
+
+.role-buttons {
+    display: flex;
+    justify-content: left;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom:20px;
+
+}
+
+#MUD-set-user,
+#MUD-set-admin,
+#MUD-set-employee {
+    padding: 10px 20px;
+    background-color: #0077cc;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    #MUD-set-user:hover,
+    #MUD-set-admin:hover,
+    #MUD-set-employee:hover {
+        background-color: #005fa3;
+    }
+
+/* Delete button */
+.delete-action {
+    margin-bottom: 30px;
+    text-align: left;
+    border-top:thin ridge;
+}
+
+#MUD-delete {
+    background-color: #cc0000;
+    color: #fff;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 20px;
+    
+}
+
+#MUD-delete:hover {
+    background-color: #a80000;
+ }
+
+.message-action label {
+    font-weight: 600;
+    display: block;
+    color: #444;
+    margin-top:20px;
+    border-top:thin ridge;
+}
+
+.message-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#MUD-msg-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+       
+}
+
+#MUD-msg-submit {
+    align-self: flex-end; /* eller center hvis du vil ha den midtstilt */
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #0066b2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    #MUD-msg-submit:hover {
+        background-color: #004f8a;
+    }
+
+    /*darkmode farger*/
 body.dark-mode {
     background-color: #1e1e2f;
     color: #f0f0f0;
