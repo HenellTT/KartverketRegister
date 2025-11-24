@@ -1,24 +1,23 @@
-﻿@page
-
-@{
+﻿@{
+   
 }
 <link rel="stylesheet" href="~/css/SuperAdmin.css" />
 
-<body>
-<h2>Hello, choose your next action</h2>
+<section class="admin-panel">
+    <h2 class="admin-heading">Administration Panel</h2>
+    <p class="admin-subheading">Select an action to manage the system:</p>
 
-<div class="Container">
-	<div class="sa-butt-cont">
-		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="ManageUsers"><button>Manage Users</button></a>
-	</div>
+    <div class="admin-actions">
+        <a asp-controller="Superadmin" asp-action="ManageUsers" class="admin-button">
+            <i class="fas fa-users"></i> Manage Users
+        </a>
 
-	<div class="sa-butt-cont">
-		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="AssignSubmissions"><button>Assign submissions</button></a>
+        <a asp-controller="Superadmin" asp-action="AssignSubmissions" class="admin-button">
+            <i class="fas fa-tasks"></i> Assign Submissions
+        </a>
 
-	</div>
-	<div class="sa-butt-cont">
-		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="Statistics"><button>Statistics</button></a>
-	</div>
-</div>
-
-</body>
+        <a asp-controller="Superadmin" asp-action="Statistics" class="admin-button">
+            <i class="fas fa-chart-bar"></i> View Statistics
+        </a>
+    </div>
+</section>
