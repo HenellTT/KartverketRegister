@@ -7,7 +7,6 @@
     color: #2c2c2c;
 }
 
-/* === Filterfelt === */
 #UserSearchInput,
 #OrganizationSelector {
     padding: 12px 16px;
@@ -20,7 +19,6 @@
     background-color: #fff;
 }
 
-/* === Tabell === */
 .UserTable {
     width: 100%;
     border-collapse: collapse;
