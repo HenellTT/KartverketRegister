@@ -7,8 +7,6 @@
     width: fit-content;
 }
 
-
-
 body {
     font-family: 'Inter', 'Segoe UI', sans-serif;
     background-color: #f5f8fc;
@@ -17,10 +15,6 @@ body {
     color: #2c3e50;
 }
 
-<<<<<<< HEAD
-/* sidecontainer */
-=======
->>>>>>> 6d2b1916572b08d59f3044a8ee2f4beda3d1c1ad
 .user-page {
     max-width: 700px;
     margin: 60px auto;
@@ -28,12 +22,9 @@ body {
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    text-align: center;
 }
 
-<<<<<<< HEAD
-/* header */
-=======
->>>>>>> 6d2b1916572b08d59f3044a8ee2f4beda3d1c1ad
 .user-header h1 {
     font-size: 32px;
     margin-bottom: 10px;
@@ -46,15 +37,12 @@ body {
     margin-bottom: 30px;
 }
 
-<<<<<<< HEAD
-/* brukerdata */
-=======
->>>>>>> 6d2b1916572b08d59f3044a8ee2f4beda3d1c1ad
 .user-card {
     background-color: #f0f4fa;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 30px;
+    text-align: center;
 }
 
     .user-card h2 {
@@ -66,18 +54,21 @@ body {
 .user-info div {
     margin-bottom: 12px;
     font-size: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .user-info span {
     font-weight: 600;
-    display: inline-block;
-    width: 160px;
     color: #2c3e50;
 }
 
-
 .user-actions {
-    text-align: right;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .logout-button {
@@ -89,12 +80,6 @@ body {
     font-weight: 600;
 }
 
-
-
-<<<<<<< HEAD
-/* --- Logg inn knapp --- */
-=======
->>>>>>> 6d2b1916572b08d59f3044a8ee2f4beda3d1c1ad
 .button-container {
     display: flex;
     flex-direction: column;

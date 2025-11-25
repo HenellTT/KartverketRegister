@@ -6,7 +6,10 @@
     <h1>NRL Aviation obstacle Register</h1>
 
     <p>Welcome to the Luftfartshindre Reporting System! This web application allows pilots and flight crews to report simple aviation obstacles to the <strong>Nasjonalt register over luftfartshindre (NRL)</strong>. It is developed as a project assignment in collaboration with the University of Agder (UiA), Kartverket, and Norsk Luftambulanse (NLA).</p>
-
+        <div class="button-container">
+                <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Login</a>
+                <a asp-controller="Auth" asp-action="Register" class="btn btn-primary">Register</a>
+            </div>
     <h2>About the Project</h2>
     <p>The system is designed for pilots and flight crews from NLA, the Air Force, and Police Helicopter Services to safely report man-made obstacles that may pose a risk to aviation. Objects over 15 meters in height must be reported (30 meters in densely populated areas), as well as power or signal lines regardless of height. For more details, see the <a href="https://luftfartshinderforskriften.no" target="_blank">Aviation Obstacles Regulation</a>.</p>
 
@@ -35,10 +38,7 @@
         <li>Secure authentication and access control for users reporting obstacles.</li>
     </ul>
 
-    <div class="button-container">
-        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Login</a>
-        <a asp-controller="Auth" asp-action="Register" class="btn btn-primary">Register</a>
-    </div>
+    
 </div>
 <style>
     .user-page {
