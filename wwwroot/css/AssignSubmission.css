@@ -33,7 +33,7 @@
 }
 
     .UserTable tr:first-child td {
-        background-color: #2f3542; /* Mørk grå */
+        background-color: #0066b2; 
         color: #fff;
         font-weight: 600;
         padding: 16px 20px;
@@ -50,7 +50,7 @@
 
     .UserTable tr:hover,
     .user-row:hover {
-        background-color: #f2f2f2; /* Nøytral grå hover */
+        background-color: #f2f2f2; 
         transition: background-color 0.2s ease;
         cursor: pointer;
     }
@@ -72,17 +72,16 @@
         padding: 16px 32px;
         font-size: 17px;
         font-weight: 600;
-        color: white;
-        background-color: #2f3542;
+        color: #fff;
+        background-color: #0066b2;
         border-radius: 10px;
         transition: all 0.3s ease;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
         min-width: 200px;
         margin-bottom: 20px;
-        
     }
 
     #SARA-SELECT{
         border-radius:10px;
        
             }
+
