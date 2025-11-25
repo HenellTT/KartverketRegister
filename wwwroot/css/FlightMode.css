@@ -14,48 +14,188 @@ header {
     position: absolute;
     inset: 0;
     width: 100%;
-    height: 100vh; /* adjust if you want a different height */
+    height: 100vh;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    z-index: 10;
+    z-index: 100;
 }
 
-
-
-
-.obstacleContainer {
+/* top bar (Point/Line center, Exit right) */
+.topBar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%; /* Full width */
-    background-color: white; /* Background color */
-    display: flex; /* Horizontal flex layout */
-    justify-content: space-around; /* Spread buttons evenly */
-    gap: auto; /* Optional spacing between buttons */
-     /* Padding around buttons */
-    z-index: 1000; /* Make sure it stays on top */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow */
-    height:10vh;
+    right: 0;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    pointer-events: none;
+    z-index: 1000;
+}
+.topBar > div { pointer-events: auto; }
+.topBar-left { flex: 1; }
+.topBar-center { flex: 1; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.topBar-right { flex: 1; display: flex; justify-content: flex-end; padding-right: 10px; }
+
+/* bottom-left Theme */
+.bottom-left {
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    z-index: 1000;
 }
 
-    .obstacleContainer button {
-        flex: 1; /* Make buttons stretch equally */
-        padding: 10px;
-        font-size: 16px;
-        cursor: pointer;
-        font-size: auto;
+/* bottom-center Revert & Clear */
+.bottom-center {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 12px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* bottom-right Submit (hidden until needed) */
+.bottom-right {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    z-index: 1000;
+}
+.floating-submit {
+    display: inline-block;
+}
+
+/* generic button styles */
+button {
+    padding: 8px 14px;
+    font-size: clamp(14px, 2vw, 20px);
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #0066b2;
+    color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+
+button:active {
+    background: #004a7a;
+    transform: translateY(1px);
+}
+
+.btn-point,
+.btn-line,
+.btn-revert,
+.btn-clear,
+.btn-submit {
+    padding: clamp(8px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
+    font-size: clamp(16px, 2.5vw, 30px);
+    margin: 0 5px;
+    min-width: 140px;
+    text-align: center;
+}
+
+.btn-theme,
+.btn-exit{
+    padding: clamp(6px, 1vw, 12px) clamp(10px, 1.5vw, 18px);
+    font-size: clamp(14px, 2vw, 22px);
+    min-width: 100px;
+    text-align: center;
+}
+
+.btn-submit {
+    background-color: #28a745;
+}
+
+.btn-exit {
+    background-color: #dc3545;
+}
+
+
+footer {
+    display: none;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+/* Tablet and smaller screens */
+@media (max-width: 768px) {
+    .topBar {
+        height: 12vh;
     }
 
- footer {
-    display: none
+    .topBar-center {
+        gap: 5px;
+    }
+
+    .btn-point,
+    .btn-line,
+    .btn-exit,
+    .btn-revert,
+    .btn-clear {
+        margin: 0 3px;
+    }
+
+    .bottom-left,
+    .bottom-center,
+    .bottom-right {
+        bottom: 8px;
+    }
+
+    .bottom-left {
+        left: 8px;
+    }
+
+    .bottom-right {
+        right: 8px;
+    }
 }
-#map {
 
-    height: 90vh; /* Full viewport height */
-    width: 100%; /* Full viewport width */
-    position: fixed;
-    bottom:0;
-    left: 0;
+/* Mobile screens */
+@media (max-width: 480px) {
+    .topBar {
+        height: 14vh;
+        padding: 0 8px;
+    }
 
+    .topBar-center {
+        gap: 4px;
+    }
+
+    .btn-point,
+    .btn-line,
+    .btn-exit,
+    .btn-revert,
+    .btn-clear {
+        padding: clamp(6px, 1vw, 12px) clamp(10px, 1.5vw, 18px);
+        margin: 0 2px;
+    }
+
+    .bottom-center {
+        bottom: 6px;
+        gap: 6px;
+    }
+
+    .bottom-left {
+        left: 6px;
+        bottom: 6px;
+    }
+
+    .bottom-right {
+        right: 6px;
+        bottom: 6px;
+    }
 }
