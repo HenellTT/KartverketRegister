@@ -11,7 +11,6 @@
 .admin-heading {
     font-size: 36px;
     font-weight: 700;
-    color: #1a1a1a;
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -90,4 +89,4 @@ body.dark-mode {
         background-color: #3a6ea5;
         color: #fff;
     }
-    /*assign submission side*/
+   
