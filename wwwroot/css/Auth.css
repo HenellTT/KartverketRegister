@@ -40,22 +40,12 @@ button {
     padding: 12px;
     border: none;
     border-radius: 6px;
-    background-color: #1a3e72;
+    background-color: #0d6efd;
     color: #ffffff;
     font-weight: 600;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
     /*box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);*/
-    margin-top:8px;
+    margin-top: 8px;
 }
-
-    button:hover {
-        background-color: #16345e;
-        transform: translateY(-1px);
-    }
-
-    button:active {
-        background-color: #122b4c;
-        transform: translateY(0);
-    }

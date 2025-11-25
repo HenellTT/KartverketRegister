@@ -2,6 +2,7 @@
 {
     public class AppUserDto
     {
+        //Modell for overføring av brukerdata
         public int Id { get; set; }
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";
