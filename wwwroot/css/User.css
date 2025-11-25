@@ -8,7 +8,7 @@
 }
 
 
-
+/* Generell stil */
 body {
     font-family: 'Inter', 'Segoe UI', sans-serif;
     background-color: #f5f8fc;
@@ -17,10 +17,7 @@ body {
     color: #2c3e50;
 }
 
-<<<<<<< HEAD
-/* sidecontainer */
-=======
->>>>>>> 6d2b1916572b08d59f3044a8ee2f4beda3d1c1ad
+/* Sidecontainer */
 .user-page {
     max-width: 700px;
     margin: 60px auto;
@@ -30,14 +27,11 @@ body {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
-<<<<<<< HEAD
-/* header */
-=======
->>>>>>> 6d2b1916572b08d59f3044a8ee2f4beda3d1c1ad
+/* Header */
 .user-header h1 {
     font-size: 32px;
     margin-bottom: 10px;
-    color: #0066b2;
+    color: #1a3e72;
 }
 
 .user-header p {
@@ -46,10 +40,7 @@ body {
     margin-bottom: 30px;
 }
 
-<<<<<<< HEAD
-/* brukerdata */
-=======
->>>>>>> 6d2b1916572b08d59f3044a8ee2f4beda3d1c1ad
+/* Kort for brukerdata */
 .user-card {
     background-color: #f0f4fa;
     padding: 20px;
@@ -60,7 +51,7 @@ body {
     .user-card h2 {
         font-size: 20px;
         margin-bottom: 20px;
-        color: #0066b2;
+        color: #34495e;
     }
 
 .user-info div {
@@ -75,26 +66,26 @@ body {
     color: #2c3e50;
 }
 
-
+/* Logout-knapp */
 .user-actions {
     text-align: right;
 }
 
 .logout-button {
-    background-color: #0066b2;
+    background-color: #1a3e72;
     color: #fff;
     padding: 10px 20px;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
+    transition: background-color 0.3s ease;
 }
 
+    .logout-button:hover {
+        background-color: #16345e;
+    }
 
-
-<<<<<<< HEAD
-/* --- Logg inn knapp --- */
-=======
->>>>>>> 6d2b1916572b08d59f3044a8ee2f4beda3d1c1ad
+/* --- Logge-inn knapp --- */
 .button-container {
     display: flex;
     flex-direction: column;
@@ -105,7 +96,7 @@ body {
 }
 
 .btn {
-    background-color: #0066b2;
+    background-color: #0078d7;
     color: white;
     text-decoration: none;
     padding: 12px 24px;
@@ -113,4 +104,11 @@ body {
     width: 220px;
     text-align: center;
     font-weight: 600;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
 }
+
+    .btn:hover {
+        background-color: #005fa3;
+        transform: translateY(-2px);
+    }
