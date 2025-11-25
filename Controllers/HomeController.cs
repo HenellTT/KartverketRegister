@@ -81,12 +81,32 @@ public class HomeController : Controller
         return View();
 
     }
-    
+    public IActionResult FlightMode()
+    {
+        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
+    }
     
    
 
     
-    
-    
+    [Route("EditMarker/{id:int}")]
+    public IActionResult EditMarker(int id)
+    {
+        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+        Marker marker = seq.FetchMarkerById(id);
+        return View(marker);
+    }
+    public IActionResult FlightMode()
+    {
+        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SetMode(string mode)
+    {
+        var appUser = await _userManager.GetUserAsync(HttpContext.User);
+        ViewBag.Theme = mode ?? "light"; // visning antar lys modus
+        return View();
+    }
 }
 
