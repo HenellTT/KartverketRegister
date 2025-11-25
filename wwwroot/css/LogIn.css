@@ -1,9 +1,11 @@
-﻿/* --- Base Layout --- */
+﻿/* --- Hovedlayout --- */
 body {
    
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     text-align:center;
 }
+
+/*overskrifter*/
 h1{
     font-size: 40px;
 }

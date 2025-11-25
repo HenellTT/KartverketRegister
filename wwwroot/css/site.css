@@ -22,9 +22,7 @@ body {
     margin-bottom: 60px;
 }
 
-/* ============================
-   Header
-============================ */
+/* Header*/
 .nav-btn {
     background-color: #0d6efd !important;
     color: white !important;
@@ -41,12 +39,6 @@ body {
     margin-right: 10px !important;
     text-decoration: none !important;
 }
-
-/*
-    .nav-btn:hover {
-        background-color: #0056b3 !important;
-        color: white !important;
-    }
 */
 /* ============================
    Ding dong knapp
