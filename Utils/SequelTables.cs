@@ -1,5 +1,6 @@
 ﻿namespace KartverketRegister.Utils
 {
+    //SQL-skript for opprettelse av tabeller i databasen
     public static class SequelTables
     {
         public static string Users_Table(string tableName)
