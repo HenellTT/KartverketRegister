@@ -23,3 +23,20 @@
     padding:0;
     margin:0;
 }
+.ar-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    margin-right: 10px;
+    color: #fff;
+}
+    .ar-button:first-child {
+        background-color: #0066b2;
+    }
+    .ar-button:last-of-type {
+        background-color: #ef4444;
+    }

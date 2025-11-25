@@ -1,4 +1,4 @@
-﻿/* --- Base Layout --- */
+﻿
 body {
     margin: 0;
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
@@ -10,7 +10,7 @@ body {
     line-height: 1.6;
 }
 
-/* --- Headings --- */
+
 h1, h2, h3 {
     margin: 0;
     font-weight: 600;
@@ -31,7 +31,7 @@ h2 {
     font-size: 1.1rem;
 }
 
-/* --- Layout --- */
+
 .main-container {
     display: flex;
     justify-content: flex-start;
@@ -56,7 +56,7 @@ h2 {
     height: 80vh;
 }
 
-/* --- Filter Sidebar --- */
+
 #filter {
     flex: 0 0 200px;
     background: #fafafa;
@@ -138,7 +138,6 @@ h2 {
         color: #4b5563;
     }
 
-    /* --- Buttons in Cards --- */
     .tmk-cont button {
         margin-top: 14px;
         margin-right: 10px;
