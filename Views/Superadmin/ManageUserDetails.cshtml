@@ -3,37 +3,57 @@
 
 @{
 }
-<link rel="stylesheet" href="~/css/SuperAdmin.css" />
+<link rel="stylesheet" href="~/css/ManageUser.css" />
 <script src="~/js/SuperAdminUserManager.js"></script>
 <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
 
+<div class="user-management-container">
+    <h2 class="user-heading">Manage User</h2>
 
+    <div class="user-info">
+        <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
+        <p><strong>ID:</strong> @Model.Id</p>
+        <p><strong>Role:</strong> @Model.UserType</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+    </div>
 
-<h2>Manage user</h2>
-<p>Name: @Model.FirstName @Model.LastName</p>
-<p>Id: @Model.Id</p>
-<p>Role: @Model.UserType</p>
-<p>email: @Model.Email</p>
-<p>Set role to:
-	<button id="MUD-set-user">User</button>
-	<button id="MUD-set-admin">Admin</button>
-	<button id="MUD-set-employee">Employee</button>
-</p>
-<p><button id="MUD-delete">Delete User</button></p>
-<p><input id="MUD-msg-input"></input><button id="MUD-msg-submit">Send Message</button></p>
+    <div class="role-actions">
+        <label>Set role to:</label>
+        <div class="role-buttons">
+            <button id="MUD-set-user">User</button>
+            <button id="MUD-set-admin">Admin</button>
+            <button id="MUD-set-employee">Employee</button>
+        </div>
+    </div>
+
+    <div class="delete-action">
+        <button id="MUD-delete" class="delete-btn">Delete User</button>
+    </div>
+
+    <div class="message-action">
+        <label for="MUD-msg-input">Send message:</label>
+        <div class="message-controls">
+            <input id="MUD-msg-input" placeholder="Type your message..." />
+            
+        </div>
+    </div>
+    <div class="message-footer">
+        <button id="MUD-msg-submit">Send</button>
+    </div>
+    
+</div>
+
 <script>
-	const csrfToken_MUD = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfToken_MUD = document.querySelector('meta[name="csrf-token"]').content;
 
-	const msU = document.getElementById("MUD-set-user");
-	const msA = document.getElementById("MUD-set-admin");
-	const msE = document.getElementById("MUD-set-employee");
-	const msD = document.getElementById("MUD-delete");
-	const msNI = document.getElementById("MUD-msg-input");
-	const msNS = document.getElementById("MUD-msg-submit");
+    const msU = document.getElementById("MUD-set-user");
+    const msA = document.getElementById("MUD-set-admin");
+    const msE = document.getElementById("MUD-set-employee");
+    const msD = document.getElementById("MUD-delete");
+    const msNI = document.getElementById("MUD-msg-input");
+    const msNS = document.getElementById("MUD-msg-submit");
 
-	const splink = window.location.href.split('/');
-	const UserId = splink[splink.length-1];
-	let UMP = new UserManagerPage(UserId, msU, msA, msE, msD, msNI, msNS, csrfToken_MUD);
-
-
+    const splink = window.location.href.split('/');
+    const UserId = splink[splink.length - 1];
+    let UMP = new UserManagerPage(UserId, msU, msA, msE, msD, msNI, msNS, csrfToken_MUD);
 </script>
