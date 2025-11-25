@@ -178,11 +178,15 @@ h2 {
     box-shadow: 2px 2px;
     transition:all 0.233s;
 }
+
+
 .ar-button:hover {
     background-color: slategray;
     color: black;
     box-shadow: 0px 0px
 }
+    
+
 .ar-button-clicked {
     background-color:slategray !important;
     color:black !important;
