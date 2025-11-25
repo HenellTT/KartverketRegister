@@ -32,8 +32,8 @@ header {
     background-color: white; /* Background color */
     display: flex; /* Horizontal flex layout */
     justify-content: space-around; /* Spread buttons evenly */
-    gap: 10px; /* Optional spacing between buttons */
-    padding: 10px; /* Padding around buttons */
+    gap: auto; /* Optional spacing between buttons */
+     /* Padding around buttons */
     z-index: 1000; /* Make sure it stays on top */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow */
     height:10vh;
@@ -44,7 +44,7 @@ header {
         padding: 10px;
         font-size: 16px;
         cursor: pointer;
-        font-size: xx-large;
+        font-size: auto;
     }
 
  footer {
