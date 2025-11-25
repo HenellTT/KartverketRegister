@@ -95,7 +95,7 @@ namespace KartverketRegister.Utils
                         mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
                         mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
 
-                        Markers.Add(mrk);
+                        Markers.Add(mrk.HtmlEncodeStrings());
                     }
                 }
             }

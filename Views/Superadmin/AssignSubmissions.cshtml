@@ -5,20 +5,25 @@
 }
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
-<link rel="stylesheet" href="~/css/SuperAdmin.css" />
+<link rel="stylesheet" href="~/css/AssignSubmission.css" />
 <link rel="stylesheet" href="~/css/SuperAdminAssign.css" />
 
 
 <script src="~/js/SuperAdminReviewAssign.js"> </script>
 
-<h1>Assign task to employee</h1>
+	<h1>Assign task to employee</h1>
+
+
 
 <div id="SubmissionsContainer">
-	<div class="AssignOptionMenu">Assign to selected submissions to: 
+	<div class="AssignOptionMenu">
+	<p>Assign to selected submissions to:</p> 
 		<select id="SARA-SELECT">
 		</select>
 		<button onclick="SARA.PostBulkAssign()">Assign</button>
 		<button onclick="SARA.AutoAssign()">Auto Assign</button>
+		<button onclick="fetch('/Superadmin/UnAssignAll');location.reload()">Unassign all</button>
+
 	</div>
 	<div id="SARA-OUTPUT">
 		<table class="UserTable">
@@ -38,7 +43,7 @@
 				<td>whatever</td>
 				<td>idnk man</td>
 				<td><input class="checkbox-submission-assign" id="submisstion-61" type="checkbox" /></td>
-				<td><button>Quick assign</button></td>
+				<td><button border-radius="12px">Quick assign</button></td>
 			</tr>
 		</table>
 	</div>

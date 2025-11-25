@@ -98,9 +98,6 @@ tbody {
             background: #f7f7f7;
         }
 
-        tbody tr:hover {
-            background: #d1e7ff;
-        }
 
 /* Table cells */
 td, th {
@@ -121,9 +118,6 @@ button {
     transition: all 0.3s ease;
 }
 
-    button:hover {
-        transform: scale(1.05);
-    }
 
     /* Button colors */
     button:nth-child(1) {
@@ -157,10 +151,6 @@ button {
     border-radius: 10px;
 }
 
-    #SomeOtherForm tbody::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-
 /* Responsive tweaks */
 @media (max-width: 800px) {
     #SomeOtherForm {
@@ -174,6 +164,7 @@ button {
     }
 }
 .darkmodeButton{
+    position: fixed !important;
     position: fixed;
     bottom: 0;
     left: 0;

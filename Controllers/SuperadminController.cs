@@ -155,6 +155,12 @@ namespace KartverketRegister.Controllers
                 return Json(new GeneralResponse(false, $"error: {ex.Message}"));
             }
         }
+        [HttpGet]
+        public IActionResult UnAssignAll()
+        {
+            SequelSuperAdmin seq = new SequelSuperAdmin();
+            return Json(seq.UnAssignAll());
+        }
         [HttpPost]
         public async Task<IActionResult> PostAssignReviews([FromBody] List<ReviewAssign> AssignedReviews) {
 

@@ -53,7 +53,7 @@ namespace KartverketRegister.Utils
                         TempMarker mrk = new TempMarker(reader);
                         
 
-                        Markers.Add(mrk);
+                        Markers.Add(mrk.HtmlEncodeStrings());
                     }
                 }
             }
@@ -96,7 +96,7 @@ namespace KartverketRegister.Utils
                 mrk.UserId = -1;
             }
 
-            return mrk;
+            return mrk.HtmlEncodeStrings();
         }
         public GeneralResponse DeleteMarkerById(int markerId, int UserId)
         {

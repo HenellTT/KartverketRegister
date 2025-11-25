@@ -7,7 +7,8 @@ async function FetchMarkers(status) {
         if (!response.ok || response.redirected) {
             response = await fetch('/Admin/GetAllMarkers?markerStatus=' + status);
             if (!response.ok) {
-                throw new Error("Error");
+                throw new Error("Error fetching markers");
+
             }
         }
 
