@@ -36,7 +36,7 @@ header {
 }
 .topBar > div { pointer-events: auto; }
 .topBar-left { flex: 1; }
-.topBar-center { flex: 1; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.topBar-center { flex: 1; display: flex; justify-content: center; gap: 10px; flex-wrap: nowrap; }
 .topBar-right { flex: 1; display: flex; justify-content: flex-end; padding-right: 10px; }
 
 /* bottom-left Theme */
@@ -56,7 +56,7 @@ header {
     display: flex;
     gap: 10px;
     z-index: 1000;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
 }
 
