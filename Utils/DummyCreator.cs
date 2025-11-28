@@ -17,7 +17,7 @@ namespace KartverketRegister.Utils
         // Genererer dummy-brukere og markører
         public async Task<GeneralResponse> FillIn()
         {
-            var rnd = new Random();
+            Random rnd = new Random();
 
             string[] firstNames = {
                 "Liam", "Olivia", "Noah", "Emma", "Elijah",
@@ -49,8 +49,8 @@ namespace KartverketRegister.Utils
                 "Building", "Power Line", "Other"
             };
 
-            var seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            var createdUsers = new List<AppUser>();
+            SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            List<AppUser> createdUsers = new List<AppUser>();
 
             // Opprett dummy-brukere
             for (int i = 0; i < lastNames.Length; i++)
@@ -58,7 +58,7 @@ namespace KartverketRegister.Utils
                 string randomOrg = organizations[rnd.Next(organizations.Length)];
                 string email = $"{lastNames[i]}{rnd.Next(1000)}@gmail.com";
 
-                var user = new AppUser
+                AppUser user = new AppUser
                 {
                     Name = email,
                     FirstName = firstNames[i],
@@ -72,7 +72,7 @@ namespace KartverketRegister.Utils
 
                 Console.WriteLine($"[DummyCreator] Creating user: {email}");
 
-                var result = await _userManager.CreateAsync(user, "1234");
+                IdentityResult result = await _userManager.CreateAsync(user, "1234");
 
                 if (result.Succeeded)
                 {
@@ -85,7 +85,7 @@ namespace KartverketRegister.Utils
             }
 
             // Opprett dummy-markører for hver bruker
-            foreach (var user in createdUsers)
+            foreach (AppUser user in createdUsers)
             {
                 double lat = RandomInRange(rnd, 57.0, 60.0);
                 double lng = RandomInRange(rnd, 6.0, 10.0);
@@ -121,7 +121,7 @@ namespace KartverketRegister.Utils
         // Genererer standard testbrukere (User, Admin, Employee)
         public async Task<GeneralResponse> GenerateDefaultUsers()
         {
-            var user = new AppUser
+            AppUser user = new AppUser
             {
                 Name = "1234@user.test",
                 FirstName = "Johnny",
@@ -133,7 +133,7 @@ namespace KartverketRegister.Utils
                 Email = "1234@user.test"
             };
 
-            var admin = new AppUser
+            AppUser admin = new AppUser
             {
                 Name = "1234@admin.test",
                 FirstName = "Adminman",
@@ -144,7 +144,7 @@ namespace KartverketRegister.Utils
                 Email = "1234@admin.test"
             };
 
-            var employee = new AppUser
+            AppUser employee = new AppUser
             {
                 Name = "1234@employee.test",
                 FirstName = "Employman",

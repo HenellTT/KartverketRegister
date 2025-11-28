@@ -19,7 +19,7 @@ namespace KartverketRegister.Utils
                 if (!response.IsSuccessStatusCode) return null;
 
                 string json = await response.Content.ReadAsStringAsync();
-                var hoyde = JsonSerializer.Deserialize<HoydeResponse>(json);
+                HoydeResponse hoyde = JsonSerializer.Deserialize<HoydeResponse>(json);
 
                 if (hoyde == null || string.IsNullOrEmpty(hoyde.value)) return null;
 

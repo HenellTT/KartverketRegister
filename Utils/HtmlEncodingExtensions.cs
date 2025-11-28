@@ -11,7 +11,7 @@ namespace KartverketRegister.Utils
             if (obj == null)
                 return obj;
 
-            var visited = new HashSet<object>();
+            HashSet<object> visited = new HashSet<object>();
             EncodeObject(obj, visited);
             return obj;
         }
@@ -21,7 +21,7 @@ namespace KartverketRegister.Utils
             if (obj == null)
                 return;
 
-            var type = obj.GetType();
+            Type type = obj.GetType();
 
             // Prevent infinite loops (circular refs)
             if (!type.IsValueType)
@@ -35,7 +35,7 @@ namespace KartverketRegister.Utils
             // Handle collections/lists
             if (obj is IEnumerable enumerable && obj is not string)
             {
-                foreach (var item in enumerable)
+                foreach (object item in enumerable)
                 {
                     EncodeObject(item, visited);
                 }
@@ -43,13 +43,13 @@ namespace KartverketRegister.Utils
             }
 
             // Handle properties
-            foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (PropertyInfo prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (!prop.CanRead || !prop.CanWrite)
                     continue;
 
-                var propType = prop.PropertyType;
-                var value = prop.GetValue(obj);
+                Type propType = prop.PropertyType;
+                object value = prop.GetValue(obj);
 
                 if (value == null)
                     continue;
