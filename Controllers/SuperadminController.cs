@@ -2,194 +2,192 @@
 using KartverketRegister.Models;
 using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
-using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing.Printing;
-using System.Globalization;
-using System.Linq.Expressions;
 
 namespace KartverketRegister.Controllers
 {
+    // Superadmin-dashboard - brukeradministrasjon og tildeling av innmeldinger
     [Authorize(Roles = "Admin")]
-    public class SuperadminController : Controller // Arver fra Controller 
+    public class SuperadminController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
 
-        public SuperadminController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public SuperadminController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
         }
-
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
+        public IActionResult Index() => View();
 
-        }
         [HttpGet]
-        public IActionResult ManageUsers()
-        {
-            return View();
+        public IActionResult ManageUsers() => View();
 
-        }
         [HttpGet]
-        public IActionResult AssignSubmissions()
+        public IActionResult AssignSubmissions() => View();
+
+        [HttpGet("Superadmin/ManageUsers/{userId}")]
+        public IActionResult ManageUsersDetails(int userId)
         {
-            return View();
-
+            var seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+            AppUserDto user = seq.FetchUser(userId);
+            return View("ManageUserDetails", user);
         }
-        
 
-        [HttpGet("Superadmin/ManageUsers/{UserId}")]
-        public IActionResult ManageUsersDetails(int UserId)
-        {
-            {
-                SequelSuperAdmin seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-                AppUserDto user = seq.FetchUser(UserId);
-                return View("ManageUserDetails", user);
-
-
-            }
-        }
+        // Endrer brukerrolle (User/Employee/Admin)
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult SetUserRole([FromBody] AppUserDto UserData)
+        public IActionResult SetUserRole([FromBody] AppUserDto userData)
         {
-            SequelSuperAdmin seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-            GeneralResponse response = seq.SetUserRole(UserData);
+            var seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+            GeneralResponse response = seq.SetUserRole(userData);
             return Ok(response);
         }
+
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult DeleteUser([FromBody] AppUserDto UserData)
+        public IActionResult DeleteUser([FromBody] AppUserDto userData)
         {
-            SequelSuperAdmin seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-            GeneralResponse response = seq.DeleteUser(UserData.Id);
+            var seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+            GeneralResponse response = seq.DeleteUser(userData.Id);
             return Ok(response);
         }
+
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult SendNotification([FromBody] AppUserDto UserData)
+        public IActionResult SendNotification([FromBody] AppUserDto userData)
         {
-            SequelSuperAdmin seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-            GeneralResponse response = seq.SendNotification(UserData.Id, UserData.Email);
+            var seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+            GeneralResponse response = seq.SendNotification(userData.Id, userData.Email);
             return Ok(response);
         }
+
+        // Henter brukerliste med valgfri navnefiltrering
         [HttpGet]
-        public IActionResult FetchUsers(string FullName = "") {
-            try
-            {
-                SequelSuperAdmin seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-                List<AppUserDto> Users = seq.UserFetcher(FullName);
-                return Ok(new GeneralResponse(true, "User list was indeed found", Users));
-            } catch (Exception ex)
-            {
-                return Ok(new GeneralResponse(false,$"No users found {ex.Message} "));
-            }
-        }
-        [HttpGet]
-        public IActionResult FetchEmployees(string FullName = "")
+        public IActionResult FetchUsers(string fullName = "")
         {
             try
             {
-                SequelSuperAdmin seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-                List<AppUserDto> Users = seq.AdvUserFetcher("Employee",FullName);
-                return Ok(new GeneralResponse(true, "User list was indeed found", Users));
+                var seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+                List<AppUserDto> users = seq.UserFetcher(fullName);
+                return Ok(new GeneralResponse(true, "Users fetched successfully", users));
             }
             catch (Exception ex)
             {
-                return Ok(new GeneralResponse(false, $"No users found {ex.Message} "));
+                return Ok(new GeneralResponse(false, $"Failed to fetch users: {ex.Message}"));
             }
         }
+
+        // Henter kun ansatte (Employee-rolle)
+        [HttpGet]
+        public IActionResult FetchEmployees(string fullName = "")
+        {
+            try
+            {
+                var seq = new SequelSuperAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+                List<AppUserDto> users = seq.AdvUserFetcher("Employee", fullName);
+                return Ok(new GeneralResponse(true, "Employees fetched successfully", users));
+            }
+            catch (Exception ex)
+            {
+                return Ok(new GeneralResponse(false, $"Failed to fetch employees: {ex.Message}"));
+            }
+        }
+
+        // Henter markører som ikke er tildelt en saksbehandler
         [HttpGet]
         public IActionResult FetchUnassignedMarkers()
         {
             try
             {
-                SequelSuperAdmin seq = new SequelSuperAdmin();
-                List<Marker> mrks = seq.FetchAllUnassignedMarkers();
-                return Json(new GeneralResponse(true, "Here are yo markers bro", mrks));
+                var seq = new SequelSuperAdmin();
+                List<Marker> markers = seq.FetchAllUnassignedMarkers();
+                return Json(new GeneralResponse(true, "Unassigned markers fetched", markers));
             }
             catch (Exception ex)
             {
-                return Json(new GeneralResponse(false, $"error: {ex.Message}"));
+                return Json(new GeneralResponse(false, $"Failed to fetch markers: {ex.Message}"));
             }
         }
+
+        // Henter alle markører filtrert på status
         [HttpGet]
         public IActionResult FetchAllMarkers(string markerStatus)
         {
             try
             {
-                SequelSuperAdmin seq = new SequelSuperAdmin();
-                List<Marker> mrks = seq.FetchAllMarkers(markerStatus);
-                
-                return Ok(new
-                {
-                    Success = true,
-                    Name = markerStatus.ToString(),
-                    Value = 69,
-                    Markers = mrks
-                });
+                var seq = new SequelSuperAdmin();
+                List<Marker> markers = seq.FetchAllMarkers(markerStatus);
+                return Ok(new GeneralResponse(true, $"Markers with status '{markerStatus}' fetched", markers));
             }
             catch (Exception ex)
             {
-                return Json(new GeneralResponse(false, $"error: {ex.Message}"));
+                return Json(new GeneralResponse(false, $"Failed to fetch markers: {ex.Message}"));
             }
         }
-        [HttpGet]
+
+        // Fjerner alle tildelinger
+        [ValidateAntiForgeryToken]
+        [HttpPost]
         public IActionResult UnAssignAll()
         {
-            SequelSuperAdmin seq = new SequelSuperAdmin();
+            var seq = new SequelSuperAdmin();
             return Json(seq.UnAssignAll());
         }
-        [HttpPost]
-        public async Task<IActionResult> PostAssignReviews([FromBody] List<ReviewAssign> AssignedReviews) {
 
-            var firstUserId = AssignedReviews?.FirstOrDefault()?.UserId;
+        // Tildeler innmeldinger til en saksbehandler
+        // Validerer at mottaker faktisk er Employee før tildeling
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> AssignReviews([FromBody] List<ReviewAssign> assignedReviews)
+        {
+            var firstUserId = assignedReviews?.FirstOrDefault()?.UserId;
 
             if (firstUserId == null)
-                return Json(new GeneralResponse(false, "AssignedReviews list is empty"));
+                return Json(new GeneralResponse(false, "No reviews to assign"));
 
-            // lar ikke Assigne reviews til de som ikke er employee
-            AppUser SelectedEmployee = await _userManager.FindByIdAsync(firstUserId.ToString());
-        
-            if (SelectedEmployee?.UserType != "Employee")
-                return Json(new GeneralResponse(false, "Fr if you get this reply, you must've really played with the feelings of our security measures. btw, User is not an Employee"));
-        
-            SequelSuperAdmin seq = new SequelSuperAdmin();
+            // Verifiser at mottaker er en ansatt
+            AppUser? selectedEmployee = await _userManager.FindByIdAsync(firstUserId.ToString());
+
+            if (selectedEmployee?.UserType != "Employee")
+                return Json(new GeneralResponse(false, "Target user is not an Employee"));
+
+            var seq = new SequelSuperAdmin();
             seq.Open();
+
             try
             {
-                
-                int Succeeded = 0;
-                int Failed = 0;
-                foreach (ReviewAssign RA in AssignedReviews)
-                {
-                    GeneralResponse r = seq.AssignReview(RA);
-                    Console.WriteLine($"[RA] uid:{RA.UserId} mid:{RA.MarkerId}");
-                    if (r.Success) Succeeded++;
-                    else { 
-                        Failed++;
-                        Console.WriteLine($"[RA] seq error: {r.Message}");
-                    }
-                }
-                Notificator.SendNotification(Convert.ToInt32(firstUserId),$"You have been assigned to review {Succeeded} submissions<br><a href='/Admin'><button>To Submissions</button></a>", "Info");
-                return Json(new GeneralResponse(true, $"Everything gucci", new { Success = Succeeded, Fail = Failed }));
+                int succeeded = 0;
+                int failed = 0;
 
+                foreach (ReviewAssign ra in assignedReviews)
+                {
+                    GeneralResponse r = seq.AssignReview(ra);
+                    if (r.Success)
+                        succeeded++;
+                    else
+                        failed++;
+                }
+
+                // Send varsel til saksbehandler
+                Notificator.SendNotification(
+                    Convert.ToInt32(firstUserId),
+                    $"You have been assigned to review {succeeded} submissions<br><a href='/Admin'><button>To Submissions</button></a>",
+                    "Info"
+                );
+
+                return Json(new GeneralResponse(true, "Reviews assigned successfully", new { Success = succeeded, Fail = failed }));
             }
             catch (Exception ex)
             {
-                return Json(new GeneralResponse(false, $"Something went wrong: {ex.Message}"));
+                return Json(new GeneralResponse(false, $"Assignment failed: {ex.Message}"));
             }
-            seq.Close();
-
+            finally
+            {
+                seq.Close();  // Sikrer at connection lukkes uansett utfall
+            }
         }
     }
 }

@@ -7,28 +7,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
-using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
 {
+    // Generelle API-endepunkter: høydedata, varsler
     [Authorize(Roles = "Employee,Admin,User")]
-
     public class ApiController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+
         public ApiController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
         }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return Ok(new GeneralResponse(true,"Api is apiing"));
-
-        }
 
         [HttpGet]
-        // Stjeler MOH value fra HoydeData sin api som en ekte sigma 😎
+        public IActionResult Index() => Ok(new GeneralResponse(true, "API is running"));
+
+        // Henter høyde over havet fra Kartverkets HøydeData API
+        // Konverterer WGS84 (lat/lng) til UTM33N før API-kall
+        [HttpGet]
         public async Task<IActionResult> GetHeight(double lat, double lng)
         {
             var wgs84 = GeographicCoordinateSystem.WGS84;
@@ -38,84 +36,67 @@ namespace KartverketRegister.Controllers
             var transform = transformFactory.CreateFromCoordinateSystems(wgs84, utm33N);
 
             double[] utmCoords = transform.MathTransform.Transform(new double[] { lng, lat });
-            double e = utmCoords[0];  // x
-            double n = utmCoords[1]; // y
-            
+            double e = utmCoords[0];  // Easting (x)
+            double n = utmCoords[1];  // Northing (y)
 
             string url = LinkGeneratorBrr.HoydeDataCoords(e, n);
-
             double? height = await HeightFetcher.GetHeightFromUrlAsync(url);
 
-            return Ok( new { 
-                url = url,
-                e = e, 
-                n = n, 
-                lat = lat, 
-                lng = lng, 
-                height = height
-            });
+            return Ok(new { url, e, n, lat, lng, height });
         }
+
+        // Henter alle varsler for innlogget bruker
         [HttpGet]
         public IActionResult GetNotifications()
         {
-            string UserIdString = _userManager.GetUserId(HttpContext?.User);
-            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
+
             try
             {
-                List<NotificationModel> Notifications = Notificator.GetNotificationsByUserId(UserId);
-                return Json(new GeneralResponse(true, $"Here are your msgs bro", Notifications));
-            } catch
+                List<NotificationModel> notifications = Notificator.GetNotificationsByUserId(userId);
+                return Json(new GeneralResponse(true, "Notifications fetched", notifications));
+            }
+            catch
             {
-                return Json(new GeneralResponse(false, "No notifications fo u bro"));
+                return Json(new GeneralResponse(false, "No notifications found"));
             }
         }
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult MarkNotificationAsRead([FromBody] NotificationRequest request)
         {
-            int NotificationId = request.NotificationId;
-            string UserIdString = _userManager.GetUserId(HttpContext?.User);
-            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
+
             try
             {
-                Notificator.SetToRead(NotificationId, UserId);
-                return Json(new GeneralResponse(true, $"Your notification was set as read! {NotificationId}"));
+                Notificator.SetToRead(request.NotificationId, userId);
+                return Json(new GeneralResponse(true, "Notification marked as read"));
             }
             catch
             {
-                return Json(new GeneralResponse(false, "Error: Notification cannot be set as viewed"));
+                return Json(new GeneralResponse(false, "Could not mark notification as read"));
             }
         }
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult DeleteNotification([FromBody] NotificationRequest request)
         {
-            int NotificationId = request.NotificationId;
-            string UserIdString = _userManager.GetUserId(HttpContext?.User);
-            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
+
             try
             {
-                Notificator.DeleteNotificationByUser(UserId, NotificationId);
-                return Json(new GeneralResponse(true, $"Your notification was removed!"));
+                Notificator.DeleteNotificationByUser(userId, request.NotificationId);
+                return Json(new GeneralResponse(true, "Notification deleted"));
             }
             catch
             {
-                return Json(new GeneralResponse(false, "Error: Notification cannot be removed"));
+                return Json(new GeneralResponse(false, "Could not delete notification"));
             }
         }
-        [HttpGet]
-        private IActionResult SendNotification(int userid, string msg) // ONLY FOR TESTING RESTRICT or DELETE l8r  
-        {
-            try
-            {
-                Notificator.SendNotification(userid, msg, "Info");
-                return Json(new GeneralResponse(true, $"Message {msg} sent to {userid}"));
-            } catch
-            {
-                return Json(new GeneralResponse(false, $"Failed sending msg: {msg} to {userid}"));
-
-            }
-        }
-
     }
 }

@@ -1,128 +1,107 @@
 using KartverketRegister.Auth;
 using KartverketRegister.Models;
-using KartverketRegister.Models;
-using KartverketRegister.Utils;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
-namespace KartverketRegister.Controllers;
-[Authorize(Roles = "User")]
-
-public class PilotController : Controller
+namespace KartverketRegister.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
-
-    public PilotController(
-        ILogger<HomeController> logger,
-        UserManager<AppUser> userManager,
-        SignInManager<AppUser> signInManager)
+    // Pilot-dashboard for vanlige brukere
+    [Authorize(Roles = "User")]
+    public class PilotController : Controller
     {
-        _logger = logger;
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+        private readonly UserManager<AppUser> _userManager;
 
-    public IActionResult Index()
-    {
-        return View(); //returnerer viewet Index.cshtml (hjemmesiden)
-    }
+        public PilotController(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
 
-    public async Task<IActionResult> User()
-    {
-        try
+        [HttpGet]
+        public IActionResult Index() => View();
+
+        [HttpGet]
+        public new async Task<IActionResult> User()
         {
             var appUser = await _userManager.GetUserAsync(HttpContext?.User);
+            
             if (appUser != null)
-
                 return View("UserLogged", appUser);
+
+            return View();
         }
-        catch
+
+        [HttpGet]
+        public IActionResult FlightMode() => View();
+
+        // Viser brukerens innmeldte markører
+        [HttpGet]
+        public IActionResult Registry()
         {
-            return View(); //returnerer viewet User.cshtml (brukersiden)
+            var seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
 
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
+
+            try
+            {
+                List<Marker> myMarkers = seq.FetchMyMarkers(userId);
+                return View(myMarkers);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return View(new List<Marker>());
+            }
         }
-        return View();
-    }
-   
-    
-    public async Task<IActionResult> Test()
-    {
-        var smth = _userManager.GetUserId(HttpContext?.User);
-        return Json(smth);
-    }
 
-    public IActionResult FlightMode()
-    {
-        return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
-
-    }
-    
-   
-
-    public IActionResult Registry()
-    {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        try
+        // Redigering av markør - sjekker at bruker eier markøren
+        [HttpGet]
+        [Route("EditMarker/{markerId:int}")]
+        public IActionResult EditMarker(int markerId)
         {
-            string UserIdString = _userManager.GetUserId(HttpContext?.User);
-            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            Marker? marker = FetchMarkerIfOwner(markerId);
+            
+            if (marker == null)
+                return Forbid();
 
-            List<Marker> myMarkers = seq.FetchMyMarkers(UserId);
-            return View(myMarkers);
+            return View(marker);
         }
-        catch (Exception ex)
+
+        // Visning av markør - sjekker at bruker eier markøren
+        [HttpGet]
+        [Route("ViewMarker/{markerId:int}")]
+        public IActionResult ViewMarker(int markerId)
         {
-            Console.WriteLine(ex.Message);
-            return View(new List<Marker>());
+            Marker? marker = FetchMarkerIfOwner(markerId);
+            
+            if (marker == null)
+                return Forbid();
+
+            return View(marker);
         }
-    }
-    
-    [Route("EditMarker/{MarkerId:int}")]
-    public IActionResult EditMarker(int MarkerId)
-    {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(MarkerId);
 
-        string UserIdString = _userManager.GetUserId(HttpContext?.User);
-        int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
-
-        if (marker.UserId != UserId)
+        [HttpPost]
+        public IActionResult SetMode(string mode)
         {
-            return Forbid();
+            ViewBag.Theme = mode ?? "light";
+            return View();
         }
-        return View(marker);
-    }
-    [Route("ViewMarker/{MarkerId:int}")]
-    public IActionResult ViewMarker(int MarkerId)
-    {
-        SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-        Marker marker = seq.FetchMarkerById(MarkerId);
 
-        string UserIdString = _userManager.GetUserId(HttpContext?.User);
-        int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
-
-        if (marker.UserId != UserId)
+        // Hjelpemetode: Henter markør kun hvis innlogget bruker eier den
+        private Marker? FetchMarkerIfOwner(int markerId)
         {
-            return Forbid();
+            var seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            Marker marker = seq.FetchMarkerById(markerId);
+
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
+
+            if (marker?.UserId != userId)
+                return null;
+
+            return marker;
         }
-        return View(marker);
-    }
-
-
-
-
-    [HttpPost]
-    public async Task<IActionResult> SetMode(string mode)
-    {
-        var appUser = await _userManager.GetUserAsync(HttpContext.User);
-        ViewBag.Theme = mode ?? "light"; // visning antar lys modus
-        return View();
     }
 }
-

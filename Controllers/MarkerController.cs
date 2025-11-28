@@ -4,58 +4,47 @@ using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Drawing.Printing;
-using System.Globalization;
-using System.Linq.Expressions;
-using System.Runtime;
-
 
 namespace KartverketRegister.Controllers
 {
+    // Håndterer permanente markører (innmeldinger)
     [Authorize(Roles = "User,Employee,Admin")]
-
-    public class MarkerController : Controller // Arver fra Controller for å håndtere markører
+    public class MarkerController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
-        public MarkerController(
 
-        UserManager<AppUser> userManager
-        )
+        public MarkerController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
         }
-        public IActionResult Index()
-        {
-            return BadRequest("Nothing to see here"); 
-        }
 
+        [HttpGet]
+        public IActionResult Index() => BadRequest("Nothing to see here");
+
+        // Konverterer TempMarker til permanent Marker
+        // TempMarker inneholder koordinater fra kartet, Marker inneholder skjemadata
         [HttpPost]
-        public async Task<IActionResult> SubmitMarker([FromBody] Marker marker) // Tar imot en markør via POST-forespørsel
+        public async Task<IActionResult> SubmitMarker([FromBody] Marker marker)
         {
-            SequelTempmarker seqT = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
-            TempMarker tempMarker = seqT.FetchMarkerById(marker.TempMarkerId);
+            var seqTemp = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
+            var seqMarker = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
 
-            SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName); // Oppretter en databaseforbindelse
-            
-            string UserIdString = _userManager.GetUserId(HttpContext?.User);
-            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            // Hent TempMarker - inneholder Lat/Lng/GeoJson fra kart-tegning
+            TempMarker tempMarker = seqTemp.FetchMarkerById(marker.TempMarkerId);
+
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
             var appUser = await _userManager.GetUserAsync(HttpContext?.User);
 
-            //Console.WriteLine($"Cap shit {UserId}");
-            //Console.WriteLine($"User org {appUser.Organization}");
-
-
-            try //try-catch for å håndtere feil
+            try
             {
-
-                seq.SaveMarker(
+                seqMarker.SaveMarker(
                     marker.Type,
                     marker.Description,
                     tempMarker.Lat,
                     tempMarker.Lng,
-                    userId: UserId,
-                    organization: appUser.Organization,
+                    userId: userId,
+                    organization: appUser?.Organization,
                     heightM: marker.HeightM,
                     heightMOverSea: tempMarker.HeightMOverSea,
                     accuracyM: marker.AccuracyM,
@@ -65,50 +54,50 @@ namespace KartverketRegister.Controllers
                     source: marker.Source,
                     geojson: tempMarker.GeoJson
                 );
-                
-                return Ok(new GeneralResponse(true, "The marker has been registered!"));
+
+                return Ok(new GeneralResponse(true, "Marker registered successfully"));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return Ok(new GeneralResponse(false, "The marker could not be registered!"));
+                return Ok(new GeneralResponse(false, "Could not register marker"));
             }
-            
         }
+
+        // Henter alle markører for innlogget bruker
         [HttpGet]
-        public IActionResult FetchMyMarkers() // Lage en for admin der User blir ikke blah blah 
+        public IActionResult FetchMyMarkers()
         {
-            SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            var seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
 
-            string UserIdString = _userManager.GetUserId(HttpContext?.User);
-            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
 
             try
             {
-                List<Marker> MyMarkers = seq.FetchMyMarkers(UserId); // Henter markører for bruker med ID 
-                return Ok(MyMarkers);
-            } catch
-            {
-                return NoContent();
-            }
-            
-        }
-        // fetch all stripped markers (for view on map, no user data)
-
-        public IActionResult GetObstacles()
-        {
-            SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            try
-            {
-                List<LocationModel> Markers = seq.GetObstacles(); 
-                return Ok(new GeneralResponse(true, "Here yo markers man", Markers));
+                List<Marker> myMarkers = seq.FetchMyMarkers(userId);
+                return Ok(myMarkers);
             }
             catch
             {
-                return Ok(new GeneralResponse(false, "no markers"));
+                return NoContent();
             }
         }
 
-
+        // Henter alle godkjente markører for visning på kartet (ingen brukerdata)
+        [HttpGet]
+        public IActionResult GetObstacles()
+        {
+            var seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            try
+            {
+                List<LocationModel> markers = seq.GetObstacles();
+                return Ok(new GeneralResponse(true, "Obstacles fetched", markers));
+            }
+            catch
+            {
+                return Ok(new GeneralResponse(false, "No obstacles found"));
+            }
+        }
     }
 }

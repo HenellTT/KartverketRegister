@@ -1,13 +1,11 @@
 ﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
-using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
 {
+    // Autentisering: innlogging, registrering, utlogging
     public class AuthController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -18,85 +16,52 @@ namespace KartverketRegister.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        
+
         [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
+        public IActionResult AccessDenied() => View();
 
-
-
-        // GET: /Auth/Login
         [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        public IActionResult Login() => View();
 
-        // POST: /Auth/LoginHandle
+        // isPersistent: false = session cookie (slettes ved lukking av browser)
+        // lockoutOnFailure: false = ingen lockout ved feil passord
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> LoginHandle(string email, string password)
         {
-            AppUser user;
-            try
-            {
-                user = await _userManager.FindByEmailAsync(email);
-                if (user == null)
-                    return Json(new GeneralResponse(false, "User not found"));
-            }
-            catch (Exception e)
-            {
-                return Json(new GeneralResponse(false, $"Email not found"));
-
-            }
-
-
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Json(new GeneralResponse(false, "User not found"));
 
             var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
-            if (result.Succeeded)
-                return Json(new GeneralResponse(true, "Logged in successfully"));
 
-            return Json(new GeneralResponse(false, "Invalid password"));
+            return result.Succeeded
+                ? Json(new GeneralResponse(true, "Logged in successfully"))
+                : Json(new GeneralResponse(false, "Invalid password"));
         }
 
-        // GET: /Auth/Register
         [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
-        // POST: /Auth/RegisterHandle
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> RegisterHandle(string username, string lastname, string org, string password, string email)
         {
-            AppUser user;
-            try
-            {
-                var existing = await _userManager.FindByEmailAsync(email);
+            var existing = await _userManager.FindByEmailAsync(email);
+            if (existing != null)
+                return Json(new GeneralResponse(false, "Email already in use"));
 
-                if (existing != null)
-                    return Json(new GeneralResponse(false, "Email already in use!"));
-                user = new AppUser
-                {
-                    Name = email,
-                    FirstName = username,
-                    LastName = lastname,
-                    Organization = org,
-                    UserName = email,
-                    UserType = "User", // default role
-                    Password = password,
-                    Email = email
-                };
-            }
-            catch (Exception e)
+            var user = new AppUser
             {
-                return Json(new GeneralResponse(false, $"You must fill out all the fields! {e}"));
-            }
-
+                Name = email,
+                FirstName = username,
+                LastName = lastname,
+                Organization = org,
+                UserName = email,
+                UserType = "User",  // Default rolle
+                Password = password,
+                Email = email
+            };
 
             var result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
@@ -109,18 +74,11 @@ namespace KartverketRegister.Controllers
             return Json(new GeneralResponse(false, $"Registration failed: {errors}"));
         }
 
-
-        // GET: /Auth/Logout
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
-        
-            
-
-            
     }
 }

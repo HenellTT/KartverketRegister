@@ -2,113 +2,112 @@
 using KartverketRegister.Models;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Drawing.Printing;
 using System.Globalization;
-using System.Linq.Expressions;
 using System.Text;
-
 
 namespace KartverketRegister.Controllers
 {
+    // Midlertidige markører (utkast) før endelig innsending
     [Authorize(Roles = "User,Employee,Admin")]
-    public class TempmarkerController : Controller //arver fra controller for å håndtere midlertidige markører
+    public class TempmarkerController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
-        public TempmarkerController(
 
-        UserManager<AppUser> userManager
-        )
+        public TempmarkerController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
         }
-        //private int MsgLimit = 15;
-        public IActionResult Index()
-        {
-            return BadRequest("Nothing to see here"); 
-        }
+
+        [HttpGet]
+        public IActionResult Index() => BadRequest("Nothing to see here");
+
+        // Lagrer midlertidig markør fra kart-tegning
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult SubmitMarker() //tar imot midlertidig markør via post forespørsel
+        public IActionResult SubmitMarker()
         {
-            
-            SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName); //databaseforbindelse hvor innsendt hinder lagres med data
+            var seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
+
             try
             {
                 string geojson = Request.Form["geojson"];
 
+                // Begrens GeoJSON-størrelse til ~1MB
                 int geoJsonBytes = Encoding.UTF8.GetByteCount(geojson);
-                int maxBytes = 1000 * 1024; // 1000 KB limit ~1mb
+                int maxBytes = 1000 * 1024;
 
                 if (geoJsonBytes > maxBytes)
-                {
-                    return Json(new GeneralResponse(false, $"GeoJSON too large! Max size is {maxBytes / 1024} KB."));
-                }
-
+                    return Json(new GeneralResponse(false, $"GeoJSON too large. Max size: {maxBytes / 1024} KB"));
 
                 string type = Request.Form["type"];
                 string description = Request.Form["description"];
-                
-
                 double lat = double.Parse(Request.Form["lat"], CultureInfo.InvariantCulture);
                 double lng = double.Parse(Request.Form["lng"], CultureInfo.InvariantCulture);
                 decimal height = decimal.Parse(Request.Form["height"], CultureInfo.InvariantCulture);
 
-                string UserIdString = _userManager.GetUserId(HttpContext?.User);
-                int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+                string userIdString = _userManager.GetUserId(HttpContext?.User);
+                int userId = int.TryParse(userIdString, out var id) ? id : 0;
 
-                seq.SaveMarker(type, description, lat, lng, height, UserId, geojson);
-                return Json(new GeneralResponse(true, "Marker saved successfully!"));
-            } catch (Exception e)
+                seq.SaveMarker(type, description, lat, lng, height, userId, geojson);
+                return Json(new GeneralResponse(true, "Marker saved successfully"));
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.InnerException);
-                return Json(new GeneralResponse(false, "Failed saving marker!")); //lagres ikke data riktig, får man denne feilmeldingen
+                return Json(new GeneralResponse(false, "Failed to save marker"));
             }
-            
-            
-
         }
+
         [HttpGet]
         public IActionResult FetchMyMarkers()
         {
-            SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
-            // Httpcontext.user.userId istd for 1
+            var seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
 
-            string UserIdString = _userManager.GetUserId(HttpContext?.User);
-            int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
 
-            List <TempMarker> MyMarkers = seq.FetchMyMarkers(UserId); // Currently 1 to simulate UserId; 
-            return Ok(MyMarkers);
+            List<TempMarker> myMarkers = seq.FetchMyMarkers(userId);
+            return Ok(myMarkers);
         }
-        [HttpGet] // Add antiforgery shit, Change to Post 💀
+
+        // Sletter midlertidig markør - database-metoden sjekker eierskap
+        [ValidateAntiForgeryToken]
+        [HttpPost]
         public IActionResult DeleteMarker(int markerId)
         {
             try
             {
-                SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
-                string UserIdString = _userManager.GetUserId(HttpContext?.User);
-                int UserId = int.TryParse(UserIdString, out var id) ? id : 0;
+                var seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
 
-                GeneralResponse DeleteMarkerResponse = seq.DeleteMarkerById(markerId, UserId);
+                string userIdString = _userManager.GetUserId(HttpContext?.User);
+                int userId = int.TryParse(userIdString, out var id) ? id : 0;
 
-                return Ok(DeleteMarkerResponse);
+                GeneralResponse response = seq.DeleteMarkerById(markerId, userId);
+                return Ok(response);
             }
-            catch (Exception ex) {
-
-                return Ok(new GeneralResponse(false, $"Marker was NOT deleted! {ex}"));
+            catch (Exception ex)
+            {
+                return Ok(new GeneralResponse(false, $"Could not delete marker: {ex.Message}"));
             }
         }
+
+        // Viser registreringsskjema for midlertidig markør
         [HttpGet]
         public IActionResult RegisterMarker(int markerId)
         {
+            var seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
+            TempMarker marker = seq.FetchMarkerById(markerId);
 
-            SequelTempmarker seq = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
-            TempMarker mrk = seq.FetchMarkerById(markerId);
-            if (mrk.UserId == -1) return Forbid();
-            return View(mrk);
-        }        
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
+
+            // Sjekk at bruker eier markøren
+            if (marker.UserId != userId)
+                return Forbid();
+
+            return View(marker);
+        }
     }
 }

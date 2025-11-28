@@ -4,52 +4,51 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
 
-
 namespace KartverketRegister.Controllers
 {
+    // Database-migrering - beskyttet med hemmelig nøkkel
     public class MigrateController : Controller
     {
-        private readonly string MigrationHashword = "84654139869a7dc2efc4fa2110d1e9a85a30d43beed59ee315f4cf102f01a026"; // secrethash
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View("Migrate");
-        }
-        [HttpGet]
-        public IActionResult Migrate(string hashish)
-        {
-            string hashedHashish = ComputeSha256Hash(hashish);
+        // SHA256-hash av hemmelig migrasjonsnøkkel
+        private const string MigrationKeyHash = "84654139869a7dc2efc4fa2110d1e9a85a30d43beed59ee315f4cf102f01a026";
 
-            if (hashedHashish != MigrationHashword)
-            {
+        [HttpGet]
+        public IActionResult Index() => View("Migrate");
+
+        // POST brukes for sikkerhet - GET-parametere logges i server-logs
+        [HttpPost]
+        public IActionResult Migrate([FromForm] string migrationKey)
+        {
+            string hashedKey = ComputeSha256Hash(migrationKey);
+
+            if (hashedKey != MigrationKeyHash)
                 return Json(new GeneralResponse(false, "Permission Denied"));
-            }
 
-
-            SequelMigrator seq = new SequelMigrator();
             try
             {
-                seq.Migrate();
+                var migrator = new SequelMigrator();
+                migrator.Migrate();
                 return Json(new GeneralResponse(true, "Database migrated successfully"));
-            } catch
+            }
+            catch (Exception e)
             {
-                return Json(new GeneralResponse(false, "Database migration failed"));
-
+                return Json(new GeneralResponse(false, $"Migration failed: {e.Message}"));
             }
         }
-        private string ComputeSha256Hash(string rawData)
+
+        private static string ComputeSha256Hash(string input)
         {
-            if (rawData == null) { return "a"; }
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2")); // lowercase hex
-                }
-                return builder.ToString();
-            }
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            using var sha256 = SHA256.Create();
+            byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+            var builder = new StringBuilder();
+            foreach (byte b in bytes)
+                builder.Append(b.ToString("x2"));
+
+            return builder.ToString();
         }
     }
 }
