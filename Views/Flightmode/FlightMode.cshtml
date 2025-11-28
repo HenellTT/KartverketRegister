@@ -2,116 +2,252 @@
     ViewData["Title"] = "Flight Mode";
 }
 
-<!-- Leaflet Map Container -->
+@section Styles {
+    <link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/FlightMode.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+}
+
 <div class="BigContainer">
     <div class="obstacleContainer">
-        <button onclick="dms()">Theme</button>
-        <button onclick="PFM.RevertLastAction()">Revert</button>
-        <button onclick="PFM.SetMode('Marker')">Point</button>
-        <button onclick="PFM.SetMode('Line')">Line</button>
-        <button onclick="formElement.requestSubmit()">Submit</button>
-        <button onclick="PFM.ClearActions()">Clear</button>
-        <button onclick="location.href='/Pilot'">Exit</button>
-
+        <button onclick="dms()" title="Toggle dark/light theme">Theme</button>
+        <button onclick="PFM?.RevertLastAction()" title="Undo last action">Revert</button>
+        <button onclick="PFM?.SetMode('Marker')" class="mode-btn" id="btn-marker" title="Add point markers">Point</button>
+        <button onclick="PFM?.SetMode('Line')" class="mode-btn" id="btn-line" title="Add line markers">Line</button>
+        <button onclick="submitMarker()" id="btn-submit" title="Submit current markers">Submit</button>
+        <button onclick="PFM?.ClearActions()" title="Clear all markers">Clear</button>
+        <button onclick="location.href='/Pilot'" title="Exit flight mode">Exit</button>
     </div>
     
     <div id="map"></div>
-
     
+    <div id="status-bar" class="status-bar">
+        <span id="gps-status">GPS: Connecting...</span>
+        <span id="mode-status">Mode: Point</span>
+    </div>
 </div>
 
+<!-- Skjult skjema for innsending av markør -->
 <form id="tempMarkerFormForm" style="display:none;">
     @Html.AntiForgeryToken()
-    <input type="text" id="type" name="type" placeholder="Enter type">
-
-    <input type="text" id="description" name="description" placeholder="Enter description">
-
+    <input type="text" id="type" name="type">
+    <input type="text" id="description" name="description">
     <input type="number" id="lat" name="lat" readonly>
-
     <input type="number" id="lng" name="lng" readonly>
-
-    <input step=0.01 type="number" id="height" name="height" placeholder="Enter height">
+    <input type="number" id="height" name="height" step="0.01">
     <input type="text" id="geojson" name="geojson">
-
-
-    <button type="submit">Save Marker</button>
 </form>
 
+<!-- Modal for beskrivelse-input (erstatter prompt()) -->
+<div id="description-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h3>Add Description</h3>
+        <p>Brief description or note for yourself:</p>
+        <textarea id="modal-description" rows="3" placeholder="Describe the obstacle..."></textarea>
+        <div class="modal-buttons">
+            <button onclick="cancelSubmit()" class="btn-cancel">Cancel</button>
+            <button onclick="confirmSubmit()" class="btn-confirm">Submit</button>
+        </div>
+    </div>
+</div>
 
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script src="~/js/PilotFlightMode.js"></script>
+    <script src="~/js/icons.js"></script>
+    <script src="~/js/ObstacleMapLoader.js"></script>
 
-<link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/FlightMode.css" asp-append-version="true" />
-<script src="~/js/PilotFlightMode.js"></script>
-<script src="~/js/icons.js"></script>
-<script src="~/js/ObstacleMapLoader.js"></script>
+    <script>
+        // Globale variabler
+        let map;
+        let PFM;
+        let OML;
+        
+        // DOM-elementer
+        const formElement = document.getElementById('tempMarkerFormForm');
+        const gpsStatus = document.getElementById('gps-status');
+        const modeStatus = document.getElementById('mode-status');
+        const descriptionModal = document.getElementById('description-modal');
+        const modalDescription = document.getElementById('modal-description');
+        const submitBtn = document.getElementById('btn-submit');
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin="" />
+        // Initialiser kartet - starter med Norge som standard
+        // GPS vil oppdatere posisjonen automatisk
+        map = L.map('map').setView([59.91, 10.75], 13);
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
 
+        // Last ikoner og initialiser
+        fetch("/icon/geticons")
+            .then(res => res.json())
+            .then((IconList) => {
+                window.icons = new Icons(IconList);
+                
+                PFM = new PilotFlightMode(map, L);
+                PFM.Init();
+                
+                OML = new ObstacleMapLoader(map, L);
+                OML.Init();
+                
+                updateModeButtons('Marker');
+                updateGpsStatus('connecting');
+            })
+            .catch(err => {
+                console.error("Failed to load icons:", err);
+                updateGpsStatus('error');
+            });
 
-<script>
-    // Initialize the map
-    map = L.map('map').setView([51.505, -0.09], 13);
+        // Oppdater modus-visning
+        function updateModeButtons(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const activeBtn = document.getElementById('btn-' + mode.toLowerCase());
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            modeStatus.textContent = 'Mode: ' + mode;
+        }
 
-    // Add OpenStreetMap tiles
-    let tl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    let PFM;
-    let OML
+        // Override SetMode for å oppdatere UI
+        const originalSetMode = PilotFlightMode.prototype.SetMode;
+        PilotFlightMode.prototype.SetMode = function(mode) {
+            originalSetMode.call(this, mode);
+            updateModeButtons(mode);
+        };
 
-    fetch("/icon/geticons").then(res => res.json()).then((IconList) => {
-        Window.icons = new Icons(IconList);
-        PFM = new PilotFlightMode(map, L);
-        PFM.Init();
-        OML = new ObstacleMapLoader(map, L);
-        OML.Init();
-    })
+        // GPS status-oppdatering
+        function updateGpsStatus(status) {
+            const statusMap = {
+                'connecting': { text: 'GPS: Connecting...', class: 'gps-connecting' },
+                'active': { text: 'GPS: Active', class: 'gps-active' },
+                'error': { text: 'GPS: Error', class: 'gps-error' },
+                'denied': { text: 'GPS: Permission Denied', class: 'gps-error' }
+            };
+            
+            const info = statusMap[status] || statusMap['error'];
+            gpsStatus.textContent = info.text;
+            gpsStatus.className = info.class;
+        }
 
-    // form handling
-    const formElement = document.getElementById('tempMarkerFormForm');
+        // Overvåk GPS-status fra PilotFlightMode
+        const checkGps = setInterval(() => {
+            if (PFM && PFM.vehiclePosition) {
+                const pos = PFM.vehiclePosition.getLatLng();
+                if (pos && pos.lat !== 0) {
+                    updateGpsStatus('active');
+                    clearInterval(checkGps);
+                }
+            }
+        }, 2000);
 
-    formElement.addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent page reload
+        // Submit-funksjoner (erstatter prompt())
+        function submitMarker() {
+            if (!PFM || PFM.ActionList.length === 0) {
+                showNotification('No markers to submit. Add some points or lines first.', 'warning');
+                return;
+            }
+            
+            descriptionModal.style.display = 'flex';
+            modalDescription.focus();
+        }
 
-        // Fill form fields
-        const last = PFM.ActionList[PFM.ActionList.length - 1];
-        formElement.lat.value = last.lat;
-        formElement.lng.value = last.lng;
-        formElement.geojson.value = PFM.ExportGeoJsonString();
-        formElement.height.value = PFM.GetHeight().toFixed(2);
-        formElement.type.value = "Fill in";
-        formElement.description.value = prompt('Brief Description / Note for yourself');
+        function cancelSubmit() {
+            descriptionModal.style.display = 'none';
+            modalDescription.value = '';
+        }
 
-        // DO NOT redeclare form — use formElement
-        const formData = new FormData(formElement);
+        function confirmSubmit() {
+            const description = modalDescription.value.trim();
+            
+            if (!description) {
+                showNotification('Please enter a description.', 'warning');
+                return;
+            }
+            
+            descriptionModal.style.display = 'none';
+            
+            // Fyll skjemaet
+            const last = PFM.ActionList[PFM.ActionList.length - 1];
+            formElement.lat.value = last.lat;
+            formElement.lng.value = last.lng;
+            formElement.geojson.value = PFM.ExportGeoJsonString();
+            formElement.height.value = PFM.GetHeight().toFixed(2);
+            formElement.type.value = "Obstacle";
+            formElement.description.value = description;
 
-        fetch('/Tempmarker/SubmitMarker', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) return response.text();
-            throw new Error('Network response was not ok');
-        })
-        .then(data => {
-            console.log('Server response:', data);
-            formElement.reset();
-        })
-        .catch(error => {
-            console.error('Error:', error);
+            // Send til server
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            
+            const formData = new FormData(formElement);
+
+            fetch('/Tempmarker/SubmitMarker', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.text();
+            })
+            .then(data => {
+                console.log('Server response:', data);
+                formElement.reset();
+                modalDescription.value = '';
+                PFM.ClearActions();
+                showNotification('Marker submitted successfully!', 'success');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Failed to submit marker. Please try again.', 'error');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
+            });
+        }
+
+        // Enkel notifikasjon
+        function showNotification(message, type) {
+            // Bruk eksisterende Notifications-system hvis tilgjengelig
+            if (window.Notification && typeof Notification.Send === 'function') {
+                Notification.Send(message, type);
+                return;
+            }
+            
+            // Fallback: Enkel alert-stil notifikasjon
+            const existing = document.querySelector('.flight-notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = `flight-notification flight-notification-${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Tastatur-snarveier
+        document.addEventListener('keydown', (e) => {
+            if (descriptionModal.style.display === 'flex') {
+                if (e.key === 'Escape') cancelSubmit();
+                if (e.key === 'Enter' && e.ctrlKey) confirmSubmit();
+                return;
+            }
+            
+            // Snarveier når modal ikke er åpen
+            switch(e.key.toLowerCase()) {
+                case 'p': PFM?.SetMode('Marker'); break;
+                case 'l': PFM?.SetMode('Line'); break;
+                case 'z': if (e.ctrlKey) PFM?.RevertLastAction(); break;
+                case 'escape': PFM?.ClearActions(); break;
+            }
         });
-
-        PFM.ClearActions();
-    });
-
-
-
-</script>
+    </script>
+}
