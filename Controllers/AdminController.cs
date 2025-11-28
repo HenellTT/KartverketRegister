@@ -1,5 +1,6 @@
 ﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
