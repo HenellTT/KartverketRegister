@@ -1,58 +1,70 @@
-﻿@page
-@model KartverketRegister.Views.Admin.indexModel
-@{
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin-table.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
 }
 
 <h1>Main Employee Panel</h1>
 <h2>Markers Pending Approval</h2>
-<div>
-    <select id="stateToSee" oninput="UpdateMarkerListTable(this.value);UpdateMapMarkers(map,L,type=this.value)">
+
+<div class="filter-container">
+    <label for="stateToSee">Filter by status:</label>
+    <select id="stateToSee" onchange="UpdateMarkerListTable(this.value); UpdateMapMarkers(map, L, this.value);">
         <option value="Everything">Everything</option>
-        <option value="Unseen">Pending</option>
+        <option value="Unseen" selected>Pending</option>
         <option value="Rejected">Rejected</option>
         <option value="Accepted">Accepted</option>
     </select>
 </div>
-<div class="main-container">
-    
 
+<div class="main-container">
     <div id="mymrk">
-        
+        <p>Loading markers...</p>
     </div>
     <div id="map"></div>
 </div>
 
-<link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/Admin-table.css" asp-append-version="true" />
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script src="~/js/icons.js"></script>
+    <script src="~/js/admin.js"></script>
+    
+    <script>
+        const DEFAULT_LAT = 51.505;
+        const DEFAULT_LNG = -0.09;
+        const DEFAULT_ZOOM = 13;
 
-<script src="~/js/admin.js"></script>
-<script src="~/js/icons.js"></script>
-
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
-
-<script>
-    window.onload = () => {
-        UpdateMarkerListTable("Everything");
-        UpdateMapMarkers(map,L);
-    };
-
-    var map = L.map('map').setView([51.505, -0.09], 13);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-    map.markers = [];
-
-    fetch("./icon/geticons").then(res => res.json()).then((IconList) => {
-        map.ICONS = new Icons(IconList);
+        var map = L.map('map').setView([DEFAULT_LAT, DEFAULT_LNG], DEFAULT_ZOOM);
         
-    })
-</script>
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        
+        map.markers = [];
 
-
+        // Last inn ikoner og initialiser markører
+        fetch("/icon/geticons")
+            .then(res => res.json())
+            .then((IconList) => {
+                map.ICONS = new Icons(IconList);
+                
+                // Last markører med "Unseen" som standard
+                UpdateMarkerListTable("Unseen");
+                UpdateMapMarkers(map, L, "Unseen");
+            })
+            .catch(err => {
+                console.error("Failed to load icons:", err);
+                // Prøv likevel å laste markørene
+                UpdateMarkerListTable("Unseen");
+            });
+    </script>
+}

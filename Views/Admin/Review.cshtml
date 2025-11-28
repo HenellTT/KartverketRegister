@@ -1,13 +1,19 @@
 ﻿@using System.Globalization
 @model KartverketRegister.Models.Marker
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
     ViewData["Title"] = "Review Marker";
+    var token = Antiforgery.GetAndStoreTokens(Context).RequestToken;
 }
-<head>
+
+@section Styles {
     <link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Admin-Review.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+}
 
-</head>
 <h2>Review Marker</h2>
 
 <div class="ap">
@@ -17,8 +23,8 @@
             <p><b>Name:</b> @(Model.UserName ?? "N/A")</p>
             <p><b>Description:</b> @Model.Description</p>
             <p><b>Type:</b> @Model.Type</p>
-            <p><b>Latitude:</b> @Model.Lat</p>
-            <p><b>Longitude:</b> @Model.Lng</p>
+            <p><b>Latitude:</b> @Model.Lat.ToString(CultureInfo.InvariantCulture)</p>
+            <p><b>Longitude:</b> @Model.Lng.ToString(CultureInfo.InvariantCulture)</p>
             <p><b>Height (m):</b> @Model.HeightM</p>
             <p><b>Height Over Sea (m):</b> @Model.HeightMOverSea</p>
             <p><b>Organization:</b> @Model.Organization</p>
@@ -31,141 +37,168 @@
             <p><b>Submitted by User ID:</b> @Model.UserId</p>
         </div>
 
-
-
-        <div style="margin-bottom: 20px;">
-            <button type="button" onclick="setStatus('Approve', this)" class="ar-button">Approve</button>
-            <button type="button" onclick="setStatus('Reject', this)" class="ar-button">Reject</button>
+        <div class="review-actions">
+            <div class="action-buttons">
+                <button type="button" onclick="setStatus('Approve', this)" class="ar-button ar-approve">
+                    ✓ Approve
+                </button>
+                <button type="button" onclick="setStatus('Reject', this)" class="ar-button ar-reject">
+                    ✗ Reject
+                </button>
+            </div>
 
             <form id="review-form">
-                <label for="review-comment"><b>Review comment:</b></label><br>
-                <textarea name="ReviewComment" required id="review-comment" rows="4" cols="50" placeholder="Write your review here..."></textarea>
+                @Html.AntiForgeryToken()
+                
+                <label for="review-comment"><b>Review comment:</b></label>
+                <textarea name="ReviewComment" 
+                          required 
+                          id="review-comment" 
+                          rows="4" 
+                          placeholder="Write your review here..."></textarea>
 
-                <!-- Hidden inputs -->
                 <input type="hidden" id="statusi" name="Status">
                 <input type="hidden" name="MarkerId" value="@Model.MarkerId">
 
-                <br>
-                <button type="submit">Submit Review!</button>
+                <button type="submit" class="submit-btn" id="submit-btn" disabled>
+                    Submit Review
+                </button>
             </form>
 
-            <div id="status" style="margin-top: 10px; font-weight: bold;"></div>
+            <div id="status" class="status-message"></div>
         </div>
     </div>
     <div id="map"></div>
 </div>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
-<script src="~/js/MapFunctions.js"></script>
-<script src="~/js/icons.js"></script>
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script src="~/js/MapFunctions.js"></script>
+    <script src="~/js/icons.js"></script>
 
-<script>
-    function setStatus(v, obji) {
-        const statusI = document.getElementById('statusi');
-        statusI.value = v;
+    <script>
+        // Aktiverer submit-knappen kun når en status er valgt
+        function setStatus(value, buttonElement) {
+            const statusInput = document.getElementById('statusi');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            statusInput.value = value;
+            submitBtn.disabled = false;
 
-        // Remove highlight class from all buttons
-        document.querySelectorAll(".ar-button-clicked").forEach((el) => {
-            el.classList.remove("ar-button-clicked");
-        });
+            // Fjern highlight fra alle knapper
+            document.querySelectorAll(".ar-button").forEach(el => {
+                el.classList.remove("ar-button-clicked");
+            });
 
-        // Add highlight to clicked button
-        obji.classList.add('ar-button-clicked');
-    }
-
-    // Handle form submission via AJAX
-    document.getElementById('review-form').addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent page reload
-
-        const form = e.target;
-        const formData = new FormData(form);
-
-        fetch('/Admin/HandleReview', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json(); // Assuming server returns JSON: { Success, Message }
-        })
-        .then(data => {
-            const statusDiv = document.getElementById('status');
-            console.log(`Log data: ${JSON.stringify(data)}`);
-            if (data.success) {
-                statusDiv.innerText = data.message || 'Marker saved successfully! Redirecting back. . .';
-                form.reset();
-                setTimeout(() => { location.href='./../Admin'; }, 750);
-
-                // Optional: remove button highlight
-                document.querySelectorAll(".ar-button-clicked").forEach(el => el.classList.remove("ar-button-clicked"));
-            } else {
-                statusDiv.innerText = data.message || 'Error saving marker.';
-            }
-
-            // Hide message after 3 seconds
-            setTimeout(() => { statusDiv.innerText = ''; }, 3000);
-        })
-        .catch(error => {
-            const statusDiv = document.getElementById('status');
-            statusDiv.innerText = 'Error saving marker.';
-            console.error('Error:', error);
-            setTimeout(() => { statusDiv.innerText = ''; }, 3000);
-        });
-    });
-
-
-    var map = L.map('map').setView([51.505, -0.09], 13);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-
-    fetch("/icon/geticons").then(res => res.json()).then((IconList) => {
-        icons = new Icons(IconList);
-        
-        mf = new MapFunctions(map, L,icons);
-        const lat = @Model.Lat.ToString(CultureInfo.InvariantCulture);
-        const lng = @Model.Lng.ToString(CultureInfo.InvariantCulture);
-        let type = "@Model.ObstacleCategory";
-        type = type.toLowerCase().replaceAll(" ","");
-        console.log(type);
-        console.log(mf.icons);
-        mf.setMarkerPosition(lat,lng, mf.icons.Get[type]);
-        mf.setViewTo(lat,lng,zoom=17);
-        
-        
-    })
-    const encoded = "@Html.Raw(Model.GeoJson ?? "null")";
-
-    // Create a temporary element to decode HTML entities
-    const parser = new DOMParser();
-    const decoded = parser.parseFromString(encoded, "text/html").documentElement.textContent;
-
-    // Now parse JSON
-    const GeoJson = JSON.parse(decoded);
-    console.log(GeoJson);
-    let bounds;
-    if (GeoJson) {
-        const geoLayer = L.geoJSON(GeoJson).addTo(map);
-
-        // Fit map view to all features
-        bounds = geoLayer.getBounds();
-        if (bounds.isValid()) {
-            setTimeout( () => {
-                map.fitBounds(bounds, { padding: [40, 40] })
-            },1000);
+            // Legg til highlight på klikket knapp
+            buttonElement.classList.add('ar-button-clicked');
         }
-    }
-</script>
 
+        // Håndter skjema-innsending via AJAX
+        document.getElementById('review-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
+            const form = e.target;
+            const formData = new FormData(form);
+            const statusDiv = document.getElementById('status');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            // Deaktiver knapp under innsending
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
 
+            try {
+                const response = await fetch('@Url.Action("HandleReview", "Admin")', {
+                    method: 'POST',
+                    body: formData
+                });
 
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
 
+                const data = await response.json();
+                
+                if (data.success) {
+                    statusDiv.className = 'status-message success';
+                    statusDiv.textContent = data.message || 'Marker saved successfully! Redirecting...';
+                    form.reset();
+                    
+                    // Fjern knapp-highlight
+                    document.querySelectorAll(".ar-button-clicked").forEach(el => {
+                        el.classList.remove("ar-button-clicked");
+                    });
+                    
+                    // Redirect til admin-oversikt
+                    setTimeout(() => {
+                        window.location.href = '@Url.Action("Index", "Admin")';
+                    }, 1000);
+                } else {
+                    statusDiv.className = 'status-message error';
+                    statusDiv.textContent = data.message || 'Error saving marker.';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Review';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Error saving marker. Please try again.';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Review';
+            }
+        });
 
+        // Kart-initialisering med markørens koordinater (ikke London!)
+        const markerLat = @Model.Lat.ToString(CultureInfo.InvariantCulture);
+        const markerLng = @Model.Lng.ToString(CultureInfo.InvariantCulture);
+        
+        var map = L.map('map').setView([markerLat, markerLng], 15);
+        
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
 
+        // Last ikoner og vis markør
+        fetch("/icon/geticons")
+            .then(res => res.json())
+            .then((IconList) => {
+                const icons = new Icons(IconList);
+                const mf = new MapFunctions(map, L, icons);
+                
+                const type = "@Model.ObstacleCategory".toLowerCase().replace(/\s+/g, "");
+                const icon = mf.icons.Get[type];
+                
+                mf.setMarkerPosition(markerLat, markerLng, icon);
+                mf.setViewTo(markerLat, markerLng, 17);
+            })
+            .catch(err => console.error("Failed to load icons:", err));
+
+        // Håndter GeoJSON hvis tilgjengelig
+        const geoJsonRaw = '@Html.Raw(Model.GeoJson ?? "null")';
+        
+        if (geoJsonRaw && geoJsonRaw !== "null") {
+            try {
+                // Dekod HTML-entiteter
+                const parser = new DOMParser();
+                const decoded = parser.parseFromString(geoJsonRaw, "text/html").documentElement.textContent;
+                const geoJson = JSON.parse(decoded);
+                
+                if (geoJson) {
+                    const geoLayer = L.geoJSON(geoJson).addTo(map);
+                    const bounds = geoLayer.getBounds();
+                    
+                    if (bounds.isValid()) {
+                        setTimeout(() => {
+                            map.fitBounds(bounds, { padding: [40, 40] });
+                        }, 500);
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to parse GeoJSON:", err);
+            }
+        }
+    </script>
+}
