@@ -1,36 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using KartverketRegister.Utils;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-
 
 namespace KartverketRegister.Controllers
 {
-
+    // Returnerer lister over tilgjengelige ikoner og gifs for frontend
     public class IconController : Controller
     {
-        //private int MsgLimit = 15;
-        public IActionResult Index()
-        {
-            return Ok(); //returnerer viewet Index.cshtml (hjemmesiden)
-		}
-
         [HttpGet]
-        public IActionResult GetIcons() // Henter alle ikonene fra wwwroot/img/icons-mappen 
-		{
+        public IActionResult Index() => Ok("Icon API");
+
+        // Henter alle ikoner og gifs fra wwwroot/img/-mappene
+        [HttpGet]
+        public IActionResult GetIcons()
+        {
             var iconDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/icons");
-            List<string> icons = Directory.GetFiles(iconDir)
-                         .Select(f => Path.GetFileNameWithoutExtension(f))
-                         .ToList();
             var gifDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/gifs");
-            List<string> gifs = Directory.GetFiles(gifDir)
-                         .Select(f => Path.GetFileNameWithoutExtension(f))
-                         .ToList();
 
+            var icons = Directory.GetFiles(iconDir)
+                .Select(f => Path.GetFileNameWithoutExtension(f))
+                .ToList();
 
-            return Json(new { Icons = icons, Gifs = gifs}); 
-		}
-        
+            var gifs = Directory.GetFiles(gifDir)
+                .Select(f => Path.GetFileNameWithoutExtension(f))
+                .ToList();
+
+            return Json(new { Icons = icons, Gifs = gifs });
+        }
     }
 }
