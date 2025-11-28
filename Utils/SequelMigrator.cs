@@ -1,7 +1,8 @@
-﻿using MySql.Data;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
+
 namespace KartverketRegister.Utils
 {
+    // Håndterer database-migrering - kopierer data til nye tabellstrukturer
     public class SequelMigrator : SequelBase
     {
         public SequelMigrator(string dbIP, string dbname) : base(dbIP, dbname) { }
@@ -10,103 +11,99 @@ namespace KartverketRegister.Utils
         public void Migrate()
         {
             conn.Open();
-            SetForeingKeyCheck(0);
+            SetForeignKeyCheck(0);
 
+            // Slett gamle kopier
             DropTable("Users_Copy");
             DropTable("Markers_Copy");
             DropTable("RegisteredMarkers_Copy");
             DropTable("Notifications_Copy");
             DropTable("ReviewAssign_Copy");
 
+            // Opprett kopitabeller
             CreateTable(SequelTables.Users_Table("Users_Copy"), "Users_Copy");
             CreateTable(SequelTables.Markers_Table("Markers_Copy"), "Markers_Copy");
             CreateTable(SequelTables.RegisteredMarkers_Table("RegisteredMarkers_Copy"), "RegisteredMarkers_Copy");
             CreateTable(SequelTables.Notifications_Table("Notifications_Copy"), "Notifications_Copy");
             CreateTable(SequelTables.ReviewAssign_Table("ReviewAssign_Copy"), "ReviewAssign_Copy");
 
+            // Kopier data
             CopyTableData("Users", "Users_Copy");
             CopyTableData("Markers", "Markers_Copy");
             CopyTableData("RegisteredMarkers", "RegisteredMarkers_Copy");
             CopyTableData("Notifications", "Notifications_Copy");
             CopyTableData("ReviewAssign", "ReviewAssign_Copy");
 
+            // Slett originaler
             DropTable("Users");
             DropTable("Markers");
             DropTable("RegisteredMarkers");
             DropTable("Notifications");
             DropTable("ReviewAssign");
 
+            // Opprett nye tabeller
             CreateTable(SequelTables.Users_Table("Users"), "Users");
             CreateTable(SequelTables.Markers_Table("Markers"), "Markers");
             CreateTable(SequelTables.RegisteredMarkers_Table("RegisteredMarkers"), "RegisteredMarkers");
             CreateTable(SequelTables.Notifications_Table("Notifications"), "Notifications");
             CreateTable(SequelTables.ReviewAssign_Table("ReviewAssign"), "ReviewAssign");
 
+            // Kopier tilbake
             CopyTableData("Users_Copy", "Users");
             CopyTableData("Markers_Copy", "Markers");
             CopyTableData("RegisteredMarkers_Copy", "RegisteredMarkers");
             CopyTableData("Notifications_Copy", "Notifications");
             CopyTableData("ReviewAssign_Copy", "ReviewAssign");
 
+            // Rydd opp
             DropTable("Users_Copy");
             DropTable("Markers_Copy");
             DropTable("RegisteredMarkers_Copy");
             DropTable("Notifications_Copy");
             DropTable("ReviewAssign_Copy");
 
-            SetForeingKeyCheck(1);
-
+            SetForeignKeyCheck(1);
             conn.Close();
         }
+
         public List<string> GetTableColumns(string tableName)
         {
-            var columns = new List<string>();
+            List<string> columns = new List<string>();
+            string query = @"
+                SELECT COLUMN_NAME 
+                FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = @TableName
+                ORDER BY ORDINAL_POSITION;";
 
-            try
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
             {
-
-                string query = @"
-            SELECT COLUMN_NAME 
-            FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = @TableName
-            ORDER BY ORDINAL_POSITION;";
-
-                using (var cmd = new MySqlCommand(query, conn))
+                cmd.Parameters.AddWithValue("@TableName", tableName);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    cmd.Parameters.AddWithValue("@TableName", tableName);
-
-                    using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            columns.Add(reader.GetString(0)); // Use ordinal 0 for COLUMN_NAME
-                        }
+                        columns.Add(reader.GetString(0));
                     }
                 }
-            } finally
-            {
-
             }
-            
-
             return columns;
         }
+
         public void CopyTableData(string oldTable, string newTable)
         {
-            var newColumns = GetTableColumns(newTable);
-            var oldColumns = GetTableColumns(oldTable); 
-            var commonColumns = oldColumns.FindAll(c => newColumns.Contains(c));
+            List<string> newColumns = GetTableColumns(newTable);
+            List<string> oldColumns = GetTableColumns(oldTable);
+            List<string> commonColumns = oldColumns.FindAll(c => newColumns.Contains(c));
+
             if (commonColumns.Count == 0)
                 throw new Exception("No matching columns found between tables.");
 
             string columnList = string.Join(", ", commonColumns);
             string paramList = string.Join(", ", commonColumns.ConvertAll(c => "@" + c));
-
             string selectQuery = $"SELECT {columnList} FROM {oldTable}";
 
-            using (var selectCmd = new MySqlCommand(selectQuery, conn))
+            using (MySqlCommand selectCmd = new MySqlCommand(selectQuery, conn))
             {
-                
                 using (var reader = selectCmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -114,10 +111,10 @@ namespace KartverketRegister.Utils
                         try
                         {
                             string insertQuery = $"INSERT INTO {newTable} ({columnList}) VALUES ({paramList})";
-                            using (var innerConn = new MySqlConnection(ConnectionString))
+                            using (MySqlConnection innerConn = new MySqlConnection(ConnectionString))
                             {
                                 innerConn.Open();
-                                using (var insertCmd = new MySqlCommand(insertQuery, innerConn))
+                                using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, innerConn))
                                 {
                                     foreach (var col in commonColumns)
                                     {
@@ -126,39 +123,40 @@ namespace KartverketRegister.Utils
                                     insertCmd.ExecuteNonQuery();
                                     Console.WriteLine($"[SequelMigrator] Copied data from {oldTable} to {newTable}");
                                 }
-                                innerConn.Close();
                             }
-                        } catch
-                        {
-                            Console.WriteLine($"[SequelMigrator] COPY - INCOMPATIBLE DATA FROM {oldTable} TO {newTable}");
-
                         }
-
-
+                        catch
+                        {
+                            Console.WriteLine($"[SequelMigrator] Incompatible data from {oldTable} to {newTable}");
+                        }
                     }
-                } 
+                }
             }
         }
+
         public void CreateTable(string SQL_Table, string tableName)
         {
-            using (var cmd = new MySqlCommand(SQL_Table, conn))
+            using (MySqlCommand cmd = new MySqlCommand(SQL_Table, conn))
             {
                 cmd.ExecuteNonQuery();
                 Console.WriteLine($"[SequelMigrator] Created {tableName}");
             }
         }
+
         public void DropTable(string tableName)
         {
-            string sqling = $"DROP TABLE IF EXISTS `{tableName}`;";
-            using (var cmd = new MySqlCommand(sqling, conn))
+            string sql = $"DROP TABLE IF EXISTS `{tableName}`;";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.ExecuteNonQuery();
-                Console.WriteLine($"[SequelMigrator] Deleted {tableName}");
+                Console.WriteLine($"[SequelMigrator] Dropped {tableName}");
             }
         }
-        public void SetForeingKeyCheck(int boolean) {
-            string sqling = $"SET FOREIGN_KEY_CHECKS={boolean};";
-            using (var cmd = new MySqlCommand(sqling, conn))
+
+        public void SetForeignKeyCheck(int value)
+        {
+            string sql = $"SET FOREIGN_KEY_CHECKS={value};";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.ExecuteNonQuery();
             }
