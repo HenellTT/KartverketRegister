@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="~/css/dark-mode.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/WelcomeToCompleteDarkness.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Notification.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 
 <body>
@@ -66,7 +67,7 @@
                         </ul>
 
 
-                </ul>
+                
 
             </div>
         </div>
