@@ -1,173 +1,189 @@
 ﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Bcpg;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using System.Drawing.Printing;
+using System.Globalization;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+
 
 namespace KartverketRegister.Controllers
 {
-    // Saksbehandler-dashboard for behandling av innmeldte markører
-    [Authorize(Roles = "Employee,Admin")]
-    public class AdminController : Controller
+    [Authorize(Roles = "Employee,Admin")] 
+    public class AdminController : Controller 
     {
         private readonly UserManager<AppUser> _userManager;
-
         public AdminController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
         }
-
         [HttpGet]
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+            return View();
 
-        // Nullstiller databasen - kun for utvikling/testing
-        [ValidateAntiForgeryToken]
-        [HttpPost]
+        }
+        [HttpGet]
         public IActionResult ResetDB()
         {
             try
             {
-                var sequel = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
+                SequelInit sequel = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
                 Constants.ResetDbOnStartup = true;
                 sequel.conn.Open();
                 sequel.InitDb();
                 sequel.conn.Close();
                 Constants.ResetDbOnStartup = false;
-                return Ok(new GeneralResponse(true, "Database reset successfully"));
-            }
-            catch (Exception e)
+                return Ok(new GeneralResponse(true, "Database Resetted Successfully"));
+            } catch (Exception e)
             {
-                return Ok(new GeneralResponse(false, $"Database reset failed: {e.Message}"));
+                return Ok(new GeneralResponse(true, $"Database Reset failed: {e.Message}"));
             }
+
         }
 
-        // Viser review-side for en spesifikk markør
         [HttpPost]
         public IActionResult Review(int markerId)
         {
-            var sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            Marker marker = sequel.FetchMarkerById(markerId);
-
-            if (marker == null)
+            SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            Marker Mrk = sequel.FetchMarkerById(markerId);
+            
+            if (Mrk == null)
+            {
                 return NotFound();
-
-            return View(marker);
+            }
+            return View(Mrk);
         }
-
-        // Behandler godkjenning/avslag fra review-siden
         [HttpPost]
-        public async Task<IActionResult> HandleReview(int markerId, string reviewComment, string status)
+        public async Task<IActionResult> HandleReview(int MarkerId, string ReviewComment, string Status)
         {
-            var sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
-            int userId = appUser.Id;
+            int UserId = appUser.Id;
 
             try
             {
-                return status switch
+                if (Status == "Approve")
                 {
-                    "Approve" => ApproveMarkerInternal(sequel, markerId, reviewComment, userId),
-                    "Reject" => RejectMarkerInternal(sequel, markerId, reviewComment, userId),
-                    _ => Ok(new GeneralResponse(false, $"Marker {markerId} not reviewed - invalid status"))
-                };
+                    sequel.ApproveMarker(MarkerId, ReviewComment, UserId);
+                    return Ok(new GeneralResponse(true, $"Marker {MarkerId} Approved successfully"));
+
+                }
+                else if (Status == "Reject")
+                {
+                    sequel.RejectMarker(MarkerId, ReviewComment, UserId);
+                    return Ok(new GeneralResponse(true, $"Marker {MarkerId} Rejected successfully"));
+                }
+                else
+                {
+                    return Ok(new GeneralResponse(false, $"Marker {MarkerId} not reviewed"));
+                }
             }
             catch (Exception e)
             {
-                return Ok(new GeneralResponse(false, $"Marker {markerId} review failed: {e.Message}"));
+                return Ok(new GeneralResponse(false, $"Marker {MarkerId} was NOT reviewed successfully! Error: {e.Message}"));
             }
         }
 
-        // Henter markører filtrert på status - kun de tildelt innlogget saksbehandler
         [HttpGet]
-        public async Task<IActionResult> GetAllMarkers(string markerStatus)
+        public async Task<IActionResult> GetAllMarkers(string markerStatus) // RESTRICT TO ONLY ASSIGNED MARKERS 
         {
-            if (!Enum.TryParse(typeof(MarkerStatus), markerStatus, true, out var result))
+            if (Enum.TryParse(typeof(MarkerStatus), markerStatus, true, out var result))
             {
-                return BadRequest(new { Success = false, Message = $"'{markerStatus}' is not a valid MarkerStatus" });
-            }
+                // Enum.TryParse succeeded, 'result' is of type object
+                var status = (MarkerStatus)result;
 
-            var status = (MarkerStatus)result;
-            AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
+                List<Marker> MarkerList;
+                AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
+                Console.WriteLine($"GetAllMarkers requested by UserId {appUser.Id}");
 
-            try
-            {
-                var sequel = new SequelAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-                List<Marker> markers = sequel.FetchAllMarkers(markerStatus, appUser.Id);
+                try
+                {
+                    SequelAdmin sequel = new SequelAdmin(Constants.DataBaseIp, Constants.DataBaseName);
+                    MarkerList = sequel.FetchAllMarkers(markerStatus, appUser.Id);
+
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = $"Problem fetching markers! E: {e}"
+                    });
+                }
 
                 return Ok(new
                 {
                     Success = true,
                     Name = status.ToString(),
                     Value = (int)status,
-                    Markers = markers
+                    Markers = MarkerList
                 });
             }
-            catch (Exception e)
+            else
             {
-                return BadRequest(new { Success = false, Message = $"Failed to fetch markers: {e.Message}" });
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = $"'{markerStatus}' is not a valid MarkerStatus value."
+                });
             }
         }
-
-        // Sletter en markør permanent
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public IActionResult DeleteMarker(int markerId)
+        [HttpGet]
+        public IActionResult DeleteMarker(int MarkerId)
         {
-            var sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
-                sequel.DeleteMarkerById(markerId);
-                return Ok(new GeneralResponse(true, $"Marker {markerId} deleted successfully"));
+                sequel.DeleteMarkerById(MarkerId);
+                return Ok(new GeneralResponse(true,$"Marker ${MarkerId} removed successfully"));
             }
             catch
             {
-                return Ok(new GeneralResponse(false, $"Marker {markerId} could not be deleted"));
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT removed successfully"));
             }
         }
-
+        
         [HttpPost]
-        public async Task<IActionResult> Approve(int markerId, string reviewComment)
+        public async Task<IActionResult> Approve(int MarkerId, string ReviewComment)
         {
             AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
-            var sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            return ApproveMarkerInternal(sequel, markerId, reviewComment, appUser.Id);
-        }
+            int UserId = appUser.Id;
 
+            SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            try
+            {
+                sequel.ApproveMarker(MarkerId,ReviewComment, UserId);
+                return Ok(new GeneralResponse(true, $"Marker ${MarkerId} approved successfully"));
+            }
+            catch
+            {
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT approved successfully"));
+            }
+        }
         [HttpPost]
-        public async Task<IActionResult> Reject(int markerId, string reviewComment)
+        public async Task<IActionResult> Reject(int MarkerId, string ReviewComment)
         {
             AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
-            var sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            return RejectMarkerInternal(sequel, markerId, reviewComment, appUser.Id);
-        }
+            int UserId = appUser.Id;
 
-        // Hjelpemetoder for godkjenning/avslag
-        private IActionResult ApproveMarkerInternal(SequelMarker sequel, int markerId, string reviewComment, int userId)
-        {
+            SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
-                sequel.ApproveMarker(markerId, reviewComment, userId);
-                return Ok(new GeneralResponse(true, $"Marker {markerId} approved successfully"));
+                sequel.RejectMarker(MarkerId, ReviewComment, UserId);
+                return Ok(new GeneralResponse(true, $"Marker ${MarkerId} approved successfully"));
             }
-            catch (Exception e)
+            catch
             {
-                return Ok(new GeneralResponse(false, $"Marker {markerId} could not be approved: {e.Message}"));
-            }
-        }
-
-        private IActionResult RejectMarkerInternal(SequelMarker sequel, int markerId, string reviewComment, int userId)
-        {
-            try
-            {
-                sequel.RejectMarker(markerId, reviewComment, userId);
-                return Ok(new GeneralResponse(true, $"Marker {markerId} rejected successfully"));
-            }
-            catch (Exception e)
-            {
-                return Ok(new GeneralResponse(false, $"Marker {markerId} could not be rejected: {e.Message}"));
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT approved successfully"));
             }
         }
     }
 }
-
