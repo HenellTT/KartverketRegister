@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@model KartverketRegister.Models.Marker
+@model Marker
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
     ViewData["Title"] = "Review Marker";
@@ -72,13 +72,13 @@
 </div>
 
 @section Scripts {
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
-    <script src="~/js/MapFunctions.js"></script>
-    <script src="~/js/icons.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script src="~/js/MapFunctions.js"></script>
+<script src="~/js/icons.js"></script>
 
-    <script>
+<script>
         // Aktiverer submit-knappen kun når en status er valgt
         function setStatus(value, buttonElement) {
             const statusInput = document.getElementById('statusi');
@@ -89,19 +89,19 @@
 
             // Fjern highlight fra alle knapper
             document.querySelectorAll(".ar-button").forEach(el => {
-                el.classList.remove("ar-button-clicked");
-            });
+            el.classList.remove("ar-button-clicked");
+        });
 
             // Legg til highlight på klikket knapp
             buttonElement.classList.add('ar-button-clicked');
-        }
+    }
 
         // Håndter skjema-innsending via AJAX
         document.getElementById('review-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const form = e.target;
-            const formData = new FormData(form);
+        const form = e.target;
+        const formData = new FormData(form);
             const statusDiv = document.getElementById('status');
             const submitBtn = document.getElementById('submit-btn');
             
@@ -121,11 +121,11 @@
 
                 const data = await response.json();
                 
-                if (data.success) {
+            if (data.success) {
                     statusDiv.className = 'status-message success';
                     statusDiv.textContent = data.message || 'Marker saved successfully! Redirecting...';
-                    form.reset();
-                    
+                form.reset();
+
                     // Fjern knapp-highlight
                     document.querySelectorAll(".ar-button-clicked").forEach(el => {
                         el.classList.remove("ar-button-clicked");
@@ -135,7 +135,7 @@
                     setTimeout(() => {
                         window.location.href = '@Url.Action("Index", "Admin")';
                     }, 1000);
-                } else {
+            } else {
                     statusDiv.className = 'status-message error';
                     statusDiv.textContent = data.message || 'Error saving marker.';
                     submitBtn.disabled = false;
@@ -153,13 +153,13 @@
         // Kart-initialisering med markørens koordinater (ikke London!)
         const markerLat = @Model.Lat.ToString(CultureInfo.InvariantCulture);
         const markerLng = @Model.Lng.ToString(CultureInfo.InvariantCulture);
-        
+
         var map = L.map('map').setView([markerLat, markerLng], 15);
         
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
 
         // Last ikoner og vis markør
         fetch("/icon/geticons")
@@ -178,11 +178,11 @@
 
         // Håndter GeoJSON hvis tilgjengelig
         const geoJsonRaw = '@Html.Raw(Model.GeoJson ?? "null")';
-        
+
         if (geoJsonRaw && geoJsonRaw !== "null") {
             try {
                 // Dekod HTML-entiteter
-                const parser = new DOMParser();
+    const parser = new DOMParser();
                 const decoded = parser.parseFromString(geoJsonRaw, "text/html").documentElement.textContent;
                 const geoJson = JSON.parse(decoded);
                 
@@ -190,7 +190,7 @@
                     const geoLayer = L.geoJSON(geoJson).addTo(map);
                     const bounds = geoLayer.getBounds();
                     
-                    if (bounds.isValid()) {
+        if (bounds.isValid()) {
                         setTimeout(() => {
                             map.fitBounds(bounds, { padding: [40, 40] });
                         }, 500);
@@ -198,7 +198,7 @@
                 }
             } catch (err) {
                 console.error("Failed to parse GeoJSON:", err);
-            }
         }
-    </script>
+    }
+</script>
 }

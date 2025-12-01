@@ -12,7 +12,7 @@
 
 /* Header */
 #mymrk thead {
-    background: linear-gradient(90deg, #0078d7, #00b4d8);
+    background: linear-gradient(90deg, #0066b2, #0088cc);
     color: #fff;
     text-align: left;
 }
@@ -57,12 +57,12 @@
 }
 
     #mymrk button:first-child {
-        background: #0078d7;
+        background: #0066b2;
         color: #fff;
     }
 
         #mymrk button:first-child:hover {
-            background: #005fa3;
+            background: #0066b2;
         }
 
     #mymrk button:last-child {

@@ -1,4 +1,4 @@
-using KartverketRegister.Models;
+using KartverketRegister.Models.Notifications;
 using MySql.Data.MySqlClient;
 
 namespace KartverketRegister.Utils

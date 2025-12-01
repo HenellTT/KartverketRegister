@@ -1,4 +1,6 @@
-using KartverketRegister.Models;
+using KartverketRegister.Models.Markers;
+using KartverketRegister.Models.Responses;
+using KartverketRegister.Models.Users;
 using KartverketRegister.Auth;
 using MySql.Data.MySqlClient;
 

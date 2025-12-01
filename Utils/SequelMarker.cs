@@ -1,4 +1,4 @@
-using KartverketRegister.Models;
+using KartverketRegister.Models.Markers;
 using MySql.Data.MySqlClient;
 using System.Net;
 
@@ -161,6 +161,26 @@ namespace KartverketRegister.Utils
                 return null;
 
             return mrk.HtmlEncodeStrings();
+        }
+
+        public void UpdateMarker(Marker marker)
+        {
+            conn.Open();
+            string sql = @"
+                UPDATE RegisteredMarkers 
+                SET ObstacleCategory = @ObstacleCategory,
+                    LastUpdated = @LastUpdated
+                WHERE MarkerId = @MarkerId";
+
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", marker.MarkerId);
+                cmd.Parameters.AddWithValue("@ObstacleCategory", marker.ObstacleCategory ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@LastUpdated", DateTime.UtcNow);
+                cmd.ExecuteNonQuery();
+            }
+
+            conn.Close();
         }
 
         public void DeleteMarkerById(int markerId)

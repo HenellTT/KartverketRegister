@@ -1,5 +1,5 @@
 ﻿using KartverketRegister.Auth;
-using KartverketRegister.Models;
+using KartverketRegister.Models.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace KartverketRegister.Utils

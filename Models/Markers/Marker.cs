@@ -6,7 +6,7 @@ namespace KartverketRegister.Models.Markers;
 /// </summary>
 public class Marker : TempMarker
 {
-    public int? MarkerId { get; set; }
+    public new int? MarkerId { get; set; }
     public int TempMarkerId { get; set; }
     
     // Bruker som har gjennomgått markøren

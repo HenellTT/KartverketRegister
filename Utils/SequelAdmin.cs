@@ -1,4 +1,4 @@
-using KartverketRegister.Models;
+using KartverketRegister.Models.Markers;
 using MySql.Data.MySqlClient;
 
 namespace KartverketRegister.Utils

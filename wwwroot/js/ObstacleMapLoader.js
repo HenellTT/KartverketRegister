@@ -14,7 +14,7 @@
 
         Markers.forEach((mrk) => {
             let iconName = mrk.obstacleCategory.toLowerCase().replaceAll(" ", "");
-            let icon = Window.icons.Get[iconName];
+            let icon = window.icons.Get[iconName];
 
             if (mrk.geoJson) {
                 mrk.geoJson = JSON.parse(mrk.geoJson);
