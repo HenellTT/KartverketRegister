@@ -1,5 +1,5 @@
 using KartverketRegister.Auth;
-using KartverketRegister.Models;
+using KartverketRegister.Models.Markers;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -87,6 +87,31 @@ namespace KartverketRegister.Controllers
         {
             ViewBag.Theme = mode ?? "light";
             return View();
+        }
+
+        // Lagrer endringer på markør
+        [HttpPost]
+        public IActionResult SaveMarker([FromForm] Marker marker)
+        {
+            string userIdString = _userManager.GetUserId(HttpContext?.User);
+            int userId = int.TryParse(userIdString, out var id) ? id : 0;
+
+            // Sjekk at bruker eier markøren
+            var seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
+            Marker existingMarker = seq.FetchMarkerById(marker.MarkerId ?? 0);
+            
+            if (existingMarker?.UserId != userId)
+                return Forbid();
+
+            try
+            {
+                seq.UpdateMarker(marker);
+                return RedirectToAction("Registry");
+            }
+            catch
+            {
+                return RedirectToAction("EditMarker", new { markerId = marker.MarkerId });
+            }
         }
 
         // Hjelpemetode: Henter markør kun hvis innlogget bruker eier den

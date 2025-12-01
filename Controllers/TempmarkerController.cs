@@ -1,5 +1,6 @@
 ﻿using KartverketRegister.Auth;
-using KartverketRegister.Models;
+using KartverketRegister.Models.Markers;
+using KartverketRegister.Models.Responses;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -73,8 +74,7 @@ namespace KartverketRegister.Controllers
         }
 
         // Sletter midlertidig markør - database-metoden sjekker eierskap
-        [ValidateAntiForgeryToken]
-        [HttpPost]
+        [HttpGet]
         public IActionResult DeleteMarker(int markerId)
         {
             try

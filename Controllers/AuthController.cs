@@ -1,11 +1,13 @@
 ﻿using KartverketRegister.Auth;
-using KartverketRegister.Models;
+using KartverketRegister.Models.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KartverketRegister.Controllers
 {
     // Autentisering: innlogging, registrering, utlogging
+    [AllowAnonymous]
     public class AuthController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

@@ -1,5 +1,6 @@
 ﻿using KartverketRegister.Auth;
-using KartverketRegister.Models;
+using KartverketRegister.Models.Markers;
+using KartverketRegister.Models.Responses;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +25,7 @@ namespace KartverketRegister.Controllers
         // Konverterer TempMarker til permanent Marker
         // TempMarker inneholder koordinater fra kartet, Marker inneholder skjemadata
         [HttpPost]
-        public async Task<IActionResult> SubmitMarker([FromBody] Marker marker)
+        public async Task<IActionResult> SubmitMarker([FromForm] Marker marker)
         {
             var seqTemp = new SequelTempmarker(Constants.DataBaseIp, Constants.DataBaseName);
             var seqMarker = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);

@@ -1,4 +1,4 @@
-﻿using KartverketRegister.Models;
+﻿using KartverketRegister.Models.Responses;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
