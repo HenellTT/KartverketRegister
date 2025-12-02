@@ -49,8 +49,9 @@ public class PilotController : Controller
         }
         return View();
     }
-   
-    
+
+    // Testmetode – returnerer innlogget bruker-ID som JSON
+
     public async Task<IActionResult> Test()
     {
         var smth = _userManager.GetUserId(HttpContext?.User);
@@ -62,8 +63,9 @@ public class PilotController : Controller
         return View(); //returnerer viewet FlightMode.cshtml (FlyModus)
 
     }
-    
-   
+
+
+    // Viser alle markører registrert av innlogget bruker
 
     public IActionResult Registry()
     {
@@ -82,7 +84,8 @@ public class PilotController : Controller
             return View(new List<Marker>());
         }
     }
-    
+
+    // Lar bruker redigere en marker (kun egne markører)
     [Route("EditMarker/{MarkerId:int}")]
     public IActionResult EditMarker(int MarkerId)
     {
@@ -98,6 +101,8 @@ public class PilotController : Controller
         }
         return View(marker);
     }
+
+    //lar brukerne se egne markører
     [Route("ViewMarker/{MarkerId:int}")]
     public IActionResult ViewMarker(int MarkerId)
     {
@@ -116,7 +121,7 @@ public class PilotController : Controller
 
 
 
-
+    //setter visningsmodus basert på brukerens valg
     [HttpPost]
     public async Task<IActionResult> SetMode(string mode)
     {

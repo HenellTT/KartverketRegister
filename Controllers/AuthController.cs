@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
 {
+    //kontroller for autentisering
+
     public class AuthController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
