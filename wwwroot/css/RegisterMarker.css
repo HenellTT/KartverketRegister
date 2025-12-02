@@ -1,4 +1,4 @@
-﻿/* Global Layout  */
+﻿/* ====== Global Layout ====== */
 body {
     font-family: 'Segoe UI', Roboto, sans-serif;
     background-color: #f4f6f8;
@@ -40,7 +40,7 @@ h1 {
     padding-bottom: 10px;
 }
 
-/* Form Fields */
+/* ====== Form Fields ====== */
 .form-group {
     width: 300px;
     flex-direction: column;
@@ -73,7 +73,7 @@ select {
         background-color: #fff;
     }
 
-/*Buttons */
+/* ====== Buttons ====== */
 button.btn {
     background-color: #0078d7;
     color: white;
@@ -88,14 +88,17 @@ button.btn {
     letter-spacing: 0.5px;
 }
 
-*/
-/*Feedback */
+    button.btn:hover {
+        background-color: #005ea6;
+    }
+
+/* ====== Feedback ====== */
 #returnMsg {
     margin-top: 20px;
     font-weight: 500;
 }
 
-/*Hidden inputs*/
+/* ====== Hidden Inputs ====== */
 .hidden-input {
     display: none !important;
 }
@@ -104,7 +107,7 @@ header {
     display: none;
 }
 
-/*Responsive*/
+/* ====== Responsive ====== */
 @media (max-width: 600px) {
     form {
         padding: 25px 30px;

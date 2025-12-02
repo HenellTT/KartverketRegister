@@ -1,11 +1,9 @@
-﻿/* --- Hovedlayout --- */
+﻿/* --- Base Layout --- */
 body {
    
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     text-align:center;
 }
-
-/*overskrifter*/
 h1{
     font-size: 40px;
 }
@@ -25,7 +23,7 @@ h2{
     .LogInButtons button {
         width: 250px;
         height: 150px;
-        background-color: #0066b2;
+        background-color: #f8f8f8;
         border: 2px solid #333;
         border-radius: 12px;
         font-size: 50px;
