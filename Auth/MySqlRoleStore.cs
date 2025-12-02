@@ -14,7 +14,7 @@ namespace KartverketRegister.Auth
         public Task<IdentityResult> DeleteAsync(IdentityRole<int> role, CancellationToken cancellationToken)
             => Task.FromResult(IdentityResult.Success);
 
-        public void Dispose() { }
+        public void Dispose() { } //ingen ressurser
 
         public Task<IdentityRole<int>> FindByIdAsync(string roleId, CancellationToken cancellationToken)
             => Task.FromResult(new IdentityRole<int> { Id = int.Parse(roleId), Name = roleId });

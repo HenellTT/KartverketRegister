@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace KartverketRegister.Auth
 {
+    //brukerlagrin mot MYsql database
     public class MySqlUserStore :
         IUserStore<AppUser>,
         IUserPasswordStore<AppUser>,
@@ -23,7 +24,7 @@ namespace KartverketRegister.Auth
         }
 
         #region IUserStore<AppUser>
-
+        //opprett, slett, oppdater og finn brukere
         public async Task<IdentityResult> CreateAsync(AppUser user, CancellationToken cancellationToken)
         {
             // Hash password
@@ -147,7 +148,7 @@ namespace KartverketRegister.Auth
         #endregion
 
         #region IUserRoleStore<AppUser>
-
+        //legg til, fjern og hent roller for brukere
         public async Task AddToRoleAsync(AppUser user, string roleName, CancellationToken cancellationToken)
         {
             const string query = "UPDATE Users SET UserType=@role WHERE UserId=@id;";
@@ -206,7 +207,7 @@ namespace KartverketRegister.Auth
         #endregion
 
         #region IUserEmailStore<AppUser>
-
+        //sett, hent og finn brukere basert på epost
         public Task SetEmailAsync(AppUser user, string email, CancellationToken cancellationToken)
         {
             user.Email = email;
@@ -247,7 +248,7 @@ namespace KartverketRegister.Auth
         #endregion
 
         #region Helpers
-
+        //mappe database leser til AppUser objekt
         private AppUser MapReaderToUser(DbDataReader reader)
         {
             return new AppUser

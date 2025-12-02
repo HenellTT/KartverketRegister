@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace KartverketRegister.Utils
 {
+    //Utility-klasse for å generere dummy-brukere og markører til testformål.
+
     public class DummyCreator
     {
         private readonly UserManager<AppUser> _userManager;
@@ -13,6 +15,8 @@ namespace KartverketRegister.Utils
             _userManager = userManager;
         }
 
+
+        // Metode for å fylle databasen med dummy-brukere og markører.
         public async Task<GeneralResponse> FillIn()
         {
             Random rnd = new Random();
@@ -60,10 +64,10 @@ namespace KartverketRegister.Utils
             // DB accessor
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
 
-            // 🔹 Keep track of created users
+            //Holde oversikt over opprettede brukere
             List<AppUser> createdUsers = new List<AppUser>();
 
-            // ✅ Create dummy users
+            //lage dummy-brukere
             for (int i = 0; i < lastNames.Length; i++)
             {
                 string randomOrg = organizations[rnd.Next(organizations.Length)];
@@ -95,7 +99,7 @@ namespace KartverketRegister.Utils
                 }
             }
 
-            // ✅ Create dummy markers for each dummy user
+            //lage dummy-markører for hver bruker
             foreach (var user in createdUsers)
             {
                 double lat = RandomInRange(rnd, 57.0, 60.0);
@@ -125,6 +129,7 @@ namespace KartverketRegister.Utils
             return new GeneralResponse(true, "Dummy users and markers generated");
         }
 
+        // Hjelpemetode for å generere et tilfeldig desimaltall innenfor et gitt område.
         public double RandomInRange(Random r, double min, double max)
         {
             return r.NextDouble() * (max - min) + min;
@@ -171,7 +176,7 @@ namespace KartverketRegister.Utils
             await _userManager.CreateAsync(user, "!Testink00!");
             await _userManager.CreateAsync(Admin, "!Testink00!");
             await _userManager.CreateAsync(Employee, "!Testink00!");
-            return new GeneralResponse(true,"Shit worked");
+            return new GeneralResponse(true,"Default test users generated successfully");
         }
     }
 }

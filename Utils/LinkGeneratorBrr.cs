@@ -4,6 +4,7 @@ using System.Web;
 
 namespace KartverketRegister.Utils
 {
+    //genrerer lenke til HoydeData API med gitte koordinater
     public static class LinkGeneratorBrr
     {
 

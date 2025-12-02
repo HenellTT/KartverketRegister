@@ -2,8 +2,11 @@
 using MySql.Data.MySqlClient;
 namespace KartverketRegister.Utils
 {
+
+    // Klasse for migrering av database
     public class SequelMigrator : SequelBase
     {
+        
         public SequelMigrator(string dbIP, string dbname) : base(dbIP, dbname) { }
         public SequelMigrator() : base() { }
 
