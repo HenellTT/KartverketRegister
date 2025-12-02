@@ -63,26 +63,27 @@ header {
 /* bottom-right Submit (hidden until needed) */
 .bottom-right {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%; /* Full width */
-    background-color: white; /* Background color */
-    display: flex; /* Horizontal flex layout */
-    justify-content: space-around; /* Spread buttons evenly */
-    gap: auto; /* Optional spacing between buttons */
-     /* Padding around buttons */
-    z-index: 1000; /* Make sure it stays on top */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow */
-    height:10vh;
+    right: 12px;
+    bottom: 12px;
+    z-index: 1000;
+}
+.floating-submit {
+    display: inline-block;
 }
 
-    .obstacleContainer button {
-        flex: 1; /* Make buttons stretch equally */
-        padding: 10px;
-        font-size: 16px;
-        cursor: pointer;
-        font-size: auto;
-    }
+/* generic button styles */
+button {
+    padding: 8px 14px;
+    font-size: clamp(14px, 2vw, 20px);
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #0066b2;
+    color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
 
 button:active {
     background: #004a7a;
