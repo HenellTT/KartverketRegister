@@ -3,7 +3,7 @@
         // Injected instances
         this.map = map;
         this.L = L;
-        this.Icons = window.icons;
+        this.Icons = Window.icons;
 
         // Actions
         this.ActionList = [];     // stores Action objects
@@ -15,7 +15,7 @@
         this._lastClick = null;
 
         // Other shit
-        this.vehiclePosition = L.marker([58.1608783456262, 7.9985872834629], { draggable: false, icon: window.icons.Get['helicopter'] });
+        this.vehiclePosition = L.marker([58.1608783456262, 7.9985872834629], { draggable: false, icon: Window.icons.Get['helicopter'] });
         this.UpdatePosition = true;
 
         

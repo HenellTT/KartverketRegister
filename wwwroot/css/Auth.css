@@ -30,7 +30,7 @@ input {
 }
 
     input:focus {
-        border-color: #0066b2;
+        border-color: #1a3e72;
         outline: none;
     }
 
@@ -40,7 +40,7 @@ button {
     padding: 12px;
     border: none;
     border-radius: 6px;
-    background-color: #0066b2;
+    background-color: #1a3e72;
     color: #ffffff;
     font-weight: 600;
     font-size: 16px;
@@ -51,11 +51,11 @@ button {
 }
 
     button:hover {
-        background-color: #0066b2;
+        background-color: #16345e;
         transform: translateY(-1px);
     }
 
     button:active {
-        background-color: #0066b2;
+        background-color: #122b4c;
         transform: translateY(0);
     }
