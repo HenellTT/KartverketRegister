@@ -34,6 +34,18 @@
             font-size: 2.5rem;
             font-weight: 700;
             color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .user-page h2 {
+            color: #0066b2;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #0066b2;
+            padding-bottom: 5px;
+        }
+
+        .user-page p {
             margin-bottom: 15px;
         }
 
@@ -55,67 +67,10 @@
             flex-wrap: wrap;
         }
 
-        .logoz {
-            max-height: 80px;
-            height: auto;
-            width: auto;
-            object-fit: contain;
-        }
-
-        /* Portrait = vertical screen */
-        @@media (orientation: portrait) {
-            .logo-placeholder
-
-        {
-            flex-direction: column;
-        }
-
-        }
-
-        /* Landscape = horizontal screen */
-        @@media (orientation: landscape) {
-            .logo-placeholder
-
-        {
-            flex-direction: row;
-        }
-
-        }
-
-
-        
-        .helicopter-img-container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 30px auto;
-            margin-bottom:0px;
-            aspect-ratio: 16/9;
-            background: #d9d9d9;
-            background-image: url("/img/nrlheli.jpg");
-            background-size:cover;
-            background-repeat:no-repeat;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #777;
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-
-        .button-container {
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-            .button-container .btn {
-                padding: 12px 28px;
-                font-size: 1.1rem;
-                border-radius: 8px;
-                font-weight: 600;
+            .button-container .btn:hover {
+                transform: scale(1.05);
+                background-color: #0066b2;
+                color: white;
             }
 
         .info-section {

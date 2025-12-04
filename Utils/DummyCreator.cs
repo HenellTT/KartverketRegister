@@ -1,11 +1,10 @@
 ﻿using KartverketRegister.Auth;
-using KartverketRegister.Models;
+using KartverketRegister.Models.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace KartverketRegister.Utils
 {
-    //Utility-klasse for å generere dummy-brukere og markører til testformål.
-
+    // Genererer testdata for utvikling og testing
     public class DummyCreator
     {
         private readonly UserManager<AppUser> _userManager;
@@ -15,14 +14,12 @@ namespace KartverketRegister.Utils
             _userManager = userManager;
         }
 
-
-        // Metode for å fylle databasen med dummy-brukere og markører.
+        // Genererer dummy-brukere og markører
         public async Task<GeneralResponse> FillIn()
         {
             Random rnd = new Random();
 
-            string[] firstNames = new string[]
-            {
+            string[] firstNames = {
                 "Liam", "Olivia", "Noah", "Emma", "Elijah",
                 "Ava", "Sophia", "James", "Isabella", "Benjamin",
                 "Mia", "Lucas", "Charlotte", "Henry", "Amelia",
@@ -31,8 +28,7 @@ namespace KartverketRegister.Utils
                 "Logan", "Elizabeth", "Sebastian", "Avery", "Jack"
             };
 
-            string[] lastNames = new string[]
-            {
+            string[] lastNames = {
                 "Smith", "Johnson", "Williams", "Brown", "Jones",
                 "Garcia", "Miller", "Davis", "Rodriguez", "Martinez",
                 "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson",
@@ -41,33 +37,22 @@ namespace KartverketRegister.Utils
                 "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson"
             };
 
-            string[] organizations = new string[]
-            {
-                "TechNova Solutions",
-                "GreenLeaf Industries",
-                "BluePeak Software",
-                "SilverGate Logistics",
-                "SunCore Energy",
-                "Apex Robotics",
-                "NorthStar Finance",
-                "UrbanHive Marketing",
-                "QuantumSphere Labs",
+            string[] organizations = {
+                "TechNova Solutions", "GreenLeaf Industries", "BluePeak Software",
+                "SilverGate Logistics", "SunCore Energy", "Apex Robotics",
+                "NorthStar Finance", "UrbanHive Marketing", "QuantumSphere Labs",
                 "BrightPath Consulting"
             };
 
-            string[] obstacleCategories = new string[]
-            {
+            string[] obstacleCategories = {
                 "Tower", "Crane", "Wind Turbine", "Mast",
                 "Building", "Power Line", "Other"
             };
 
-            // DB accessor
             SequelMarker seq = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-
-            //Holde oversikt over opprettede brukere
             List<AppUser> createdUsers = new List<AppUser>();
 
-            //lage dummy-brukere
+            // Opprett dummy-brukere
             for (int i = 0; i < lastNames.Length; i++)
             {
                 string randomOrg = organizations[rnd.Next(organizations.Length)];
@@ -85,9 +70,9 @@ namespace KartverketRegister.Utils
                     Email = email
                 };
 
-                Console.WriteLine($"[Dummy Data Creator] Creating user: {email}");
+                Console.WriteLine($"[DummyCreator] Creating user: {email}");
 
-                var result = await _userManager.CreateAsync(user, "1234"); // ✅ Password must be passed here
+                IdentityResult result = await _userManager.CreateAsync(user, "1234");
 
                 if (result.Succeeded)
                 {
@@ -95,16 +80,15 @@ namespace KartverketRegister.Utils
                 }
                 else
                 {
-                    Console.WriteLine("[Dummy Data Creator] Failed to create user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                    Console.WriteLine("[DummyCreator] Failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
                 }
             }
 
-            //lage dummy-markører for hver bruker
-            foreach (var user in createdUsers)
+            // Opprett dummy-markører for hver bruker
+            foreach (AppUser user in createdUsers)
             {
                 double lat = RandomInRange(rnd, 57.0, 60.0);
                 double lng = RandomInRange(rnd, 6.0, 10.0);
-
                 string obstacle = obstacleCategories[rnd.Next(obstacleCategories.Length)];
 
                 seq.SaveMarker(
@@ -123,60 +107,60 @@ namespace KartverketRegister.Utils
                     source: "DummyCreator"
                 );
 
-                Console.WriteLine($"[Dummy Data Creator] Created marker for user {user.Email} at {lat}, {lng}");
+                Console.WriteLine($"[DummyCreator] Created marker for {user.Email} at {lat}, {lng}");
             }
 
             return new GeneralResponse(true, "Dummy users and markers generated");
         }
 
-        // Hjelpemetode for å generere et tilfeldig desimaltall innenfor et gitt område.
-        public double RandomInRange(Random r, double min, double max)
+        private static double RandomInRange(Random r, double min, double max)
         {
             return r.NextDouble() * (max - min) + min;
         }
+
+        // Genererer standard testbrukere (User, Admin, Employee)
         public async Task<GeneralResponse> GenerateDefaultUsers()
         {
-            string email = "1234@user.test";
             AppUser user = new AppUser
             {
-                Name = email,
+                Name = "1234@user.test",
                 FirstName = "Johnny",
                 LastName = "Test",
                 Organization = "UiA",
-                UserName = email,
+                UserName = "1234@user.test",
                 UserType = "User",
                 Password = "!Testink00!",
-                Email = email
+                Email = "1234@user.test"
             };
 
-            email = "1234@admin.test";
-            AppUser Admin = new AppUser
+            AppUser admin = new AppUser
             {
-                Name = email,
+                Name = "1234@admin.test",
                 FirstName = "Adminman",
                 LastName = "Testman",
                 Organization = "Kartverket",
                 UserType = "Admin",
                 Password = "!Testink00!",
-                Email = email
+                Email = "1234@admin.test"
             };
-            email = "1234@employee.test";
-            AppUser Employee = new AppUser
+
+            AppUser employee = new AppUser
             {
-                Name = email,
+                Name = "1234@employee.test",
                 FirstName = "Employman",
                 LastName = "Test",
                 Organization = "Kartverket",
-                UserName = email,
+                UserName = "1234@employee.test",
                 UserType = "Employee",
                 Password = "!Testink00!",
-                Email = email
+                Email = "1234@employee.test"
             };
 
             await _userManager.CreateAsync(user, "!Testink00!");
-            await _userManager.CreateAsync(Admin, "!Testink00!");
-            await _userManager.CreateAsync(Employee, "!Testink00!");
-            return new GeneralResponse(true,"Default test users generated successfully");
+            await _userManager.CreateAsync(admin, "!Testink00!");
+            await _userManager.CreateAsync(employee, "!Testink00!");
+
+            return new GeneralResponse(true, "Default test users created");
         }
     }
 }

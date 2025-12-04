@@ -1,4 +1,4 @@
-﻿using KartverketRegister.Models;
+﻿using KartverketRegister.Models.Responses;
 using Xunit;
 
 namespace KartverketRegister.Tests.Models

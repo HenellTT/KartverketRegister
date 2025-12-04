@@ -7,6 +7,8 @@
     width: fit-content;
 }
 
+
+/* Generell stil */
 body {
     font-family: 'Inter', 'Segoe UI', sans-serif;
     background-color: #f5f8fc;
@@ -86,7 +88,7 @@ body {
 }
 
     .logout-button:hover {
-        background-color: #16345e;
+        background-color: #0066b2;
     }
 
 /* --- Logge-inn knapp --- */
@@ -113,7 +115,6 @@ body {
 }
 
     .btn:hover {
-        background-color: #005fa3;
+        background-color: #0066b2;
         transform: translateY(-2px);
     }
-}
