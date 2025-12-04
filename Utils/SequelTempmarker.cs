@@ -1,23 +1,30 @@
-using KartverketRegister.Models.Markers;
-using KartverketRegister.Models.Responses;
+using KartverketRegister.Models;
+using Microsoft.AspNetCore.Identity;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Tls;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace KartverketRegister.Utils
 {
-    // SQL-queries for midlertidige markører (Markers-tabellen)
-    public class SequelTempmarker : SequelBase
+	// SQL queries for alt som har med tempmarker å gjøre. 
+    public class SequelTempmarker: SequelBase
     {
-        public SequelTempmarker(string dbIP, string dbname) : base(dbIP, dbname) { }
-
+        public SequelTempmarker(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
+        { }
         public void SaveMarker(string type, string description, double lat, double lng, decimal height, int UserId, string GeoJson)
         {
             conn.Open();
 
-            string sql = @"INSERT INTO Markers (Type, Description, Lat, Lng, HeightMOverSea, UserId, GeoJson) 
-                           VALUES (@type, @description, @lat, @lng, @Height, @UserId, @GeoJson)";
+            string sql = "INSERT INTO Markers (Type, Description, Lat, Lng, HeightMOverSea, UserId, GeoJson) " +
+                     "VALUES (@type, @description, @lat, @lng, @Height, @UserId, @GeoJson)";
 
-            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            using (var cmd = new MySqlCommand(sql, conn))
             {
+                // Parameters protect against SQL injection 
                 cmd.Parameters.AddWithValue("@type", type);
                 cmd.Parameters.AddWithValue("@description", description);
                 cmd.Parameters.AddWithValue("@lat", lat);
@@ -25,19 +32,18 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@Height", height);
                 cmd.Parameters.AddWithValue("@UserId", UserId);
                 cmd.Parameters.AddWithValue("@GeoJson", GeoJson);
-                cmd.ExecuteNonQuery();
+               
+                cmd.ExecuteNonQuery(); // <-- this runs the INSERT
+                
             }
-
             conn.Close();
         }
-
         public List<TempMarker> FetchMyMarkers(int UserId)
         {
             conn.Open();
             List<TempMarker> Markers = new List<TempMarker>();
             string sql = "SELECT * FROM Markers WHERE UserId = @userId";
-
-            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@userId", UserId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -45,6 +51,8 @@ namespace KartverketRegister.Utils
                     while (reader.Read())
                     {
                         TempMarker mrk = new TempMarker(reader);
+                        
+
                         Markers.Add(mrk.HtmlEncodeStrings());
                     }
                 }
@@ -53,23 +61,23 @@ namespace KartverketRegister.Utils
             conn.Close();
             return Markers;
         }
-
         public TempMarker FetchMarkerById(int markerId)
         {
-            TempMarker mrk = null;
+            TempMarker mrk = null; // Will hold the result
 
             conn.Open();
             string sql = "SELECT * FROM Markers WHERE MarkerId = @markerId LIMIT 1";
 
-            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@markerId", markerId);
 
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
+                    if (reader.Read()) // Only read first row
                     {
                         mrk = new TempMarker(reader);
+                        
                     }
                 }
             }
@@ -79,41 +87,42 @@ namespace KartverketRegister.Utils
             // Fallback if marker not found
             if (mrk == null)
             {
-                mrk = new TempMarker
-                {
-                    Description = "Not found",
-                    MarkerId = -1,
-                    Type = "None",
-                    Lat = 0,
-                    Lng = 0,
-                    UserId = -1
-                };
+                mrk = new TempMarker();
+                mrk.Description = "No";
+                mrk.MarkerId = -1;
+                mrk.Type = "No";
+                mrk.Lat = 0;
+                mrk.Lng = 0;
+                mrk.UserId = -1;
             }
 
             return mrk.HtmlEncodeStrings();
         }
-
         public GeneralResponse DeleteMarkerById(int markerId, int UserId)
         {
             try
             {
-                conn.Open();
-                string sql = "DELETE FROM Markers WHERE MarkerId = @MarkerId AND UserId = @UserId";
 
-                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@MarkerId", markerId);
-                    cmd.Parameters.AddWithValue("@UserId", UserId);
-                    cmd.ExecuteNonQuery();
-                }
+            conn.Open();
+            //string sql = "DELETE FROM Markers WHERE MarkerId = @MarkerId";
+            string sql = "DELETE FROM Markers WHERE MarkerId = @MarkerId AND UserId = @UserId";
 
-                conn.Close();
-                return new GeneralResponse(true, "Marker Deleted Successfully");
-            }
-            catch (Exception ex)
+            using (var cmd = new MySqlCommand(sql, conn))
             {
-                return new GeneralResponse(false, $"Error deleting marker: {ex.Message}");
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.Parameters.AddWithValue("@UserId", UserId);
+                cmd.ExecuteNonQuery();
+
             }
+
+            conn.Close();
+                return new GeneralResponse(true, "Marker Deleted Successfully");
+
+            } catch (Exception ex)
+            {
+                return new GeneralResponse(false, $"Error deleting marker: {ex}");
+            }
+
         }
     }
 }

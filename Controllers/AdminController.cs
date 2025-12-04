@@ -1,27 +1,36 @@
 ﻿using KartverketRegister.Auth;
-using KartverketRegister.Models.Markers;
-using KartverketRegister.Models.Responses;
+using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Bcpg;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using System.Drawing.Printing;
+using System.Globalization;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+
 
 namespace KartverketRegister.Controllers
 {
-    // Saksbehandler-dashboard for behandling av innmeldte markører
-    [Authorize(Roles = "Employee,Admin")]
-    public class AdminController : Controller
+    //Administrasjon av markør (reset, review, approve/reject, hente og slette
+    [Authorize(Roles = "Employee,Admin")]  
+    public class AdminController : Controller // Arver fra Controller for å håndtere markører
     {
         private readonly UserManager<AppUser> _userManager;
-
         public AdminController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
         }
-
         [HttpGet]
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+            return View();
 
+        }
         [HttpGet]
         public IActionResult ResetDB()
         {
@@ -34,12 +43,12 @@ namespace KartverketRegister.Controllers
                 sequel.InitDb();
                 sequel.conn.Close();
                 Constants.ResetDbOnStartup = false;
-                return Ok(new GeneralResponse(true, "Database reset successfully"));
-            }
-            catch (Exception e)
+                return Ok(new GeneralResponse(true, "Database Resetted Successfully"));
+            } catch (Exception e)
             {
-                return Ok(new GeneralResponse(false, $"Database reset failed: {e.Message}"));
+                return Ok(new GeneralResponse(true, $"Database Reset failed: {e.Message}"));
             }
+
         }
 
         [HttpPost]
@@ -55,7 +64,6 @@ namespace KartverketRegister.Controllers
             }
             return View(Mrk);
         }
-
         [HttpPost]
         public async Task<IActionResult> HandleReview(int MarkerId, string ReviewComment, string Status)
         {
@@ -69,12 +77,13 @@ namespace KartverketRegister.Controllers
                 if (Status == "Approve")
                 {
                     sequel.ApproveMarker(MarkerId, ReviewComment, UserId);
-                    return Ok(new GeneralResponse(true, $"Marker {MarkerId} approved successfully"));
+                    return Ok(new GeneralResponse(true, $"Marker {MarkerId} Approved successfully"));
+
                 }
                 else if (Status == "Reject")
                 {
                     sequel.RejectMarker(MarkerId, ReviewComment, UserId);
-                    return Ok(new GeneralResponse(true, $"Marker {MarkerId} rejected successfully"));
+                    return Ok(new GeneralResponse(true, $"Marker {MarkerId} Rejected successfully"));
                 }
                 else
                 {
@@ -83,31 +92,34 @@ namespace KartverketRegister.Controllers
             }
             catch (Exception e)
             {
-                return Ok(new GeneralResponse(false, $"Marker {MarkerId} review failed: {e.Message}"));
+                return Ok(new GeneralResponse(false, $"Marker {MarkerId} was NOT reviewed successfully! Error: {e.Message}"));
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllMarkers(string markerStatus)
+        public async Task<IActionResult> GetAllMarkers(string markerStatus) // RESTRICT TO ONLY ASSIGNED MARKERS 
         {
             if (Enum.TryParse(typeof(MarkerStatus), markerStatus, true, out var result))
             {
+                // Enum.TryParse succeeded, 'result' is of type object
                 var status = (MarkerStatus)result;
 
                 List<Marker> MarkerList;
                 AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
+                Console.WriteLine($"GetAllMarkers requested by UserId {appUser.Id}");
 
                 try
                 {
                     SequelAdmin sequel = new SequelAdmin(Constants.DataBaseIp, Constants.DataBaseName);
                     MarkerList = sequel.FetchAllMarkers(markerStatus, appUser.Id);
+
                 }
                 catch (Exception e)
                 {
                     return BadRequest(new
                     {
                         Success = false,
-                        Message = $"Problem fetching markers: {e.Message}"
+                        Message = $"Problem fetching markers! E: {e}"
                     });
                 }
 
@@ -128,23 +140,21 @@ namespace KartverketRegister.Controllers
                 });
             }
         }
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
+        [HttpGet]
         public IActionResult DeleteMarker(int MarkerId)
         {
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
                 sequel.DeleteMarkerById(MarkerId);
-                return Ok(new GeneralResponse(true, $"Marker {MarkerId} deleted successfully"));
+                return Ok(new GeneralResponse(true,$"Marker ${MarkerId} removed successfully"));
             }
             catch
             {
-                return Ok(new GeneralResponse(false, $"Marker {MarkerId} could not be deleted"));
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT removed successfully"));
             }
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> Approve(int MarkerId, string ReviewComment)
         {
@@ -154,15 +164,14 @@ namespace KartverketRegister.Controllers
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
-                sequel.ApproveMarker(MarkerId, ReviewComment, UserId);
-                return Ok(new GeneralResponse(true, $"Marker {MarkerId} approved successfully"));
+                sequel.ApproveMarker(MarkerId,ReviewComment, UserId);
+                return Ok(new GeneralResponse(true, $"Marker ${MarkerId} approved successfully"));
             }
             catch
             {
-                return Ok(new GeneralResponse(false, $"Marker {MarkerId} was NOT approved successfully"));
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT approved successfully"));
             }
         }
-
         [HttpPost]
         public async Task<IActionResult> Reject(int MarkerId, string ReviewComment)
         {
@@ -173,13 +182,12 @@ namespace KartverketRegister.Controllers
             try
             {
                 sequel.RejectMarker(MarkerId, ReviewComment, UserId);
-                return Ok(new GeneralResponse(true, $"Marker {MarkerId} rejected successfully"));
+                return Ok(new GeneralResponse(true, $"Marker ${MarkerId} approved successfully"));
             }
             catch
             {
-                return Ok(new GeneralResponse(false, $"Marker {MarkerId} was NOT rejected successfully"));
+                return Ok(new GeneralResponse(false, $"Marker ${MarkerId} was NOT approved successfully"));
             }
         }
     }
 }
-

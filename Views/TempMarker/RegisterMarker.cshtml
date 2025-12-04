@@ -1,4 +1,4 @@
-﻿@model TempMarker
+﻿@model KartverketRegister.Models.TempMarker
 
 @{
     ViewData["Title"] = "Register Marker";
@@ -8,7 +8,6 @@
 
 <a asp-controller="Pilot" asp-action="Index">&larr; Back</a>
 <form method="post" asp-action="SubmitMarker" asp-controller="Marker">
-    <input type="hidden" name="TempMarkerId" value="@Model.MarkerId" />
     <h1>@ViewData["Title"]</h1>
 
     <div class="container-content">
@@ -56,7 +55,7 @@
         </div>
         <div class="form-group hidden-input">
             <label>GeoJson</label>
-            <input required type="text" value="@(Model.GeoJson ?? "")" name="GeoJson" />
+            <input required type="text" value="@Model.GeoJson.ToString(System.Globalization.CultureInfo.InvariantCulture)" name="GeoJson" />
         </div>
     </div>
     

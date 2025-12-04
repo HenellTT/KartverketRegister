@@ -63,7 +63,7 @@ div .obstacleContainer{
     }
 
 thead {
-    background: #0066b2;
+    background: #428fd6;
     color: white;
     display: table;
     width: 100%;
@@ -125,13 +125,6 @@ button {
         transform: scale(1.05);
     }
 
-    /* Fjern hover fra FlightMode, User, Logout og Full info knappene */
-    .obstacleContainer button:hover,
-    #mymrk button:hover,
-    #mymrksub button:hover {
-        transform: none;
-    }
-
     /* Button colors */
     button:nth-child(1) {
         background: #4caf50;
@@ -139,7 +132,7 @@ button {
     }
     /* Continue Registration */
     button:nth-child(2) {
-        background: #0066b2;
+        background: #2196f3;
         color: white;
     }
     /* Delete */

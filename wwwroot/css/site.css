@@ -26,7 +26,7 @@ body {
    Header
 ============================ */
 .nav-btn {
-    background-color: #0066b2 !important;
+    background-color: #0d6efd !important;
     color: white !important;
     width: 190px !important; 
     height: 52px !important; 
@@ -43,7 +43,7 @@ body {
 }
 
     .nav-btn:hover {
-        background-color: #0066b2 !important;
+        background-color: #0056b3 !important;
         color: white !important;
     }
 
@@ -53,6 +53,15 @@ body {
 #Notification-Open-Button {
     padding: 0 !important; 
     font-size: 22px !important; 
+
+
+
+#Notification-Open-Button {
+    font-size: 25px;
+    line-height: 1;
+    background: none;
+    border: none;
+    padding: 12px 12px;
 }
 
 /* ============================
@@ -76,19 +85,4 @@ body {
         font-weight: 700 !important;
         font-size: 16px !important;
         text-decoration: none !important;
-    }
-
-/* ============================
-   Global btn-primary override
-============================ */
-.btn-primary {
-    background-color: #0066b2 !important;
-    border-color: #0066b2 !important;
-}
-
-    .btn-primary:hover,
-    .btn-primary:focus,
-    .btn-primary:active {
-        background-color: #0066b2 !important;
-        border-color: #0066b2 !important;
     }
