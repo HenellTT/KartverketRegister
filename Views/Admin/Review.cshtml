@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="~/css/Admin-Review.css" asp-append-version="true" />
 
 </head>
+
+    <a href="./../Admin" class="back-link-text">&larr; Back to Admin Panel</a>
+
 <h2>Review Marker</h2>
 
 <div class="ap">
@@ -99,7 +102,7 @@
             if (data.success) {
                 statusDiv.innerText = data.message || 'Marker saved successfully! Redirecting back. . .';
                 form.reset();
-                setTimeout(() => { location.href='./../Admin'; }, 2500);
+                setTimeout(() => { location.href='./../Admin'; }, 750);
 
                 // Optional: remove button highlight
                 document.querySelectorAll(".ar-button-clicked").forEach(el => el.classList.remove("ar-button-clicked"));
@@ -140,6 +143,27 @@
         
         
     })
+    const encoded = "@Html.Raw(Model.GeoJson ?? "null")";
+
+    // Create a temporary element to decode HTML entities
+    const parser = new DOMParser();
+    const decoded = parser.parseFromString(encoded, "text/html").documentElement.textContent;
+
+    // Now parse JSON
+    const GeoJson = JSON.parse(decoded);
+    console.log(GeoJson);
+    let bounds;
+    if (GeoJson) {
+        const geoLayer = L.geoJSON(GeoJson).addTo(map);
+
+        // Fit map view to all features
+        bounds = geoLayer.getBounds();
+        if (bounds.isValid()) {
+            setTimeout( () => {
+                map.fitBounds(bounds, { padding: [40, 40] })
+            },1000);
+        }
+    }
 </script>
 
 

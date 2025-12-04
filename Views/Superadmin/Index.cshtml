@@ -1,0 +1,24 @@
+﻿@page
+
+@{
+}
+<link rel="stylesheet" href="~/css/SuperAdmin.css" />
+
+<body>
+<h2>Hello, choose your next action</h2>
+
+<div class="Container">
+	<div class="sa-butt-cont">
+		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="ManageUsers"><button>Manage Users</button></a>
+	</div>
+
+	<div class="sa-butt-cont">
+		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="AssignSubmissions"><button>Assign submissions</button></a>
+
+	</div>
+	<div class="sa-butt-cont">
+		<a class="nav-link text-dark" asp-area="" asp-controller="Superadmin" asp-action="Statistics"><button>Statistics</button></a>
+	</div>
+</div>
+
+</body>

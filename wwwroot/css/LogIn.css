@@ -1,0 +1,37 @@
+﻿/* --- Base Layout --- */
+body {
+   
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    text-align:center;
+}
+h1{
+    font-size: 40px;
+}
+
+h2{
+   font-size: 30px;
+}
+
+.LogInButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 160px;
+    margin-top: 250px;
+}
+
+    .LogInButtons button {
+        width: 250px;
+        height: 150px;
+        background-color: #f8f8f8;
+        border: 2px solid #333;
+        border-radius: 12px;
+        font-size: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
+    }
+
+

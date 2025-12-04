@@ -56,3 +56,5 @@ nunit-*.xml
 .vs
 *.csproj.user
 mariadb_data
+Tests/bin
+Tests/obj

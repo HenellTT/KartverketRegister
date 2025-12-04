@@ -14,7 +14,7 @@ form.addEventListener("submit", async (event) => {
 
     // Convert checkbox
     data.IsTemporary = form.querySelector("[name='IsTemporary']").checked;
-
+    data.TempMarkerId = location.toLocaleString().split('=')[1];
     // Optional date (may be empty)
     if (data.ExpectedRemovalDate === "") data.ExpectedRemovalDate = null;
 

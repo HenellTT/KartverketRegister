@@ -1,18 +1,21 @@
-using MySql.Data.MySqlClient;
 using KartverketRegister.Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace KartverketRegister.Utils
 {
-	// SQL queries for alt som har med Marker/obstacler å gjøre. 
+    // SQL queries for alt som har med Marker/obstacler å gjøre. 
     public class SequelMarker : SequelBase
     {
 
         public SequelMarker(string dbIP, string dbname) : base(dbIP, dbname) // calls base constructor
+        { }
+        public SequelMarker() : base() // calls base constructor
         { }
         public void SaveMarker(
             string type,
@@ -31,7 +34,8 @@ namespace KartverketRegister.Utils
             int? submittedBy = null,
             int? reviewedBy = null,
             string? reviewComment = null,
-            string? source = null
+            string? source = null,
+            string? geojson = null
         )
         {
             conn.Open();
@@ -39,10 +43,10 @@ namespace KartverketRegister.Utils
             string sql = @"
                 INSERT INTO RegisteredMarkers 
                 (Type, Description, Lat, Lng, UserId, Organization, State, HeightM, HeightMOverSea, AccuracyM, 
-                 ObstacleCategory, IsTemporary, Lighting, SubmittedBy, ReviewedBy, ReviewComment, LastUpdated, Source)
+                 ObstacleCategory, IsTemporary, Lighting, SubmittedBy, ReviewedBy, ReviewComment, LastUpdated, Source, GeoJson)
                 VALUES 
                 (@Type, @Description, @Lat, @Lng, @UserId, @Organization, @State, @HeightM, @HeightMOverSea, @AccuracyM,
-                 @ObstacleCategory, @IsTemporary, @Lighting, @SubmittedBy, @ReviewedBy, @ReviewComment, @LastUpdated, @Source);
+                 @ObstacleCategory, @IsTemporary, @Lighting, @SubmittedBy, @ReviewedBy, @ReviewComment, @LastUpdated, @Source, @GeoJson);
                 ";
 
             using (var cmd = new MySqlCommand(sql, conn))
@@ -69,10 +73,11 @@ namespace KartverketRegister.Utils
                 cmd.Parameters.AddWithValue("@LastUpdated", DateTime.UtcNow);
                 cmd.Parameters.AddWithValue("@Source", source ?? (object)DBNull.Value);
 
+                cmd.Parameters.AddWithValue("@GeoJson", WebUtility.HtmlDecode(geojson));
+
                 cmd.ExecuteNonQuery();
             }
-            Console.WriteLine($"laat: {lat}");
-            Console.WriteLine($"lnng: {lng}");
+
             conn.Close();
         }
         public List<Marker> FetchMyMarkers(int UserId)
@@ -92,6 +97,7 @@ namespace KartverketRegister.Utils
 
                         mrk.Type = reader["Type"] as string;
                         mrk.Description = reader["Description"] as string;
+                        
                         mrk.Lat = reader.GetDouble("Lat");
                         mrk.Lng = reader.GetDouble("Lng");
 
@@ -104,6 +110,9 @@ namespace KartverketRegister.Utils
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
+                        mrk.Date = Convert.ToDateTime(reader["Date"]);
+                        mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
+
 
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 
@@ -111,7 +120,7 @@ namespace KartverketRegister.Utils
                         mrk.ReviewedBy = reader["ReviewedBy"] != DBNull.Value ? Convert.ToInt32(reader["ReviewedBy"]) : (int?)null;
                         mrk.ReviewComment = reader["ReviewComment"] != DBNull.Value ? reader["ReviewComment"].ToString() : null;
 
-                        Markers.Add(mrk);
+                        Markers.Add(mrk.HtmlEncodeStrings());
                     }
                 }
             }
@@ -121,7 +130,7 @@ namespace KartverketRegister.Utils
         }
         public Marker FetchMarkerById(int markerId)
         {
-            Marker mrk = new Marker() ; // Will hold the result
+            Marker mrk = new Marker(); // Will hold the result
 
             conn.Open();
             string sql = @"
@@ -141,7 +150,7 @@ namespace KartverketRegister.Utils
                 {
                     if (reader.Read()) // Only read first row
                     {
-                        
+
 
                         mrk.Type = reader["Type"] as string;
                         mrk.Description = reader["Description"] as string;
@@ -157,6 +166,7 @@ namespace KartverketRegister.Utils
                         mrk.Lighting = reader["Lighting"] as string;
                         mrk.Source = reader["Source"] as string;
                         mrk.State = reader["State"] as string;
+                        mrk.GeoJson = reader["GeoJson"] != DBNull.Value ? (string)reader["GeoJson"] : null;
 
                         mrk.MarkerId = reader["MarkerId"] != DBNull.Value ? Convert.ToInt32(reader["MarkerId"]) : (int?)null;
 
@@ -176,7 +186,7 @@ namespace KartverketRegister.Utils
                 return null;
             }
 
-            return mrk;
+            return mrk.HtmlEncodeStrings();
         }
         public void DeleteMarkerById(int markerId)
         {
@@ -191,6 +201,8 @@ namespace KartverketRegister.Utils
             }
 
             conn.Close();
+            int UserId = GetUserIdFromMarkerId(markerId);
+            Notificator.SendNotification(UserId, $"Your Submission has been Removed", "Warning", markerId);
 
         }
         public void SetMarkerStatusSeen(int markerId)
@@ -208,39 +220,98 @@ namespace KartverketRegister.Utils
             conn.Close();
 
         }
-        public void ApproveMarker(int markerId, string ReviewComment)
+        public void ApproveMarker(int markerId, string ReviewComment, int ReviewerId)
         {
             conn.Open();
-            string sql = "UPDATE RegisteredMarkers SET State = 'Accepted', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+            string sql = "UPDATE RegisteredMarkers SET State = 'Accepted', ReviewComment = @ReviewComment, ReviewedBy = @UserId WHERE MarkerId = @MarkerId";
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@MarkerId", markerId);
                 cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.Parameters.AddWithValue("@UserId", ReviewerId);
                 cmd.ExecuteNonQuery();
 
             }
-
             conn.Close();
+            int UserId = GetUserIdFromMarkerId(markerId);
+            Notificator.SendNotification(UserId, $"Your Submission has been approved", "Info", markerId);
 
         }
-        public void RejectMarker(int markerId, string ReviewComment)
+        public void RejectMarker(int markerId, string ReviewComment, int ReviewerId)
         {
             conn.Open();
-            string sql = "UPDATE RegisteredMarkers SET State = 'Rejected', ReviewComment = @ReviewComment WHERE MarkerId = @MarkerId";
+            string sql = "UPDATE RegisteredMarkers SET State = 'Rejected', ReviewComment = @ReviewComment, ReviewedBy = @UserId WHERE MarkerId = @MarkerId";
+
 
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@MarkerId", markerId);
                 cmd.Parameters.AddWithValue("@ReviewComment", ReviewComment);
+                cmd.Parameters.AddWithValue("@UserId", ReviewerId);
                 cmd.ExecuteNonQuery();
 
             }
 
             conn.Close();
+            int UserId = GetUserIdFromMarkerId(markerId);
+            Notificator.SendNotification(UserId, $"Your Submission has been rejected", "Info", markerId);
 
         }
+        public int GetUserIdFromMarkerId(int MarkerId)
+        {
+            conn.Open();
+            string sql = "SELECT UserId FROM RegisteredMarkers WHERE MarkerId = @MarkerId";
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", MarkerId);
+                using (var Reader = cmd.ExecuteReader())
+                {
+                    int UserId = 0;
+                    if (Reader.Read())
+                    {
+                        UserId = Reader.GetInt32("UserId");
+                    }
 
+                    return UserId;
+                }
+            }
+
+        }
+        public List<LocationModel> GetObstacles() { // add lat lng l8r to limit amount of markers fetched by user;
+            conn.Open();
+
+            List<LocationModel> markers = new List<LocationModel>();
+            
+            string sql = @"
+                SELECT Lat,Lng,ObstacleCategory,GeoJson
+                FROM RegisteredMarkers
+               
+            ";
+
+
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+               
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        LocationModel LM = new LocationModel();
+                        LM.ObstacleCategory = reader["ObstacleCategory"] as string;
+                        LM.GeoJson = reader["GeoJson"] as string;
+                        LM.Lat = reader.GetDouble("Lat");
+                        LM.Lng = reader.GetDouble("Lng");
+                        markers.Add(LM);
+                    }
+                }
+            }
+            conn.Close();
+            return markers;
+        }
 
     }
+
+
 }
+

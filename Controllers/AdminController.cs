@@ -1,19 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KartverketRegister.Auth;
 using KartverketRegister.Models;
+using KartverketRegister.Models.Other;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Bcpg;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq.Expressions;
-using KartverketRegister.Models.Other;
-using System.Diagnostics.Eventing.Reader;
+using System.Threading.Tasks;
 
 
 namespace KartverketRegister.Controllers
 {
-
+    //Administrasjon av markør (reset, review, approve/reject, hente og slette
+    [Authorize(Roles = "Employee,Admin")]  
     public class AdminController : Controller // Arver fra Controller for å håndtere markører
     {
+        private readonly UserManager<AppUser> _userManager;
+        public AdminController(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
         [HttpGet]
         public IActionResult Index()
         {
@@ -23,6 +34,7 @@ namespace KartverketRegister.Controllers
         [HttpGet]
         public IActionResult ResetDB()
         {
+            //reset av databasen
             try
             {
                 SequelInit sequel = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
@@ -42,6 +54,7 @@ namespace KartverketRegister.Controllers
         [HttpPost]
         public IActionResult Review(int markerId)
         {
+            //viser markører for gjennomgang
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             Marker Mrk = sequel.FetchMarkerById(markerId);
             
@@ -49,25 +62,27 @@ namespace KartverketRegister.Controllers
             {
                 return NotFound();
             }
-            Console.WriteLine($"Mrk!!: {markerId}");
             return View(Mrk);
         }
         [HttpPost]
-        public IActionResult HandleReview(int MarkerId, string ReviewComment, string Status)
+        public async Task<IActionResult> HandleReview(int MarkerId, string ReviewComment, string Status)
         {
+            //håndtering av godkjenning eller avvisning av marker
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
-            Console.WriteLine($"Mid: {MarkerId}, RC: {ReviewComment} St: {Status}");
+            AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
+            int UserId = appUser.Id;
+
             try
             {
                 if (Status == "Approve")
                 {
-                    sequel.ApproveMarker(MarkerId, ReviewComment);
+                    sequel.ApproveMarker(MarkerId, ReviewComment, UserId);
                     return Ok(new GeneralResponse(true, $"Marker {MarkerId} Approved successfully"));
 
                 }
                 else if (Status == "Reject")
                 {
-                    sequel.RejectMarker(MarkerId, ReviewComment);
+                    sequel.RejectMarker(MarkerId, ReviewComment, UserId);
                     return Ok(new GeneralResponse(true, $"Marker {MarkerId} Rejected successfully"));
                 }
                 else
@@ -82,7 +97,7 @@ namespace KartverketRegister.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllMarkers(string markerStatus)
+        public async Task<IActionResult> GetAllMarkers(string markerStatus) // RESTRICT TO ONLY ASSIGNED MARKERS 
         {
             if (Enum.TryParse(typeof(MarkerStatus), markerStatus, true, out var result))
             {
@@ -90,11 +105,13 @@ namespace KartverketRegister.Controllers
                 var status = (MarkerStatus)result;
 
                 List<Marker> MarkerList;
+                AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
+                Console.WriteLine($"GetAllMarkers requested by UserId {appUser.Id}");
 
                 try
                 {
                     SequelAdmin sequel = new SequelAdmin(Constants.DataBaseIp, Constants.DataBaseName);
-                    MarkerList = sequel.FetchAllMarkers(markerStatus);
+                    MarkerList = sequel.FetchAllMarkers(markerStatus, appUser.Id);
 
                 }
                 catch (Exception e)
@@ -139,12 +156,15 @@ namespace KartverketRegister.Controllers
         }
         
         [HttpPost]
-        public IActionResult Approve(int MarkerId, string ReviewComment)
+        public async Task<IActionResult> Approve(int MarkerId, string ReviewComment)
         {
+            AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
+            int UserId = appUser.Id;
+
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
-                sequel.ApproveMarker(MarkerId,ReviewComment);
+                sequel.ApproveMarker(MarkerId,ReviewComment, UserId);
                 return Ok(new GeneralResponse(true, $"Marker ${MarkerId} approved successfully"));
             }
             catch
@@ -153,12 +173,15 @@ namespace KartverketRegister.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Reject(int MarkerId, string ReviewComment)
+        public async Task<IActionResult> Reject(int MarkerId, string ReviewComment)
         {
+            AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
+            int UserId = appUser.Id;
+
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             try
             {
-                sequel.RejectMarker(MarkerId, ReviewComment);
+                sequel.RejectMarker(MarkerId, ReviewComment, UserId);
                 return Ok(new GeneralResponse(true, $"Marker ${MarkerId} approved successfully"));
             }
             catch

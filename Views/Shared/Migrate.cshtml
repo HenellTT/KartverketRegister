@@ -1,0 +1,23 @@
+﻿@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+	<a href="/"><button>Back</button></a>
+	<p>Enter password to Migrate database</p>
+	<input id="input" placeholder="password" type="password"/><button onclick="SendMigrationRequest()">Migrate!</button>
+	<p id="output"></p>
+</body>
+<script>
+	const inputy = document.getElementById('input');
+	const ouput = document.getElementById('output');
+
+	async function SendMigrationRequest() {
+		const pwd = inputy.value;
+		const resp = await fetch(`/Migrate/Migrate?hashish=${pwd}`);
+		const data = await resp.json();
+		output.innerText = data.message;
+	}
+</script>
+</html>

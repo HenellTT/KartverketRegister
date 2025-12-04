@@ -1,0 +1,19 @@
+@model KartverketRegister.Models.Marker
+
+@{
+    ViewData["Title"] = "Edit marker";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" asp-action="SaveMarker">
+    <input type="hidden" asp-for="MarkerId" />
+    
+    <div class="mb-3">
+        <label asp-for="ObstacleCategory" class="form-label"></label>
+        <input asp-for="ObstacleCategory" class="form-control" />
+    </div>
+    
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="User" class="btn btn-secondary">Cancel</a>
+</form>

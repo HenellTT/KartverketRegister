@@ -1,0 +1,29 @@
+<!-- USER INFORMATION-->
+@{
+    Layout = null;
+}
+@model KartverketRegister.Auth.AppUser
+
+<link rel="stylesheet" href="~/css/User.css" asp-append-version="true" />
+
+<div class="user-page">
+    <div class="user-header">
+        <h1>My profile</h1>
+        <p>Here is your information</p>
+    </div>
+
+    <div class="user-card">
+        <h2>User info</h2>
+        <div class="user-info">
+            <div><span>Full Name:</span> @Model.FirstName @Model.LastName</div>
+            <div><span>Email:</span> @Model.Email</div>
+            <div><span>Organization:</span> @Model.Organization</div>
+            <div><span>Role:</span> @Model.UserType</div>
+        </div>
+    </div>
+
+    <div class="user-actions">
+        <a class="logout-button" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
+        <a class="logout-button" asp-area="" asp-controller="Pilot" asp-action="Index">Back</a>
+    </div>
+</div>

@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using KartverketRegister.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -7,6 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace KartverketRegister.Controllers
 {
+    [Authorize(Roles = "User,Employee,Admin")]
 
     public class FlightmodeController : Controller
     {

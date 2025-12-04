@@ -1,8 +1,16 @@
-﻿
+﻿//henter markers fra serveren basert på statusen 
 async function FetchMarkers(status) {
     try {
-        const response = await fetch('/Admin/GetAllMarkers?markerStatus=' + status);
-        if (!response.ok) throw new Error('Network response was not ok');
+
+        let response = await fetch('/Superadmin/FetchAllMarkers?markerStatus=' + status);
+        
+        if (!response.ok || response.redirected) {
+            response = await fetch('/Admin/GetAllMarkers?markerStatus=' + status);
+            if (!response.ok) {
+                throw new Error("Error fetching markers");
+
+            }
+        }
 
         const data = await response.json();
         return data.success ? data.markers : [];
@@ -13,16 +21,72 @@ async function FetchMarkers(status) {
 }
 
 const mymrk = document.getElementById('mymrk');
-
+let SortBy = 'markerId';
+let SortRev = true;
+//oppdaterer marker-listen
 async function UpdateMarkerList(status) {
     let markers = await FetchMarkers(status);
-    
+
     let stringToAdd = "";
-    markers.forEach((mrk) => { stringToAdd += CreateMarkerElement(mrk)})
+    markers.forEach((mrk) => {
+        stringToAdd += CreateMarkerElement(mrk);
+    });
     mymrk.innerHTML = stringToAdd;
+}
+//endrer sorteringsfilteret og oppdaterer tabellen
+async function UpdateMarkerListTableFilter(filter) {
+    let status = sts.value;
+    if (SortBy == filter) {
+        SortRev = !SortRev;
+    } else {
+        SortBy = filter;
+        SortRev = true;
+    }
+    await UpdateMarkerListTable(status);
+
+}
+
+//oppdaterer listen marker i tabellvisning med sortering
+async function UpdateMarkerListTable(status) {
+    let markers = await FetchMarkers(status);
+    markers.sort((a, b) => {
+        let valA = a[SortBy];
+        let valB = b[SortBy];
+
+        // Treat null/undefined as smallest value
+        if (valA == null) valA = '';
+        if (valB == null) valB = '';
+
+        let comparison = 0;
+
+        if (typeof valA === 'string' && typeof valB === 'string') {
+            comparison = valA.localeCompare(valB);
+        } else {
+            comparison = valA - valB;
+        }
+
+        return SortRev ? -comparison : comparison;
+    });
+
+    let stringToAdd = `<table><tr>
+        <td onclick="UpdateMarkerListTableFilter('date')">Date</td>
+        <td onclick="UpdateMarkerListTableFilter('userName')" ><u>User</u></td>
+        <td onclick="UpdateMarkerListTableFilter('heightM')">Height</td>
+        <td onclick="UpdateMarkerListTableFilter('heightMOverSea')">Height(sea)</td>
+        <td onclick="UpdateMarkerListTableFilter('organization')">Organization</td>
+        <td onclick="UpdateMarkerListTableFilter('type')" >Type</td>
+        <td onclick="UpdateMarkerListTableFilter('obstacleCategory')">Category</td>
+        <td onclick="UpdateMarkerListTableFilter('state')">Status</td>
+        <td>Actions</td>
+    </tr>`;
+       
+    markers.forEach((mrk) => { stringToAdd += CreateMarkerRow(mrk) })
+    mymrk.innerHTML = stringToAdd + "</table>";
 } 
 
+//lager html for en marker
 function CreateMarkerElement(marker) {
+
     return `
     <div class="tmk-cont trw-${marker.state}" id='markerBox-${marker.markerId}' style="padding:10px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
         <h3>${marker.type}</h3>
@@ -32,7 +96,7 @@ function CreateMarkerElement(marker) {
             <p><b>Height (M):</b> ${marker.heightM ?? 'N/A'}</p>
             <p><b>Height Over Sea (M):</b> ${marker.heightMOverSea ?? 'N/A'}</p>
             <p><b>Organization:</b> ${marker.organization ?? 'N/A'}</p>
-            <p><b>Accuracy (M):</b> ${marker.accuracyM ?? 'N/A'}</p>
+            <p><b>Date</b> ${marker.date ?? 'N/A'}</p>
             <p><b>Obstacle Category:</b> ${marker.obstacleCategory ?? 'N/A'}</p>
 
             <p><b>Review Comment:</b> ${marker.reviewComment ?? 'N/A'}</p>
@@ -43,13 +107,36 @@ function CreateMarkerElement(marker) {
     </div>
     `;
 }
+
+//lager rad i tabellen for en marker
+function CreateMarkerRow(marker) {
+    let date = marker.date.replaceAll("-","/").split("T");
+    return `
+    <tr id="markerRow-${marker.markerId}" class="trw-${marker.state}">
+        <td>${date[0]} ${date[1]}</td>
+        <td><u>${marker.userName}</u></td>
+        <td>${marker.heightM ?? 'N/A'}</td>
+        <td>${marker.heightMOverSea ?? 'N/A'}</td>
+        <td>${marker.organization ?? 'N/A'}</td>
+        <td>${marker.type}</td>
+        <td>${marker.obstacleCategory ?? 'N/A'}</td>
+        <td>${marker.state ?? 'N/A'}</td>
+        <td style="text-align:right;">
+            <button onclick="postRedirect('/Admin/Review', { markerId: ${marker.markerId} })">Review</button>
+            <button onclick="DeleteMarker(${marker.markerId})">Delete</button>
+        </td>
+    </tr>
+    `;
+}
 const sts = document.getElementById("stateToSee");
+//sletter markers og oppdaterer tabellen
 function DeleteMarker(MarkerId) {
     fetch(`./Admin/DeleteMarker?MarkerId=${MarkerId}`).then(() => {
-        UpdateMarkerList(sts.value);
+        UpdateMarkerListTable(sts.value);
     })
     
 }
+//utfører post med skjult form
 function postRedirect(url, params = { }) {
     // Create a hidden form
     const form = document.createElement('form');
@@ -70,6 +157,8 @@ function postRedirect(url, params = { }) {
     document.body.appendChild(form);
     form.submit();
 }
+
+// scroller siden ned til en bestemt posisjon
 function SmoothScroll(topPx) {
     window.scrollTo({
         top: -2000000000,
@@ -82,11 +171,13 @@ function SmoothScroll(topPx) {
         behavior: 'smooth' 
     });
 }
+//Scroller til en spesifikk markør 
 function scrollToMarker(markerId) {
     const topsset = document.getElementById(`markerBox-${markerId}`).offsetTop;
     SmoothScroll(topsset);
 }
 
+// klasse for å beregne gjennomsnitt 
 class OverComplicatedAverage {
     constructor() {
         this.numbers = [];
@@ -100,7 +191,7 @@ class OverComplicatedAverage {
         this.numbers.push(n);
     }
 }
-
+//justerer ikomonstørrelse og popup-anker
 function ResizeIcons(size, ICONS) {
     const keys = Object.keys(ICONS.icons);
     keys.forEach((key) => {
@@ -112,6 +203,7 @@ function ResizeIcons(size, ICONS) {
     })
 }
 
+//oppdaterer markører på kartet
 async function UpdateMapMarkers(map, L, type = 'Everything') {
     const markers = await FetchMarkers(type);
     if (markers.length == 0) {

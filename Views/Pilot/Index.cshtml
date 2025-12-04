@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="BigContainer">
+    <div class="obstacleContainer">
+     
+        
+        <button onclick="location.href='/Flightmode'">FlightMode</button>
+        <button onclick="location.href='/Pilot/User'">User</button>
+        <button onclick="location.href='/Auth/Logout'">Logout</button>
+
+    </div>
+    <div id="SomeOtherForm">
+        <h2 class="selectionTitle">Drafts</h2>
+        <div id="mymrk"></div>
+    </div>
+    <div id="SomeOtherForm">
+        <h2 class="selectionTitle">Submitted Reports</h2>
+        <div id="mymrksub"></div>
+    </div>
+
+
+    <button type="button" class="darkmodeButton" onclick="dms()">Theme</button>
+</div>
+
+
+<link rel="stylesheet" href="~/css/PilotIndex.css" asp-append-version="true" />
+<script src="~/js/PilotIndex.js"></script>
+
+
+
+
+
+
+<script>
+    setTimeout( ()=>{
+        UpdateMyMarkerList();
+        UpdateMySubmissionList();
+    },200)
+
+   
+</script>
+

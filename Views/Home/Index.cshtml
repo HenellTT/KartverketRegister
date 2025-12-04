@@ -1,99 +1,226 @@
 @{
     ViewData["Title"] = "Home Page";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NRL Aviation Obstacle Register</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
 
-<!-- Leaflet Map Container -->
-<div class="BigContainer">
-    <div id="map"></div>
-    <></>
-    <div id="mapSideBar">
-        <nav id="sideBarNav">
-            <button onclick="showSideBarSec('TempMarkerForm'); SetActiveButton(this)">Mark it!</button>
-            <button onclick="showSideBarSec('SomeOtherForm'); UpdateMyMarkerList(); SetActiveButton(this)">Markers</button>
-            <button onclick="showSideBarSec('RegisterObstacleFromDraft'); UpdateMySubmissionList(); SetActiveButton(this)">Submitted</button>
-        </nav>
-        <div class="sideBarContainer">
-            <div id="TempMarkerForm">
-                <h3>Temporary Marker Form</h3>
-                <form id="tempMarkerFormForm">
-                    <label for="type">Type</label>
-                    <input type="text" id="type" name="type" placeholder="Enter type">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+        }
 
-                    <label for="description">Description</label>
-                    <input type="text" id="description" name="description" placeholder="Enter description">
+        header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
 
-                    <label for="lat">Latitude</label>
-                    <input type="number" id="lat" name="lat" readonly>
+        .hero {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
 
-                    <label for="lng">Longitude</label>
-                    <input type="number" id="lng" name="lng" readonly>
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
 
-                    <label for="height">Height (m)</label>
-                    <input step=0.01 type="number" id="height" name="height" placeholder="Enter height">
+        .hero-subtitle {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            color: #555;
+        }
 
-                    <button type="submit">Save Marker</button>
-                </form>
-                <div id="status"></div>
+        .logo-placeholder {
+            margin: 20px auto;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-            </div>
-            <div id="SomeOtherForm" hidden>
-                <div id="mymrk"></div>
-            </div>
-            <div id="RegisterObstacleFromDraft" hidden>
-                <div id="mymrksub"></div>
-            </div>
+        .logoz {
+            max-height: 80px;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Portrait = vertical screen */
+        @@media (orientation: portrait) {
+            .logo-placeholder
+
+        {
+            flex-direction: column;
+        }
+
+        }
+
+        /* Landscape = horizontal screen */
+        @@media (orientation: landscape) {
+            .logo-placeholder
+
+        {
+            flex-direction: row;
+        }
+
+        }
+
+
+        
+        .helicopter-img-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 30px auto;
+            margin-bottom:0px;
+            aspect-ratio: 16/9;
+            background: #d9d9d9;
+            background-image: url("/img/nrlheli.jpg");
+            background-size:cover;
+            background-repeat:no-repeat;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #777;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .button-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+            .button-container .btn {
+                padding: 12px 28px;
+                font-size: 1.1rem;
+                border-radius: 8px;
+                font-weight: 600;
+            }
+
+        .info-section {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #4a6fa5;
+            padding-bottom: 6px;
+            margin-top: 35px;
+            color: #4a6fa5;
+            font-weight: 600;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+   
+
+    <section class="hero">
+        <div class="logo-placeholder">
+            <img class="logoz" src="/img/nrllogo.png">
+            <img class="logoz" src="/img/kv.png">
         </div>
 
-    </div>
-</div>
+        <h1 class="hero-title">Aviation Obstacle Register</h1>
+        <p class="hero-subtitle">
+            A reporting system for safe and efficient submission of aviation obstacle information
+            to the Nasjonalt register over luftfartshindre (NRL).
+        </p>
+        <div class="button-container">
+            <a class="btn btn-primary" href="/Auth/Login">Login</a>
+            <a class="btn btn-outline-primary" href="/Auth/Register">Register</a>
+        </div>
+        <div>
+            <div class="helicopter-img-container">
+            </div>
+            <p style="font:0.5em" >Image taken from NLA official website</p>
+        </div>
+        
 
-<link rel="stylesheet" href="~/css/MapPage-TempMarkerForm.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/MapPage.css" asp-append-version="true" />
-<script src="~/js/MapPage.js"></script>
-<script src="~/js/icons.js"></script>
+        
+    </section>
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin="" />
+    <section class="info-section">
+        <h2>About the Project</h2>
+        <p>
+            This system enables pilots and flight crews from NLA, the Air Force, and the Police to safely report man-made
+            obstacles that may pose danger to aviation. Objects over 15 meters (or 30 meters in dense areas), as well as all
+            power and signal lines, must be reported.
+        </p>
+        <h2>Made by Group 13</h2>
+        <ul>
+            
+            <li>
+                Taavi-Topias Henell</li>
+            <li>
+                Jakub Broz
+            </li>
+            <li>
+                Iselin Rolness
+            </li>
+            <li>
+                Aisha Rafi
+            </li>
+            <li>
+                Laurie Niyongabo
+            </li>
+            <li>Erza Malici</li>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
+        </ul>
+        <h2>Features</h2>
+        <ul>
+            <li>Fast and mobile-friendly obstacle reporting</li>
+            <li>Map-based submission using Leaflet</li>
+            <li>Employee panel for reviewing of submissions</li>
+            <li>Admin panel for managing users and assigning reviews to employees</li>
+        </ul>
 
+        <h2>Technical Requirements</h2>
+        <ul>
+            <li>MariaDB backend</li>
+            <li>Leaflet map with OSM/orthophoto layers</li>
+            <li>WGS84 / GeoJSON coordinate support</li>
+            <li>Offline support for low-signal environments</li>
+        </ul>
 
-<!-- Fullscreen CSS -->
-<style>
+        <h2>Future Enhancements</h2>
+        <ul>
+            <li>Photo Uploads</li>
+            <li>Multiple map layer support</li>
+            <li>Full Offline support</li>
+        </ul>
+    </section>
 
-</style>
-
-<script>
-    // Initialize the map
-    map = L.map('map').setView([51.505, -0.09], 13);
-
-    // Add OpenStreetMap tiles
-    let tl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    // Add a marker
-    //L.marker([51.505, -0.09]).addTo(map)
-    //    .bindPopup('Hello, Leaflet!')
-    //    .openPopup();
-    fetch("./icon/geticons").then(res => res.json()).then((IconList) => {
-        icons = new Icons(IconList);
-        mf = new MapFunctions(map, icons);
-        mf.Run();
-    })
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 
 
 
 
-    const childrenArray = Array.from(document.querySelector('.sideBarContainer').children);
-    function showSideBarSec(id) {
-        childrenArray.forEach(e => {e.hidden = true});
-        document.getElementById(id).hidden = false;
-    }
-</script>

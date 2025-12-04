@@ -1,4 +1,4 @@
-﻿/* --- Base Layout --- */
+﻿
 body {
     margin: 0;
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
@@ -10,7 +10,7 @@ body {
     line-height: 1.6;
 }
 
-/* --- Headings --- */
+
 h1, h2, h3 {
     margin: 0;
     font-weight: 600;
@@ -31,7 +31,7 @@ h2 {
     font-size: 1.1rem;
 }
 
-/* --- Layout --- */
+
 .main-container {
     display: flex;
     justify-content: flex-start;
@@ -53,10 +53,10 @@ h2 {
     padding: 20px;
     position: sticky;
     top: 100px;
-    height: 80vh;
+    height: 70vh;
 }
 
-/* --- Filter Sidebar --- */
+
 #filter {
     flex: 0 0 200px;
     background: #fafafa;
@@ -109,20 +109,23 @@ h2 {
     padding: 20px 25px;
 }
 
+#mymrk td button {
+    margin:2px;
+    width:83.2px;
+}
+
 /* --- Individual Marker Card --- */
 .tmk-cont {
     background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    border: 2px solid black;
+    margin:2px;
     border-radius: 10px;
     padding: 18px 20px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     transition: all 0.2s ease;
 }
 
-    .tmk-cont:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    }
+    
 
     .tmk-cont h3 {
         font-size: 1.1rem;
@@ -135,7 +138,6 @@ h2 {
         color: #4b5563;
     }
 
-    /* --- Buttons in Cards --- */
     .tmk-cont button {
         margin-top: 14px;
         margin-right: 10px;
@@ -188,22 +190,6 @@ h2 {
     display:none;
 }
 
-.trw-Accepted {
-    background-color:green;
-}
-    .trw-Accepted p {
-        color: darkturquoise;
-    }
-.trw-Rejected {
-    background-color:orangered;
-    
-}
-    .trw-Rejected p {
-        color: darkturquoise;
-    }
-.trw-Unseen {
-    background-color:aqua;
-}
-.trw-Seen {
-    background-color: aqua;
+#mymrk tr {
+    border-bottom: 2px solid black !important;
 }

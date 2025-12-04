@@ -1,0 +1,61 @@
+﻿/* Generell stil */
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #f5f8fc;
+    margin: 0;
+    padding: 0;
+    color: #2c3e50;
+}
+
+/* Skjemakontainer */
+.container {
+    max-width: 420px;
+    margin: 60px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    /*box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);*/
+}
+
+/* Inputfelt */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    border: 1px solid #d0d7e2;
+    font-size: 16px;
+    background-color: #f9fbff;
+    transition: border-color 0.3s ease;
+}
+
+    input:focus {
+        border-color: #1a3e72;
+        outline: none;
+    }
+
+/* Knapper */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #1a3e72;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    /*box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);*/
+    margin-top:8px;
+}
+
+    button:hover {
+        background-color: #16345e;
+        transform: translateY(-1px);
+    }
+
+    button:active {
+        background-color: #122b4c;
+        transform: translateY(0);
+    }
