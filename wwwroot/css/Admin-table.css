@@ -12,64 +12,16 @@
 
 /* Header */
 #mymrk thead {
-<<<<<<< HEAD
-    background: #fff;
-    color: #333;
-    text-align: left;
-}
-
-    #mymrk thead tr:hover {
-        background: transparent;
-        transform: none;
-    }
-
-=======
-    background: linear-gradient(90deg, #0078d7, #00b4d8);
+    background: linear-gradient(90deg, #0066b2, #0088cc);
     color: #fff;
     text-align: left;
 }
 
->>>>>>> eb7798a9a6e043dc6b466e295f2fc2154ff0f912
     #mymrk thead th {
         padding: 12px 14px;
         font-weight: 600;
         letter-spacing: 0.4px;
     }
-<<<<<<< HEAD
-    
-    #mymrk thead th:hover {
-        background: transparent;
-        cursor: default;
-    }
-
-/* Header row - first tr (uses td instead of th) */
-#mymrk table tr:first-child,
-#mymrk table tbody tr:first-child {
-    background: #fff !important;
-    color: #333 !important;
-}
-
-#mymrk table tr:first-child:hover,
-#mymrk table tbody tr:first-child:hover {
-    background: #fff !important;
-    transform: none !important;
-}
-
-#mymrk table tr:first-child td,
-#mymrk table tbody tr:first-child td {
-    padding: 12px 14px;
-    font-weight: 600;
-    letter-spacing: 0.4px;
-    cursor: pointer;
-    background: transparent !important;
-}
-
-#mymrk table tr:first-child td:hover,
-#mymrk table tbody tr:first-child td:hover {
-    background: transparent !important;
-}
-=======
->>>>>>> eb7798a9a6e043dc6b466e295f2fc2154ff0f912
 
 /* Body Rows */
 #mymrk tbody tr {
@@ -77,22 +29,10 @@
     border-bottom: 1px solid #eee;
 }
 
-<<<<<<< HEAD
-    #mymrk tbody tr:not(:first-child):hover {
-        background: #f7fbff;
-        transform: scale(1.01);
-    }
-    
-    #mymrk tbody tr:first-child:hover {
-        background: #fff !important;
-        transform: none !important;
-    }
-=======
     #mymrk tbody tr:hover {
         background: #f7fbff;
         transform: scale(1.01);
     }
->>>>>>> eb7798a9a6e043dc6b466e295f2fc2154ff0f912
 
 /* Cells */
 #mymrk tbody td {
@@ -117,20 +57,12 @@
 }
 
     #mymrk button:first-child {
-<<<<<<< HEAD
         background: #0066b2;
-=======
-        background: #0078d7;
->>>>>>> eb7798a9a6e043dc6b466e295f2fc2154ff0f912
         color: #fff;
     }
 
         #mymrk button:first-child:hover {
-<<<<<<< HEAD
             background: #0066b2;
-=======
-            background: #005fa3;
->>>>>>> eb7798a9a6e043dc6b466e295f2fc2154ff0f912
         }
 
     #mymrk button:last-child {

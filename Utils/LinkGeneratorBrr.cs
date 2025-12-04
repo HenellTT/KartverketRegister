@@ -1,4 +1,4 @@
-﻿using KartverketRegister.Models.Other;
+﻿using KartverketRegister.Models.Geo;
 using System.Text.Json;
 using System.Web;
 
@@ -12,9 +12,9 @@ namespace KartverketRegister.Utils
         {
             Geometry gm = new Geometry
             {
-                x = e,
-                y = n,
-                spatialReference = new SpatialReference { wkid = 25833 }
+                X = e,
+                Y = n,
+                SpatialReference = new SpatialReference { Wkid = 25833 }
             };
 
             string jsonGm = JsonSerializer.Serialize(gm);

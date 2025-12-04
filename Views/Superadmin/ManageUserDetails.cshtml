@@ -1,4 +1,4 @@
-﻿@model KartverketRegister.Models.AppUserDto
+﻿@model AppUserDto
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
 @{
@@ -15,9 +15,9 @@
 <p>Role: @Model.UserType</p>
 <p>email: @Model.Email</p>
 <p>Set role to:
-	<button id="MUD-set-user">User</button>
-	<button id="MUD-set-admin">Admin</button>
-	<button id="MUD-set-employee">Employee</button>
+            <button id="MUD-set-user">User</button>
+            <button id="MUD-set-admin">Admin</button>
+            <button id="MUD-set-employee">Employee</button>
 </p>
 <p><button id="MUD-delete">Delete User</button></p>
 <p><input id="MUD-msg-input"></input><button id="MUD-msg-submit">Send Message</button></p>
@@ -31,9 +31,9 @@
 	const msNI = document.getElementById("MUD-msg-input");
 	const msNS = document.getElementById("MUD-msg-submit");
 
-	const splink = window.location.href.split('/');
+    const splink = window.location.href.split('/');
 	const UserId = splink[splink.length-1];
-	let UMP = new UserManagerPage(UserId, msU, msA, msE, msD, msNI, msNS, csrfToken_MUD);
+    let UMP = new UserManagerPage(UserId, msU, msA, msE, msD, msNI, msNS, csrfToken_MUD);
 
 
 </script>

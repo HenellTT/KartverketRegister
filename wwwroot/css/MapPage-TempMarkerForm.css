@@ -41,7 +41,7 @@
 
 #TempMarkerForm button {
     padding: 10px;
-    background: #0078d7;
+    background: #0066b2;
     color: white;
     border: none;
     border-radius: 6px;
@@ -51,7 +51,7 @@
 }
 
 #TempMarkerForm button:hover {
-    background: #005fa3;
+    background: #0066b2;
 }
 
 #mymrk {
@@ -107,7 +107,7 @@
     .tmk-cont button {
         margin-top: 10px;
         padding: 8px 14px;
-        background-color: #0078d7;
+        background-color: #0066b2;
         color: white;
         border: none;
         border-radius: 6px;
@@ -117,5 +117,5 @@
     }
 
         .tmk-cont button:hover {
-            background-color: #005fa3;
+            background-color: #0066b2;
         }
