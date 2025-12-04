@@ -1,0 +1,149 @@
+﻿/* === Marker Table Styling === */
+#mymrk table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 14px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Header */
+#mymrk thead {
+    background: #fff;
+    color: #333;
+    text-align: left;
+}
+
+    #mymrk thead tr:hover {
+        background: transparent;
+        transform: none;
+    }
+
+    #mymrk thead th {
+        padding: 12px 14px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+    }
+    
+    #mymrk thead th:hover {
+        background: transparent;
+        cursor: default;
+    }
+
+/* Header row - first tr (uses td instead of th) */
+#mymrk table tr:first-child,
+#mymrk table tbody tr:first-child {
+    background: #fff !important;
+    color: #333 !important;
+}
+
+#mymrk table tr:first-child:hover,
+#mymrk table tbody tr:first-child:hover {
+    background: #fff !important;
+    transform: none !important;
+}
+
+#mymrk table tr:first-child td,
+#mymrk table tbody tr:first-child td {
+    padding: 12px 14px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    background: transparent !important;
+}
+
+#mymrk table tr:first-child td:hover,
+#mymrk table tbody tr:first-child td:hover {
+    background: transparent !important;
+}
+
+/* Body Rows */
+#mymrk tbody tr {
+    transition: background 0.2s ease, transform 0.1s ease;
+    border-bottom: 1px solid #eee;
+}
+
+    #mymrk tbody tr:not(:first-child):hover {
+        background: #f7fbff;
+        transform: scale(1.01);
+    }
+    
+    #mymrk tbody tr:first-child:hover {
+        background: #fff !important;
+        transform: none !important;
+    }
+
+/* Cells */
+#mymrk tbody td {
+    padding: 10px 14px;
+    vertical-align: middle;
+}
+
+/* Alternate Row Color */
+#mymrk tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* Buttons */
+#mymrk button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 4px;
+}
+
+    #mymrk button:first-child {
+        background: #0066b2;
+        color: #fff;
+    }
+
+        #mymrk button:first-child:hover {
+            background: #0066b2;
+        }
+
+    #mymrk button:last-child {
+        background: #e74c3c;
+        color: #fff;
+    }
+
+        #mymrk button:last-child:hover {
+            background: #c0392b;
+        }
+
+/* Optional: Responsive tweaks */
+@media (max-width: 700px) {
+    #mymrk table,
+    #mymrk thead,
+    #mymrk tbody,
+    #mymrk th,
+    #mymrk td,
+    #mymrk tr {
+        display: block;
+        width: 100%;
+    }
+
+    #mymrk tr {
+        margin-bottom: 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    #mymrk td {
+        padding: 8px 12px;
+        border: none;
+        position: relative;
+    }
+
+        #mymrk td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+            color: #555;
+        }
+}
