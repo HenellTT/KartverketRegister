@@ -351,7 +351,7 @@ namespace KartverketRegister.Utils
         {
             Open();
             string sql = @"
-                DELETE FROM ReviewAssign;
+                DELETE FROM ReviewAssign WHERE Reviewed = false;
             ";
             try
             {
