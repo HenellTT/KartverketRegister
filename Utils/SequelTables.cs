@@ -83,6 +83,7 @@
             CREATE TABLE {tableName} (
                 UserId INT NOT NULL,
                 MarkerId INT NOT NULL,
+                Reviewed BOOL NOT NULL DEFAULT FALSE,
                 PRIMARY KEY (UserId, MarkerId),
 
                 FOREIGN KEY (MarkerId) REFERENCES RegisteredMarkers(MarkerId) ON DELETE CASCADE,

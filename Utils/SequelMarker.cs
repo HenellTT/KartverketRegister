@@ -233,9 +233,17 @@ namespace KartverketRegister.Utils
                 cmd.ExecuteNonQuery();
 
             }
-            conn.Close();
+            
             int UserId = GetUserIdFromMarkerId(markerId);
             Notificator.SendNotification(UserId, $"Your Submission has been approved", "Info", markerId);
+
+            string sql2 = "UPDATE ReviewAssign SET Reviewed = true WHERE MarkerId = @MarkerId";
+            using (var cmd = new MySqlCommand(sql2, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.ExecuteNonQuery();
+            }
+            conn.Close();
 
         }
         public void RejectMarker(int markerId, string ReviewComment, int ReviewerId)
@@ -253,6 +261,12 @@ namespace KartverketRegister.Utils
 
             }
 
+            string sql2 = "UPDATE ReviewAssign SET Reviewed = true WHERE MarkerId = @MarkerId";
+            using (var cmd = new MySqlCommand(sql2, conn))
+            {
+                cmd.Parameters.AddWithValue("@MarkerId", markerId);
+                cmd.ExecuteNonQuery();
+            }
             conn.Close();
             int UserId = GetUserIdFromMarkerId(markerId);
             Notificator.SendNotification(UserId, $"Your Submission has been rejected", "Info", markerId);
