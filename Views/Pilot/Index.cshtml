@@ -1,7 +1,15 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+@{
+    Layout = null;
+}
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
+<head>
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+
+</head>
 
 <div class="BigContainer">
     <div class="obstacleContainer">
@@ -9,7 +17,7 @@
         
         <button onclick="location.href='/Flightmode'">FlightMode</button>
         <button onclick="location.href='/Pilot/User'">User</button>
-        <button onclick="location.href='/Auth/Logout'">Logout</button>
+        <button id="Notification-Open-Button">Notifications</button>
 
     </div>
     <div id="SomeOtherForm">
@@ -20,6 +28,7 @@
         <h2 class="selectionTitle">Submitted Reports</h2>
         <div id="mymrksub"></div>
     </div>
+    <div id="NotificationContainer"></div>
 
 
     <button type="button" class="darkmodeButton" onclick="dms()">Theme</button>
@@ -27,9 +36,13 @@
 
 
 <link rel="stylesheet" href="~/css/PilotIndex.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Notification.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/WelcomeToCompleteDarkness.css" asp-append-version="true" />
+
 <script src="~/js/PilotIndex.js"></script>
+<script src="~/js/Dark-mode.js"></script>
 
-
+<script src="~/js/Notifications.js"></script>
 
 
 
@@ -40,6 +53,11 @@
         UpdateMySubmissionList();
     },200)
 
+    const notiCont = document.getElementById('NotificationContainer');
+    const notiButt = document.getElementById('Notification-Open-Button');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    let Notification = new Notifications(notiCont, notiButt, csrfToken);
    
 </script>
 
