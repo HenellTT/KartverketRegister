@@ -64,7 +64,7 @@ Passord til alle brukere er !Testink00!
 
 # Drift
 The app can be run locallly or inside Docker.
-For å kjøre systemet uten Docker må du ha .NET 8 SDK installert.
+For å kjøre systemet uten Docker må du ha .NET 9 SDK installert.
 Bruk deretter følgende kommandoer
 	
 
