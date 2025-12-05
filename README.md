@@ -72,7 +72,7 @@ Bruk deretter følgende kommandoer
 
 - .NET 9 SDK
 - Docker
-- MariaDB (startes automatisk i Docker, eller via start_mariadb.bat)
+- MariaDB (startes automatisk i Docker Compose, eller via start_mariadb.bat)
 - Tilgang til internet for kartet
 
 # Systemarkitektur
@@ -90,17 +90,30 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - Docker: Pakker applikasjonen i en container og sørger for at applikasjonen kjøres likt. 
 - Kart: Integrert kart fra Leaflet i frontend. Lar brukeren velge sted på kart, sender kordinatene til backend
 
+## Database tilkobling
+- Environment-variabler for databasekonfigurasjon – Applikasjonen bruker miljøvariabler for å angi hvilken host og port databasen kjører på, samt databasen sitt root-passord. Dette gjør konfigurasjonen sikrere og mer fleksibel på tvers av miljøer.
+
+- Fallback til hardkodet passord – Applikasjonen kan også koble seg til databasen ved hjelp av et standardpassord som er hardkodet i Utils/Constants.cs. Dette fungerer som en fallback-løsning, men bør unngås i produksjon av sikkerhetsmessige årsaker.
+
+- Databasekommunikasjon via MySql.Data – All kommunikasjon med databasen håndteres gjennom MySql.Data-biblioteket. Dette brukes i hjelpeklasser (repositories/DAO-er) som står for selve databaseoperasjonene.
+
+- Felles baseklasse for datatilgang – Alle hjelpeklassene arver fra SequelBase, som i sin konstruktør oppretter databasekoblingen. Dette gir en konsistent og gjenbrukbar måte å håndtere SQL-tilkoblinger i applikasjonen.
+
 ## Dataflyt
 - GET: Bruker åpner side → Controller henter data fra database → View viser data via ViewModel.
 - POST(skjema): Bruker sender skjema → Controller validerer og lagrer → Redirect til visningsside som henter og viser lagret data.
 - Post(Kart): Bruker klikker på kart → Frontend sender koordinater til backend → Backend lagrer → Visningsside henter og viser på kart/tekst.
 
 ## Security
-- XSS
-- Anti Forgery Tokens
-- SQL Injections
-- Password Hashing - Raw passwords not saved
-- HTML Injections
+XSS (Cross-Site Scripting) – Vi beskytter applikasjonen mot XSS ved at Razor automatisk HTML-enkoder data i views, og ved at alle API-endepunkter returnerer HTML-enkodet/trygg output. Dette forhindrer at skript eller ondsinnet markup kan injiseres gjennom dynamiske JS-kall.
+
+Anti-Forgery Tokens (CSRF) – Vi bruker MVCs innebygde CSRF-beskyttelse med @Html.AntiForgeryToken() og [ValidateAntiForgeryToken], som hindrer uautoriserte eller automatiserte forespørsler mot POST-endepunkter.
+
+SQL Injection – Databasen håndteres via System.Data.SqlClient og parameteriserte SqlCommand-querier. Alle verdier legges inn som parametere, noe som eliminerer risikoen for SQL-injection.
+
+Password Hashing – Autentisering og passordlagring håndteres av ASP.NET Core Identity, som automatisk hasher passord (standard: PBKDF2) og sørger for at rå passord aldri lagres i databasen.
+
+HTML Injection – Siden all output både i views og fra API-endepunkter HTML-enkodes før det sendes til klienten, kan ikke brukere injisere egne HTML-elementer eller markup.
 
 ## Testing Scenario
 
