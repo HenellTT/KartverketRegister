@@ -56,7 +56,9 @@ ________________________________________________________________________________
 
 # Hvorfor vi ikke har valgt å bruke Dapper eller EntityFramework
 Vi har valgt å implementere våre egne koblinger mellom databasen og modellene i stedet for å bruke Dapper eller Entity Framework fordi dette gir oss større kontroll over hvordan data hentes og lagres. Med egen implementasjon kan vi skrive rå SQL-spørringer direkte i koden når det er nødvendig, noe som gir både fleksibilitet og optimal ytelse for spesifikke scenarioer.
+
 Denne tilnærmingen gjør det enkelt å styre databaseoperasjoner på et lavere nivå, samtidig som vi kan sikre at strukturen og initieringen av databasen håndteres presist slik vi ønsker. Alle nødvendige operasjoner for opprettelse av tabeller, sjekking av eksistens og eventuelt sletting ved reset, er implementert i Sequel*.cs-filene i Utils-mappen. Dette gir oss full kontroll uten å være bundet til rammeverkets abstraksjoner eller begrensninger.
+
 Kort sagt: vi prioriterer fleksibilitet og kontroll, spesielt der vi har behov for spesifikke SQL-operasjoner, samtidig som vi har en enkel og oversiktlig måte å håndtere databaseinitiering og struktur på.
 
 
