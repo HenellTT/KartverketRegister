@@ -1,7 +1,6 @@
 ﻿
 async function FetchMarkers(status) {
     try {
-
         let response = await fetch('/Superadmin/FetchAllMarkers?markerStatus=' + status);
         
         if (!response.ok || response.redirected) {
@@ -12,9 +11,10 @@ async function FetchMarkers(status) {
         }
 
         const data = await response.json();
-        return data.success ? data.markers : [];
+        // Håndter begge responsformater: data.markers (Admin) eller data.data (SuperAdmin)
+        return data.success ? (data.markers || data.data || []) : [];
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching markers:', error);
         return [];
     }
 }
@@ -123,10 +123,33 @@ function CreateMarkerRow(marker) {
 }
 const sts = document.getElementById("stateToSee");
 function DeleteMarker(MarkerId) {
-    fetch(`./Admin/DeleteMarker?MarkerId=${MarkerId}`).then(() => {
-        UpdateMarkerListTable(sts.value);
-    })
+    if (!confirm('Are you sure you want to delete this marker?')) {
+        return;
+    }
     
+    const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+    
+    fetch('/Admin/DeleteMarker', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: `MarkerId=${MarkerId}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            UpdateMarkerListTable(sts.value);
+            UpdateMapMarkers(map, L, sts.value);
+        } else {
+            alert('Could not delete marker: ' + data.message);
+        }
+    })
+    .catch(err => {
+        console.error('Delete failed:', err);
+        alert('Failed to delete marker');
+    });
 }
 function postRedirect(url, params = { }) {
     // Create a hidden form

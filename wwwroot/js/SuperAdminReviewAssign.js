@@ -2,13 +2,16 @@
     MarkerArray = [];
     CheckBoxes = [];
     Employees = [];
-    OutputDiv = document.getElementById('SARA-OUTPUT');
-    EmployeeSelect = document.getElementById('SARA-SELECT');
-    Constructor(CSRF) {
+    OutputDiv = null;
+    EmployeeSelect = null;
+    
+    constructor(CSRF) {
         this.csrf = CSRF;
     }
 
     async Init() {
+        this.OutputDiv = document.getElementById('SARA-OUTPUT');
+        this.EmployeeSelect = document.getElementById('SARA-SELECT');
         await this.SetupTable();
         await this.SetupSelector();
         window.SARA = this;
@@ -18,20 +21,22 @@
         try {
             const resp = await fetch("/Superadmin/FetchUnassignedMarkers");
             const data = await resp.json();
-            this.MarkerArray = data.data;
+            this.MarkerArray = data.data || [];
         } catch {
             this.MarkerArray = [];
         }
     }
+
     async FetchEmployees() {
         try {
             const resp = await fetch("/Superadmin/FetchEmployees");
             const data = await resp.json();
-            this.Employees = data.data;
+            this.Employees = data.data || [];
         } catch {
             this.Employees = [];
         }
     }
+
     async SetupTable() {
         await this.FetchMarkers();
         let htmlString = `<table class="UserTable">
@@ -48,13 +53,14 @@
         htmlString += `</table>`;
         this.OutputDiv.innerHTML = htmlString;
         this.CheckBoxes = Array.from(this.OutputDiv.querySelectorAll(".checkbox-submission-assign"));
-
     }
+
     GetCheckedIds() {
         let OnlyChecked = this.CheckBoxes.filter(el => el.checked);
         let ids = OnlyChecked.map(el => Number(el.id.split('-')[1]));
         return ids;
     }
+
     GetAvailableIds() {
         let ids = this.CheckBoxes.map(el => Number(el.id.split('-')[1]));
         return ids;
@@ -73,12 +79,14 @@
             </tr>
             `;
     }
+
     CreateOption(user) {
         return `<option value=${user.id}>${user.firstName} ${user.lastName}</option>`;
     }
+
     async SetupSelector() {
         await this.FetchEmployees();
-        let htmlString;
+        let htmlString = '';
         this.Employees.forEach(usr => htmlString += this.CreateOption(usr));
         this.EmployeeSelect.innerHTML = htmlString;
     }
@@ -88,12 +96,11 @@
         const SelectedUser = Number(this.EmployeeSelect.value);
         const RARRAY = ids.map(id => new ReviewAssign(SelectedUser, id));
 
-        console.log(RARRAY);
-        const resp = await fetch("/Superadmin/PostAssignReviews", {
+        const resp = await fetch("/Superadmin/AssignReviews", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "RequestVerificationToken": this.csrf
+                "X-CSRF-TOKEN": this.csrf
             },
             body: JSON.stringify(RARRAY)
         })
@@ -102,20 +109,19 @@
         if (gresp.success) {
             await this.SetupTable();
         }
-
         return gresp;
     }
+
     async PostQuickAssign(mrkId) {
         const ids = [mrkId];
         const SelectedUser = Number(this.EmployeeSelect.value);
         const RARRAY = ids.map(id => new ReviewAssign(SelectedUser, id));
 
-        console.log(RARRAY);
-        const resp = await fetch("/Superadmin/PostAssignReviews", {
+        const resp = await fetch("/Superadmin/AssignReviews", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "RequestVerificationToken": this.csrf
+                "X-CSRF-TOKEN": this.csrf
             },
             body: JSON.stringify(RARRAY)
         })
@@ -124,13 +130,10 @@
         if (gresp.success) {
             await this.SetupTable();
         }
-
         return gresp;
     }
+
     async AutoAssign() {
-        console.log("shit");
-        // markers / employess
-        //
         const Mlength = this.GetAvailableIds().length;
         const Elength = this.Employees.length;
         const MarkersPerEmployee = Math.ceil(Mlength / Elength);
@@ -140,20 +143,16 @@
             for (let i = 0; i < MarkersPerEmployee; i++) {
                 try {
                     this.CheckBoxes[i].checked = true;
-                } catch {
-
-                }
+                } catch { }
             }
             await this.PostBulkAssign();
         }
-
     }
-
 }
+
 class ReviewAssign {
     constructor(uid, mid) { 
         this.UserId = uid;
         this.MarkerId = mid;
     }
 }
-

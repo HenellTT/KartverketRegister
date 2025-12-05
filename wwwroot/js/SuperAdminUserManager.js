@@ -29,9 +29,8 @@
         const resp = await fetch(`/Superadmin/FetchUsers?FullName=${FullName}`);
         const respJson = await resp.json();
         this._users = respJson.data || [];
-        this._organizations = [...new Set(UMS._users.map(u => u.organization))];
+        this._organizations = [...new Set(this._users.map(u => u.organization))];
         this.UpdateSelector();
-
     }
     UpdateSelector() {
         let selectorOptionsHtml = '<option value="fhikdknflsm343443">All</option>';

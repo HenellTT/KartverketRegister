@@ -1,33 +1,34 @@
-﻿
-const form = document.querySelector("form");
+﻿const form = document.querySelector("form");
 const outputField = document.getElementById('returnMsg');
 const submitButton = document.querySelector('button[type="submit"]');
 
-
 form.addEventListener("submit", async (event) => {
-    event.preventDefault(); // Stop normal form submission
-    const data = Object.fromEntries(new FormData(form).entries());
+    event.preventDefault();
 
-    // Convert number fields properly
-    const numericFields = ["Lat", "Lng", "HeightM", "HeightMOverSea", "AccuracyM"];
-    numericFields.forEach(f => data[f] = data[f] ? parseFloat(data[f]) : null);
-
-    // Convert checkbox
-    data.IsTemporary = form.querySelector("[name='IsTemporary']").checked;
-    data.TempMarkerId = location.toLocaleString().split('=')[1];
-    // Optional date (may be empty)
-    if (data.ExpectedRemovalDate === "") data.ExpectedRemovalDate = null;
+    const formData = new FormData(form);
+    
+    // Valider at obligatoriske felt er fylt ut
+    if (!ValidateForm(formData)) {
+        outputField.innerHTML = "Please fill in all required fields.";
+        outputField.style.color = "red";
+        return;
+    }
+    
+    // Legg til TempMarkerId fra URL
+    const params = new URLSearchParams(window.location.search);
+    formData.set('TempMarkerId', params.get('markerId') || '');
+    
+    // Håndter checkbox (unchecked sender ikke verdi)
+    if (!form.querySelector("[name='IsTemporary']").checked) {
+        formData.set('IsTemporary', 'false');
+    }
 
     const response = await fetch(form.action, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
+        body: formData
     });
 
     const reply = await response.json();
-    const outputField = document.getElementById("returnMsg");
     outputField.innerHTML = reply.message;
 
     if (reply.success) {
@@ -40,27 +41,32 @@ form.addEventListener("submit", async (event) => {
 });
 
 
-function SuccessfulReq(msg) {
+function SuccessfulReq() {
     submitButton.disabled = true;
-    outputField.innerHTML += " - Redirecting to back to home . . .";
-    let params = new URLSearchParams(document.location.search)
-    let markerIdToDelete = params.get("markerId");
-    fetch(`/TempMarker/DeleteMarker?markerId=${markerIdToDelete}`);
+    outputField.innerHTML += " - Redirecting back to home...";
+    
+    const params = new URLSearchParams(window.location.search);
+    const markerIdToDelete = params.get("markerId");
+    
+    if (markerIdToDelete) {
+        fetch(`/TempMarker/DeleteMarker?markerId=${markerIdToDelete}`, { method: 'POST' });
+    }
 
     setTimeout(() => {
-        location.href = '/';
-    }, 1500)
+        window.location.href = '/Pilot';
+    }, 1500);
 }
 function FailedReq() {
 
 }
 
-function ValidateForm(formeeData) {
-    FieldsToBeVerified = ['Type','Description','Lat','Lng','HeightM','HeightMOverSea','Organization','AccuracyM','ObstacleCategory','Source'];
+function ValidateForm(formData) {
+    const fieldsToVerify = ['Type', 'Description', 'Lat', 'Lng', 'HeightM', 'Organization', 'ObstacleCategory', 'Source'];
 
-    for (const item of formeeData) {
-        console.log(item);
-        if (item[1] === '' && FieldsToBeVerified.includes(item[0])) return false;
+    for (const [name, value] of formData.entries()) {
+        if (value === '' && fieldsToVerify.includes(name)) {
+            return false;
+        }
     }
     return true;
 }
