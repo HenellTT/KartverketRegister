@@ -200,6 +200,7 @@ Register Marker
 | **U4**  | Utmerket navigasjon. Likte flyten i å velge flyvning før markøren ble registrert. | ✅ | Ingen. |
 | **U5**  | Ble overveldet med mange knapper i FlightMode, slet med å finne fram | ❌ | Fjerne unødvendige knapper. |
 
-
+Fixes
+- FlightMode UI ble oppdatert og minimalisert med mer brukervennlige knapper. 
 
 
