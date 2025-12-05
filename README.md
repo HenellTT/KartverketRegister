@@ -64,7 +64,7 @@ Passord til alle brukere er !Testink00!
 
 # Drift
 The app can be run locallly or inside Docker.
-For å kjøre systemet uten Docker må du ha .NET 8 SDK installert.
+For å kjøre systemet uten Docker må du ha .NET 9 SDK installert.
 Bruk deretter følgende kommandoer
 	
 
@@ -185,10 +185,10 @@ Review report
 Spørte brukeren om å logge seg inn som bruker - pilot, og sende inn en rapport:
 
 Main landing page - User
-> <img width="50%" height="50%" alt="Main landing page - User" src="https://github.com/user-attachments/assets/43770c58-6388-4cf1-b699-e21fd627ef3f" />
+> <img width="50%" height="50%" alt="Main landing page - User" src="https://github.com/user-attachments/assets/6c9be6c3-d0f2-4b64-934f-e985f8ebe7aa" />
 
 FlightMode
-> <img width="50%" height="50%" alt="FlightMode w/ marker" src="https://github.com/user-attachments/assets/acf41db8-5b9a-43d7-b76e-84fd7ea21d48" />
+> <img width="50%" height="50%" alt="FlightMode w/ marker" src="https://github.com/user-attachments/assets/417c5146-4f25-4a80-9c0e-4a840198945b" />
 
 Register Marker
 > <img width="50%" height="50%" alt="Register Marker" src="https://github.com/user-attachments/assets/f53ad8ce-0ad4-4725-b875-4fbebbace789" />
