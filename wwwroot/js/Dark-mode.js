@@ -1,6 +1,22 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function dms(bool = "wetSocks") {
+    let body = document.querySelector('body');
+    let mappyUwU = document.getElementById("map");
 
-// Write your JavaScript code.
-//dark mode toggle
-    
+    if (bool == "wetSocks") {
+        if (body.classList.contains("MayDarknessSwallowYourSoul")) {
+            bool = false;
+        } else {
+            bool = true;
+        }
+    }
+
+    if (bool) {
+        sessionStorage.setItem('DarkMode', true);
+        body.classList.add("MayDarknessSwallowYourSoul");
+        mappyUwU?.classList.add("MayDarknessSwallowYourSoulMap");
+    } else {
+        sessionStorage.setItem('DarkMode', false);
+        body.classList.remove("MayDarknessSwallowYourSoul");
+        mappyUwU?.classList.remove("MayDarknessSwallowYourSoulMap");
+    }
+}

@@ -64,7 +64,7 @@ Passord til alle brukere er !Testink00!
 
 # Drift
 The app can be run locallly or inside Docker.
-For å kjøre systemet uten Docker må du ha .NET 8 SDK installert.
+For å kjøre systemet uten Docker må du ha .NET 9 SDK installert.
 Bruk deretter følgende kommandoer
 	
 
@@ -72,7 +72,7 @@ Bruk deretter følgende kommandoer
 
 - .NET 9 SDK
 - Docker
-- MariaDB (startes automatisk i Docker, eller via start_mariadb.bat)
+- MariaDB (startes automatisk i Docker Compose, eller via start_mariadb.bat)
 - Tilgang til internet for kartet
 
 # Systemarkitektur
@@ -90,17 +90,30 @@ Brukerinteraksjon skjer via skjemaer og kart, og data som flyter mellom frontend
 - Docker: Pakker applikasjonen i en container og sørger for at applikasjonen kjøres likt. 
 - Kart: Integrert kart fra Leaflet i frontend. Lar brukeren velge sted på kart, sender kordinatene til backend
 
+## Database tilkobling
+- Environment-variabler for databasekonfigurasjon – Applikasjonen bruker miljøvariabler for å angi hvilken host og port databasen kjører på, samt databasen sitt root-passord. Dette gjør konfigurasjonen sikrere og mer fleksibel på tvers av miljøer.
+
+- Fallback til hardkodet passord – Applikasjonen kan også koble seg til databasen ved hjelp av et standardpassord som er hardkodet i Utils/Constants.cs. Dette fungerer som en fallback-løsning, men bør unngås i produksjon av sikkerhetsmessige årsaker.
+
+- Databasekommunikasjon via MySql.Data – All kommunikasjon med databasen håndteres gjennom MySql.Data-biblioteket. Dette brukes i hjelpeklasser (repositories/DAO-er) som står for selve databaseoperasjonene.
+
+- Felles baseklasse for datatilgang – Alle hjelpeklassene arver fra SequelBase, som i sin konstruktør oppretter databasekoblingen. Dette gir en konsistent og gjenbrukbar måte å håndtere SQL-tilkoblinger i applikasjonen.
+
 ## Dataflyt
 - GET: Bruker åpner side → Controller henter data fra database → View viser data via ViewModel.
 - POST(skjema): Bruker sender skjema → Controller validerer og lagrer → Redirect til visningsside som henter og viser lagret data.
 - Post(Kart): Bruker klikker på kart → Frontend sender koordinater til backend → Backend lagrer → Visningsside henter og viser på kart/tekst.
 
 ## Security
-- XSS
-- Anti Forgery Tokens
-- SQL Injections
-- Password Hashing - Raw passwords not saved
-- HTML Injections
+XSS (Cross-Site Scripting) – Vi beskytter applikasjonen mot XSS ved at Razor automatisk HTML-enkoder data i views, og ved at alle API-endepunkter returnerer HTML-enkodet/trygg output. Dette forhindrer at skript eller ondsinnet markup kan injiseres gjennom dynamiske JS-kall.
+
+Anti-Forgery Tokens (CSRF) – Vi bruker MVCs innebygde CSRF-beskyttelse med @Html.AntiForgeryToken() og [ValidateAntiForgeryToken], som hindrer uautoriserte eller automatiserte forespørsler mot POST-endepunkter.
+
+SQL Injection – Databasen håndteres via System.Data.SqlClient og parameteriserte SqlCommand-querier. Alle verdier legges inn som parametere, noe som eliminerer risikoen for SQL-injection.
+
+Password Hashing – Autentisering og passordlagring håndteres av ASP.NET Core Identity, som automatisk hasher passord (standard: PBKDF2) og sørger for at rå passord aldri lagres i databasen.
+
+HTML Injection – Siden all output både i views og fra API-endepunkter HTML-enkodes før det sendes til klienten, kan ikke brukere injisere egne HTML-elementer eller markup.
 
 ## Testing Scenario
 
@@ -172,10 +185,10 @@ Review report
 Spørte brukeren om å logge seg inn som bruker - pilot, og sende inn en rapport:
 
 Main landing page - User
-> <img width="50%" height="50%" alt="Main landing page - User" src="https://github.com/user-attachments/assets/43770c58-6388-4cf1-b699-e21fd627ef3f" />
+> <img width="50%" height="50%" alt="Main landing page - User" src="https://github.com/user-attachments/assets/6c9be6c3-d0f2-4b64-934f-e985f8ebe7aa" />
 
 FlightMode
-> <img width="50%" height="50%" alt="FlightMode w/ marker" src="https://github.com/user-attachments/assets/acf41db8-5b9a-43d7-b76e-84fd7ea21d48" />
+> <img width="50%" height="50%" alt="FlightMode w/ marker" src="https://github.com/user-attachments/assets/417c5146-4f25-4a80-9c0e-4a840198945b" />
 
 Register Marker
 > <img width="50%" height="50%" alt="Register Marker" src="https://github.com/user-attachments/assets/f53ad8ce-0ad4-4725-b875-4fbebbace789" />
@@ -187,6 +200,7 @@ Register Marker
 | **U4**  | Utmerket navigasjon. Likte flyten i å velge flyvning før markøren ble registrert. | ✅ | Ingen. |
 | **U5**  | Ble overveldet med mange knapper i FlightMode, slet med å finne fram | ❌ | Fjerne unødvendige knapper. |
 
-
+Fixes
+- FlightMode UI ble oppdatert og minimalisert med mer brukervennlige knapper. 
 
 

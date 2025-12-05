@@ -11,8 +11,10 @@ namespace KartverketRegister.Utils
 {
     public static class Notificator
     {
+        // Connection string for database
         private static string _connString = $"Server={Constants.DataBaseIp};Port={Constants.DataBasePort};Database={Constants.DataBaseName};User ID=root;Password={Constants.DataBaseRootPassword};";
 
+        //metoder for å sende, lese, merke som lest og slette notifikasjoner
         public static void SendNotification(int ToUser, string Message, string Type)
         {
             string sqlQuery = @"

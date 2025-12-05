@@ -25,11 +25,13 @@ namespace KartverketRegister.Controllers
         {
             _userManager = userManager;
         }
+
         //private int MsgLimit = 15;
         public IActionResult Index()
         {
-            return BadRequest("Nothing to see here"); 
+            return BadRequest("No content avaliable here"); 
         }
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult SubmitMarker() //tar imot midlertidig markør via post forespørsel
@@ -65,12 +67,14 @@ namespace KartverketRegister.Controllers
             } catch (Exception e)
             {
                 Console.WriteLine(e.InnerException);
-                return Json(new GeneralResponse(false, "Failed saving marker!")); //lagres ikke data riktig, får man denne feilmeldingen
+                return Json(new GeneralResponse(false, "Error: Marker could not be saved")); //lagres ikke data riktig, får man denne feilmeldingen
             }
             
             
 
         }
+
+        //henter alle midlertidige markører for innlogget bruker
         [HttpGet]
         public IActionResult FetchMyMarkers()
         {
@@ -83,6 +87,8 @@ namespace KartverketRegister.Controllers
             List <TempMarker> MyMarkers = seq.FetchMyMarkers(UserId); // Currently 1 to simulate UserId; 
             return Ok(MyMarkers);
         }
+
+
         [HttpGet] // Add antiforgery shit, Change to Post 💀
         public IActionResult DeleteMarker(int markerId)
         {
@@ -98,9 +104,11 @@ namespace KartverketRegister.Controllers
             }
             catch (Exception ex) {
 
-                return Ok(new GeneralResponse(false, $"Marker was NOT deleted! {ex}"));
+                return Ok(new GeneralResponse(false, $"Error: Marker could not be deleted. {ex}"));
             }
         }
+
+        //viser marøkr i registreringsvisning
         [HttpGet]
         public IActionResult RegisterMarker(int markerId)
         {

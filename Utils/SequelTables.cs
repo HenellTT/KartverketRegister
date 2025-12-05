@@ -1,5 +1,6 @@
 ﻿namespace KartverketRegister.Utils
 {
+    //SQL-skript for opprettelse av tabeller i databasen
     public static class SequelTables
     {
         public static string Users_Table(string tableName)
@@ -82,6 +83,7 @@
             CREATE TABLE {tableName} (
                 UserId INT NOT NULL,
                 MarkerId INT NOT NULL,
+                Reviewed BOOL NOT NULL DEFAULT FALSE,
                 PRIMARY KEY (UserId, MarkerId),
 
                 FOREIGN KEY (MarkerId) REFERENCES RegisteredMarkers(MarkerId) ON DELETE CASCADE,

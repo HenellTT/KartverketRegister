@@ -2,6 +2,7 @@
 
 namespace KartverketRegister.Utils
 {
+    //henter høydeverdi fra ekstern URL som returnerer JSON med "value"-felt
     public static class HeightFetcher
     {
         private static readonly HttpClient client = new HttpClient();

@@ -4,6 +4,7 @@ namespace KartverketRegister.Models
 {
     public class MapMarker : TempMarker
     {
+        //representerer en markør på kartet med tilleggsinformasjon
         public string ObstacleCategory { get; set; }
         public string Organization { get; set; }
 

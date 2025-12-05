@@ -5,6 +5,7 @@ using System;
 
 namespace KartverketRegister.Utils
 {
+    // baseklasse for mySQL-databaseforbindelser
     public class SequelBase : IDisposable
     {
         protected MySqlConnection conn;

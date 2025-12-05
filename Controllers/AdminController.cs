@@ -16,7 +16,8 @@ using System.Threading.Tasks;
 
 namespace KartverketRegister.Controllers
 {
-    [Authorize(Roles = "Employee,Admin")] // shit works for now!!! 
+    //Administrasjon av markør (reset, review, approve/reject, hente og slette
+    [Authorize(Roles = "Employee,Admin")]  
     public class AdminController : Controller // Arver fra Controller for å håndtere markører
     {
         private readonly UserManager<AppUser> _userManager;
@@ -33,6 +34,7 @@ namespace KartverketRegister.Controllers
         [HttpGet]
         public IActionResult ResetDB()
         {
+            //reset av databasen
             try
             {
                 SequelInit sequel = new SequelInit(Constants.DataBaseIp, Constants.DataBaseName);
@@ -52,6 +54,7 @@ namespace KartverketRegister.Controllers
         [HttpPost]
         public IActionResult Review(int markerId)
         {
+            //viser markører for gjennomgang
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             Marker Mrk = sequel.FetchMarkerById(markerId);
             
@@ -64,6 +67,7 @@ namespace KartverketRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> HandleReview(int MarkerId, string ReviewComment, string Status)
         {
+            //håndtering av godkjenning eller avvisning av marker
             SequelMarker sequel = new SequelMarker(Constants.DataBaseIp, Constants.DataBaseName);
             AppUser appUser = await _userManager.GetUserAsync(HttpContext?.User);
             int UserId = appUser.Id;

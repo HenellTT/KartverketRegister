@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
-// ✅ Initialize DB (using your existing logic)
+// Initialize DB 
 bool connectedToDb = false;
 SequelInit? seq = null;
 int attempt = -1;
@@ -41,7 +41,7 @@ SequelBase seqConn = new SequelBase(Constants.DataBaseIp, Constants.DataBaseName
 var dbConnString = seqConn.ConnectionString;
 Console.WriteLine($"[Setup Identity] Conn string for identity: {dbConnString}");
 
-// ✅ Register a scoped MySQL connection factory using SequelInit's connection string
+// Register a scoped MySQL connection factory using SequelInit's connection string
 builder.Services.AddScoped<MySqlConnection>(_ =>
 {
     var conn = new MySqlConnection(dbConnString);
@@ -51,7 +51,7 @@ builder.Services.AddScoped<MySqlConnection>(_ =>
 //builder.Services.AddSingleton(dbConnString);
 
 
-// ✅ Identity setup (custom user/role stores)
+// Identity setup (custom user/role stores)
 builder.Services.AddScoped<IUserStore<AppUser>>(sp => new MySqlUserStore(dbConnString));
 
 builder.Services.AddScoped<IRoleStore<IdentityRole<int>>, MySqlRoleStore>();
@@ -123,7 +123,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// ✅ Identity middleware
+// Identity middleware
 app.UseAuthentication();
 app.UseAuthorization();
 

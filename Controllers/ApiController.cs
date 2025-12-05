@@ -9,6 +9,7 @@ using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using System.Threading.Tasks;
 
+//API-kontroller for brukere
 namespace KartverketRegister.Controllers
 {
     [Authorize(Roles = "Employee,Admin,User")]
@@ -20,15 +21,17 @@ namespace KartverketRegister.Controllers
         {
             _userManager = userManager;
         }
+
+        //returnere statusmelding for api
         [HttpGet]
         public IActionResult Index()
         {
-            return Ok(new GeneralResponse(true,"Api is apiing"));
+            return Ok(new GeneralResponse(true,"Api is responding"));
 
         }
 
         [HttpGet]
-        // Stjeler MOH value fra HoydeData sin api som en ekte sigma 😎
+        // Stjeler MOH value fra HoydeData sin api
         public async Task<IActionResult> GetHeight(double lat, double lng)
         {
             var wgs84 = GeographicCoordinateSystem.WGS84;
@@ -55,6 +58,9 @@ namespace KartverketRegister.Controllers
                 height = height
             });
         }
+
+
+
         [HttpGet]
         public IActionResult GetNotifications()
         {
@@ -63,12 +69,13 @@ namespace KartverketRegister.Controllers
             try
             {
                 List<NotificationModel> Notifications = Notificator.GetNotificationsByUserId(UserId);
-                return Json(new GeneralResponse(true, $"Here are your msgs bro", Notifications));
+                return Json(new GeneralResponse(true, $"Here are your messages", Notifications));
             } catch
             {
-                return Json(new GeneralResponse(false, "No notifications fo u bro"));
+                return Json(new GeneralResponse(false, "No notifications"));
             }
         }
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult MarkNotificationAsRead([FromBody] NotificationRequest request)
@@ -86,6 +93,8 @@ namespace KartverketRegister.Controllers
                 return Json(new GeneralResponse(false, "Error: Notification cannot be set as viewed"));
             }
         }
+
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult DeleteNotification([FromBody] NotificationRequest request)
@@ -103,6 +112,8 @@ namespace KartverketRegister.Controllers
                 return Json(new GeneralResponse(false, "Error: Notification cannot be removed"));
             }
         }
+
+
         [HttpGet]
         private IActionResult SendNotification(int userid, string msg) // ONLY FOR TESTING RESTRICT or DELETE l8r  
         {
