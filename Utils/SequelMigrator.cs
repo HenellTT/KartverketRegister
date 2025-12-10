@@ -13,55 +13,77 @@ namespace KartverketRegister.Utils
         public void Migrate()
         {
             conn.Open();
-            SetForeingKeyCheck(0);
 
-            DropTable("Users_Copy");
-            DropTable("Markers_Copy");
-            DropTable("RegisteredMarkers_Copy");
-            DropTable("Notifications_Copy");
-            DropTable("ReviewAssign_Copy");
+            using (var transaction = conn.BeginTransaction())
+            {
+                Console.WriteLine("[SequelMigrator] Started Migration Transaction");
+                try
+                {
+                    SetForeingKeyCheckTransaction(0, transaction);
 
-            CreateTable(SequelTables.Users_Table("Users_Copy"), "Users_Copy");
-            CreateTable(SequelTables.Markers_Table("Markers_Copy"), "Markers_Copy");
-            CreateTable(SequelTables.RegisteredMarkers_Table("RegisteredMarkers_Copy"), "RegisteredMarkers_Copy");
-            CreateTable(SequelTables.Notifications_Table("Notifications_Copy"), "Notifications_Copy");
-            CreateTable(SequelTables.ReviewAssign_Table("ReviewAssign_Copy"), "ReviewAssign_Copy");
+                    DropTableTransaction("Users_Copy", transaction);
+                    DropTableTransaction("Markers_Copy", transaction);
+                    DropTableTransaction("RegisteredMarkers_Copy", transaction);
+                    DropTableTransaction("Notifications_Copy", transaction);
+                    DropTableTransaction("ReviewAssign_Copy", transaction);
 
-            CopyTableData("Users", "Users_Copy");
-            CopyTableData("Markers", "Markers_Copy");
-            CopyTableData("RegisteredMarkers", "RegisteredMarkers_Copy");
-            CopyTableData("Notifications", "Notifications_Copy");
-            CopyTableData("ReviewAssign", "ReviewAssign_Copy");
+                    CreateTableTransaction(SequelTables.Users_Table("Users_Copy"), "Users_Copy", transaction);
+                    CreateTableTransaction(SequelTables.Markers_Table("Markers_Copy"), "Markers_Copy", transaction);
+                    CreateTableTransaction(SequelTables.RegisteredMarkers_Table("RegisteredMarkers_Copy"), "RegisteredMarkers_Copy", transaction);
+                    CreateTableTransaction(SequelTables.Notifications_Table("Notifications_Copy"), "Notifications_Copy", transaction);
+                    CreateTableTransaction(SequelTables.ReviewAssign_Table("ReviewAssign_Copy"), "ReviewAssign_Copy", transaction);
 
-            DropTable("Users");
-            DropTable("Markers");
-            DropTable("RegisteredMarkers");
-            DropTable("Notifications");
-            DropTable("ReviewAssign");
+                    CopyTableDataBulkTransaction("Users", "Users_Copy", transaction);
+                    CopyTableDataBulkTransaction("Markers", "Markers_Copy", transaction);
+                    CopyTableDataBulkTransaction("RegisteredMarkers", "RegisteredMarkers_Copy", transaction);
+                    CopyTableDataBulkTransaction("Notifications", "Notifications_Copy", transaction);
+                    CopyTableDataBulkTransaction("ReviewAssign", "ReviewAssign_Copy", transaction);
 
-            CreateTable(SequelTables.Users_Table("Users"), "Users");
-            CreateTable(SequelTables.Markers_Table("Markers"), "Markers");
-            CreateTable(SequelTables.RegisteredMarkers_Table("RegisteredMarkers"), "RegisteredMarkers");
-            CreateTable(SequelTables.Notifications_Table("Notifications"), "Notifications");
-            CreateTable(SequelTables.ReviewAssign_Table("ReviewAssign"), "ReviewAssign");
+                    DropTableTransaction("Users", transaction);
+                    DropTableTransaction("Markers", transaction);
+                    DropTableTransaction("RegisteredMarkers", transaction);
+                    DropTableTransaction("Notifications", transaction);
+                    DropTableTransaction("ReviewAssign", transaction);
 
-            CopyTableData("Users_Copy", "Users");
-            CopyTableData("Markers_Copy", "Markers");
-            CopyTableData("RegisteredMarkers_Copy", "RegisteredMarkers");
-            CopyTableData("Notifications_Copy", "Notifications");
-            CopyTableData("ReviewAssign_Copy", "ReviewAssign");
+                    CreateTableTransaction(SequelTables.Users_Table("Users"), "Users", transaction);
+                    CreateTableTransaction(SequelTables.Markers_Table("Markers"), "Markers", transaction);
+                    CreateTableTransaction(SequelTables.RegisteredMarkers_Table("RegisteredMarkers"), "RegisteredMarkers", transaction);
+                    CreateTableTransaction(SequelTables.Notifications_Table("Notifications"), "Notifications", transaction);
+                    CreateTableTransaction(SequelTables.ReviewAssign_Table("ReviewAssign"), "ReviewAssign", transaction);
 
-            DropTable("Users_Copy");
-            DropTable("Markers_Copy");
-            DropTable("RegisteredMarkers_Copy");
-            DropTable("Notifications_Copy");
-            DropTable("ReviewAssign_Copy");
+                    CopyTableDataBulkTransaction("Users_Copy", "Users", transaction);
+                    CopyTableDataBulkTransaction("Markers_Copy", "Markers", transaction);
+                    CopyTableDataBulkTransaction("RegisteredMarkers_Copy", "RegisteredMarkers", transaction);
+                    CopyTableDataBulkTransaction("Notifications_Copy", "Notifications", transaction);
+                    CopyTableDataBulkTransaction("ReviewAssign_Copy", "ReviewAssign", transaction);
 
-            SetForeingKeyCheck(1);
+                    DropTableTransaction("Users_Copy", transaction);
+                    DropTableTransaction("Markers_Copy", transaction);
+                    DropTableTransaction("RegisteredMarkers_Copy", transaction);
+                    DropTableTransaction("Notifications_Copy", transaction);
+                    DropTableTransaction("ReviewAssign_Copy", transaction);
 
-            conn.Close();
+                    SetForeingKeyCheckTransaction(1, transaction);
+
+                    // Commit the transaction
+                    transaction.Commit();
+                }
+                catch
+                {
+                    // Rollback if anything fails
+                    Console.WriteLine("[SequelMigrator] Failed Migration Transaction");
+                    transaction.Rollback();
+                    Console.WriteLine("[SequelMigrator] Transaction Rolled Back");
+                    throw;
+                }
+                finally
+                {
+                    Console.WriteLine("[SequelMigrator] Completed Migration Transaction");
+                    conn.Close();
+                }
+            }
         }
-        public List<string> GetTableColumns(string tableName)
+        private List<string> GetTableColumns(string tableName)
         {
             var columns = new List<string>();
 
@@ -94,7 +116,23 @@ namespace KartverketRegister.Utils
 
             return columns;
         }
-        public void CopyTableData(string oldTable, string newTable)
+        private void CopyTableDataBulk(string oldTable, string newTable)
+        {
+            var newColumns = GetTableColumns(newTable);
+            var oldColumns = GetTableColumns(oldTable);
+            var commonColumns = oldColumns.FindAll(c => newColumns.Contains(c));
+
+            string sqlColumns = string.Join(", ", commonColumns);
+
+            string sql = $"INSERT INTO {newTable} ({sqlColumns}) SELECT {sqlColumns} FROM {oldTable}";
+
+            using (var cmd = new MySqlCommand(sql,conn))
+            {
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine($"[SequelMigrator] Bulk copied data from {oldTable} to {newTable}");
+        }
+        private void CopyTableData(string oldTable, string newTable)
         {
             var newColumns = GetTableColumns(newTable);
             var oldColumns = GetTableColumns(oldTable); 
@@ -166,5 +204,50 @@ namespace KartverketRegister.Utils
                 cmd.ExecuteNonQuery();
             }
         }
+        public void CreateTableTransaction(string SQL_Table, string tableName, MySqlTransaction transaction)
+        {
+            using (var cmd = new MySqlCommand(SQL_Table, conn, transaction))
+            {
+                cmd.ExecuteNonQuery();
+                Console.WriteLine($"[SequelMigrator] Created {tableName}");
+            }
+        }
+
+        public void DropTableTransaction(string tableName, MySqlTransaction transaction)
+        {
+            string sqling = $"DROP TABLE IF EXISTS `{tableName}`;";
+            using (var cmd = new MySqlCommand(sqling, conn, transaction))
+            {
+                cmd.ExecuteNonQuery();
+                Console.WriteLine($"[SequelMigrator] Deleted {tableName}");
+            }
+        }
+
+        public void SetForeingKeyCheckTransaction(int boolean, MySqlTransaction transaction)
+        {
+            string sqling = $"SET FOREIGN_KEY_CHECKS={boolean};";
+            using (var cmd = new MySqlCommand(sqling, conn, transaction))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public void CopyTableDataBulkTransaction(string oldTable, string newTable, MySqlTransaction transaction)
+        {
+            var newColumns = GetTableColumns(newTable);
+            var oldColumns = GetTableColumns(oldTable);
+            var commonColumns = oldColumns.FindAll(c => newColumns.Contains(c));
+
+            if (!commonColumns.Any())
+                throw new InvalidOperationException("No common columns found between tables.");
+
+            string sqlColumns = string.Join(", ", commonColumns.Select(c => $"`{c}`"));
+            string sql = $"INSERT INTO `{newTable}` ({sqlColumns}) SELECT {sqlColumns} FROM `{oldTable}`";
+
+            using (var cmd = new MySqlCommand(sql, conn, transaction))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+
     }
 }
