@@ -116,70 +116,7 @@ namespace KartverketRegister.Utils
 
             return columns;
         }
-        private void CopyTableDataBulk(string oldTable, string newTable)
-        {
-            var newColumns = GetTableColumns(newTable);
-            var oldColumns = GetTableColumns(oldTable);
-            var commonColumns = oldColumns.FindAll(c => newColumns.Contains(c));
-
-            string sqlColumns = string.Join(", ", commonColumns);
-
-            string sql = $"INSERT INTO {newTable} ({sqlColumns}) SELECT {sqlColumns} FROM {oldTable}";
-
-            using (var cmd = new MySqlCommand(sql,conn))
-            {
-                cmd.ExecuteNonQuery();
-            }
-            Console.WriteLine($"[SequelMigrator] Bulk copied data from {oldTable} to {newTable}");
-        }
-        private void CopyTableData(string oldTable, string newTable)
-        {
-            var newColumns = GetTableColumns(newTable);
-            var oldColumns = GetTableColumns(oldTable); 
-            var commonColumns = oldColumns.FindAll(c => newColumns.Contains(c));
-            if (commonColumns.Count == 0)
-                throw new Exception("No matching columns found between tables.");
-
-            string columnList = string.Join(", ", commonColumns);
-            string paramList = string.Join(", ", commonColumns.ConvertAll(c => "@" + c));
-
-            string selectQuery = $"SELECT {columnList} FROM {oldTable}";
-
-            using (var selectCmd = new MySqlCommand(selectQuery, conn))
-            {
-                
-                using (var reader = selectCmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        try
-                        {
-                            string insertQuery = $"INSERT INTO {newTable} ({columnList}) VALUES ({paramList})";
-                            using (var innerConn = new MySqlConnection(ConnectionString))
-                            {
-                                innerConn.Open();
-                                using (var insertCmd = new MySqlCommand(insertQuery, innerConn))
-                                {
-                                    foreach (var col in commonColumns)
-                                    {
-                                        insertCmd.Parameters.AddWithValue("@" + col, reader[col]);
-                                    }
-                                    insertCmd.ExecuteNonQuery();
-                                    Console.WriteLine($"[SequelMigrator] Copied data from {oldTable} to {newTable}");
-                                }
-                                innerConn.Close();
-                            }
-                        } catch
-                        {
-                            Console.WriteLine($"[SequelMigrator] COPY - INCOMPATIBLE DATA FROM {oldTable} TO {newTable}");
-
-                        }
-
-
-                    }
-                } 
-            }
-        }
+        
         public void CreateTable(string SQL_Table, string tableName)
         {
             using (var cmd = new MySqlCommand(SQL_Table, conn))
